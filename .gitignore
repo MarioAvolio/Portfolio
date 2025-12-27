@@ -1,0 +1,410 @@
+# ML Portfolio - .gitignore
+# Python, ML/DL, IDE, OS-specific files to exclude from version control
+
+# ============================================================
+# PYTHON & VIRTUAL ENVIRONMENTS
+# ============================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv/
+.ENV/
+.env.local
+.env.*.local
+venv.bak/
+env.bak/
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env.bak/
+venv.bak/
+
+# ============================================================
+# JUPYTER NOTEBOOK
+# ============================================================
+
+.ipynb_checkpoints
+*.ipynb
+.nbgrader.log
+
+# ============================================================
+# MACHINE LEARNING / DEEP LEARNING
+# ============================================================
+
+# Model files (large)
+*.pt
+*.pth
+*.h5
+*.keras
+*.pb
+*.pkl
+*.pickle
+*.joblib
+*.xgb
+*.npy
+*.npz
+*.safetensors
+*.onnx
+*.ort
+
+# Checkpoints
+checkpoints/
+checkpoint-*/
+runs/
+tb_logs/
+wandb/
+lightning_logs/
+
+# Data files (large)
+*.csv
+*.xlsx
+*.xls
+*.tsv
+*.parquet
+*.feather
+*.arrow
+*.json  # Can be large
+*.jsonl
+*.gz
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.rar
+
+# Data directories
+data/
+datasets/
+raw_data/
+processed_data/
+cache/
+.cache/
+
+# Model caches
+models/
+pretrained_models/
+model_weights/
+huggingface/
+.huggingface/
+
+# BUT keep .gitkeep files for directory structure
+!data/.gitkeep
+!models/.gitkeep
+!datasets/.gitkeep
+
+# ============================================================
+# LLM & VECTOR DATABASE CACHES
+# ============================================================
+
+# Hugging Face cache
+~/.cache/huggingface/
+.cache/huggingface/
+
+# Chromadb
+*.db
+chroma_data/
+chroma_storage/
+
+# Vector database indexes
+index/
+indexes/
+vectorstore/
+vector_store/
+
+# ============================================================
+# LOGS & OUTPUT
+# ============================================================
+
+# Logs
+*.log
+logs/
+*.log.*
+logging/
+
+# Output directories
+outputs/
+results/
+predictions/
+evaluations/
+
+# Tensorboard
+runs/
+tb_logs/
+
+# Weights & Biases
+wandb/
+
+# ============================================================
+# IDE & EDITOR
+# ============================================================
+
+# VSCode
+.vscode/
+*.code-workspace
+.history/
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Nano
+.nano_history
+
+# ============================================================
+# OS SPECIFIC
+# ============================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+._*
+.Spotlight-V100
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+*.tmp
+
+# Linux
+.Xauthority
+.lesshst
+*~
+
+# ============================================================
+# ENVIRONMENT & SECRETS
+# ============================================================
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production.local
+.env.development.local
+.env.test.local
+
+# API Keys
+api_keys.txt
+secrets.json
+.credentials
+.aws/
+.gcp/
+
+# ============================================================
+# BUILD & DISTRIBUTION
+# ============================================================
+
+# Build directories
+build/
+dist/
+*.egg-info/
+*.whl
+*.tar.gz
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+.pytest_cache/
+.tox/
+coverage.xml
+*.cover
+
+# ============================================================
+# TEMPORARY & DEBUG
+# ============================================================
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+
+# Debug
+.debug/
+debug_output/
+
+# Testing
+test_output/
+test_results/
+
+# ============================================================
+# PACKAGE MANAGER
+# ============================================================
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# poetry
+poetry.lock
+
+# uv
+uv.lock
+
+# pipenv
+Pipfile.lock
+
+# ============================================================
+# CI/CD
+# ============================================================
+
+# GitHub Actions
+.github/workflows/artifacts/
+
+# GitLab CI
+.gitlab-ci.yml.local
+
+# ============================================================
+# DOCUMENTATION BUILD
+# ============================================================
+
+# Sphinx documentation
+docs/_build/
+site/
+
+# ============================================================
+# MISC
+# ============================================================
+
+# System files to ignore
+.DS_Store
+Thumbs.db
+
+# Bulk rename tool
+bak/
+
+# Pytest
+.pytest_cache/
+.hypothesis/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Type checking
+.pyre/
+
+# ============================================================
+# PROJECT SPECIFIC
+# ============================================================
+
+# LLM-specific caches
+ollama_cache/
+vllm_cache/
+deepseek_cache/
+
+# Fine-tuning outputs
+fine_tune_outputs/
+adapter_cache/
+lora_weights/
+
+# RAG specific
+vector_indexes/
+retrieval_cache/
+
+# Agentic AI
+agent_logs/
+agent_memory/
+agent_state/
+
+# ============================================================
+# EXCEPTIONS (Keep these files)
+# ============================================================
+
+# Keep important example files
+!examples/**/*.py
+!examples/**/*.json
+!examples/**/.gitkeep
+
+# Keep configs
+!config/**/*.yaml
+!config/**/*.yml
+!config/**/.gitkeep
+
+# Keep directory structure markers
+!data/.gitkeep
+!models/.gitkeep
+!datasets/.gitkeep
+!outputs/.gitkeep
+!logs/.gitkeep
+!cache/.gitkeep
