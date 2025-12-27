@@ -1,227 +1,53 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
-name = "ml-portfolio"
+name = "portfolio"
 version = "0.1.0"
-description = "Machine Learning Portfolio - Agentic AI & Generative AI Projects"
-readme = "README.md"
-requires-python = ">=3.9"
-license = {text = "MIT"}
-authors = [
-    {name = "Your Name", email = "your-email@example.com"}
-]
-
-keywords = [
-    "agentic-ai",
-    "generative-ai",
-    "llm",
-    "langchain",
-    "crewai",
-    "rag",
-    "fine-tuning",
-    "machine-learning"
-]
-
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-]
-
+requires-python = ">=3.11"
 dependencies = [
-    # Core & Configuration
-    "python-dotenv>=1.0.0",
-    "pydantic>=2.0.0",
-    "pydantic-settings>=2.0.0",
-    
-    # LLM APIs & Providers
-    "openai>=1.0.0",
-    "anthropic>=0.25.0",
-    "google-generativeai>=0.3.0",
-    "cohere>=5.0.0",
-    
-    # Agentic AI Frameworks
-    "langchain>=0.1.0",
-    "langchain-openai>=0.1.0",
-    "langchain-anthropic>=0.1.0",
-    "langgraph>=0.0.1",
-    "crewai>=0.1.0",
-    "autogen>=0.2.0",
-    "pydantic-ai>=0.5.0",
-    
-    # Generative AI & RAG
-    "llamaindex>=0.9.0",
-    "llama-index-llms-openai>=0.1.0",
-    "llama-index-embeddings-huggingface>=0.1.0",
-    "llama-index-vector-stores-chroma>=0.1.0",
-    
-    # Vector Databases & Retrieval
-    "faiss-cpu>=1.7.4",
-    "chromadb>=0.4.0",
-    "pinecone-client>=3.0.0",
-    "qdrant-client>=2.7.0",
-    
-    # NLP & Embeddings
-    "transformers>=4.36.0",
-    "sentence-transformers>=2.2.0",
-    "tokenizers>=0.15.0",
-    "huggingface-hub>=0.19.0",
-    
-    # ML & Deep Learning Core
-    "torch>=2.1.0",
-    "torchvision>=0.16.0",
-    "numpy>=1.24.0",
-    "scipy>=1.11.0",
-    "scikit-learn>=1.3.0",
-    
-    # Fine-tuning & Model Optimization
-    "peft>=0.7.0",
-    "bitsandbytes>=0.41.0",
-    "onnx>=1.15.0",
-    "onnxruntime>=1.17.0",
-    "tensorrt>=8.6.0",
-    
-    # Web & API
-    "fastapi>=0.104.0",
-    "uvicorn>=0.24.0",
-    "requests>=2.31.0",
-    "aiohttp>=3.9.0",
-    "httpx>=0.25.0",
-    
-    # Data Processing
-    "pandas>=2.1.0",
-    "polars>=0.19.0",
-    "pyarrow>=13.0.0",
-    
-    # Utilities
-    "tqdm>=4.66.0",
-    "pyyaml>=6.0",
-    "click>=8.1.0",
-    "typer>=0.9.0",
-    "rich>=13.7.0",
-    "loguru>=0.7.0",
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.4.0",
-    "pytest-asyncio>=0.21.0",
-    "pytest-cov>=4.1.0",
-    "black>=23.11.0",
-    "ruff>=0.1.0",
-    "mypy>=1.7.0",
-    "types-requests>=2.31.0",
-]
-
-notebook = [
-    "ipython>=8.16.0",
-    "jupyter>=1.0.0",
-    "jupyterlab>=4.0.0",
-    "ipykernel>=6.26.0",
-]
-
-viz = [
-    "matplotlib>=3.8.0",
-    "plotly>=5.17.0",
-    "seaborn>=0.13.0",
-    "wandb>=0.16.0",
-]
-
-deploy = [
-    "onnx-simplifier>=0.4.0",
-    "protobuf>=4.24.0",
-    "grpcio>=1.59.0",
-]
-
-all = [
-    "ml-portfolio[dev,notebook,viz,deploy]",
-]
-
-[project.urls]
-Homepage = "https://github.com/your-username/ml-portfolio"
-Documentation = "https://github.com/your-username/ml-portfolio#readme"
-Repository = "https://github.com/your-username/ml-portfolio.git"
-Issues = "https://github.com/your-username/ml-portfolio/issues"
-
-[tool.hatch.build.targets.wheel]
-packages = ["agentic_ai", "generative_ai"]
-
-[tool.black]
-line-length = 100
-target-version = ['py39', 'py310', 'py311', 'py312']
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
-
-[tool.ruff]
-line-length = 100
-target-version = "py39"
-select = [
-    "E",
-    "F",
-    "W",
-    "I",
-    "N",
-    "UP",
-]
-ignore = [
-    "E501",
-    "E402",
-]
-
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["F401"]
-
-[tool.mypy]
-python_version = "3.9"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = false
-ignore_missing_imports = true
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-asyncio_mode = "auto"
-addopts = "--cov=agentic_ai --cov=generative_ai --cov-report=html --cov-report=term-missing"
-
-[tool.coverage.run]
-source = ["agentic_ai", "generative_ai"]
-omit = [
-    "*/tests/*",
-    "*/test_*.py",
-]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
-    "if TYPE_CHECKING:",
-    "class .*\\bProtocol\\):",
-    "@(abc\\.)?abstractmethod",
+    "anthropic>=0.69.0",
+    "beautifulsoup4>=4.14.2",
+    "chromadb>=1.1.0",
+    "datasets==3.6.0",
+    "feedparser>=6.0.12",
+    "google-genai>=1.41.0",
+    "google-generativeai>=0.8.5",
+    "gradio>=5.47.2",
+    "ipykernel>=6.30.1",
+    "ipywidgets>=8.1.7",
+    "jupyter-dash>=0.4.2",
+    "langchain>=0.3.27",
+    "langchain-chroma>=0.2.6",
+    "langchain-community>=0.3.30",
+    "langchain-core>=0.3.76",
+    "langchain-openai>=0.3.33",
+    "langchain-text-splitters>=0.3.11",
+    "litellm>=1.77.5",
+    "matplotlib>=3.10.6",
+    "nbformat>=5.10.4",
+    "modal>=1.1.4",
+    "numpy>=2.3.3",
+    "ollama>=0.6.0",
+    "openai>=1.109.1",
+    "pandas>=2.3.3",
+    "plotly>=6.3.0",
+    "protobuf==3.20.2",
+    "psutil>=7.1.0",
+    "pydub>=0.25.1",
+    "python-dotenv>=1.1.1",
+    "requests>=2.32.5",
+    "scikit-learn>=1.7.2",
+    "scipy>=1.16.2",
+    "sentence-transformers>=5.1.1",
+    "setuptools>=80.9.0",
+    "speedtest-cli>=2.1.3",
+    "tiktoken>=0.11.0",
+    "torch>=2.8.0",
+    "tqdm>=4.67.1",
+    "transformers>=4.56.2",
+    "wandb>=0.22.1",
+    "langchain-huggingface>=1.0.0",
+    "langchain-ollama>=1.0.0",
+    "langchain-anthropic>=1.0.1",
+    "langchain-experimental>=0.0.42",
+    "groq>=0.33.0",
+    "xgboost>=3.1.1",
 ]
