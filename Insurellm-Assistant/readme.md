@@ -1,62 +1,100 @@
 # 🛡️ InsureLLM Assistant
 
 ## 📖 Project Description
-**InsureLLM Assistant** is a Generative AI-powered assistant designed specifically for the insurance sector. It allows users to upload, analyze, and query complex insurance documents (such as policies, terms and conditions, and claim guidelines), delivering highly accurate and context-aware answers in natural language.
+**InsureLLM Assistant** is an advanced Generative AI-powered chatbot specifically designed for the insurance domain. It leverages a custom Retrieval-Augmented Generation (RAG) pipeline to ingest, process, and query an internal knowledge base of markdown documents (spanning company policies, contracts, employee data, and insurance products).
 
-This project is part of my **Agentic & Generative AI** portfolio, demonstrating the practical application of advanced Natural Language Processing (NLP) architectures to solve real-world industry challenges.
+Unlike standard out-of-the-box RAG tutorials, this project implements **LLM-assisted Semantic Chunking**, **Dynamic Metadata Tagging**, and **History-Aware Retrieval** to ensure zero hallucinations and deeply contextual, highly accurate answers. 
 
-> **💡 Inspiration & Credits:** > The core architecture of this project is based on the concepts covered in [Week 5 of Ed Donner's "LLM Engineering" repository](https://github.com/ed-donner/llm_engineering/tree/main/week5), which focuses on advanced RAG (Retrieval-Augmented Generation) pipelines. I adapted and extended these principles to tackle a complex use case within the *Insurance* domain.
+This project is part of my **AI & Software Engineering Portfolio**, showcasing production-ready patterns for modern LLM applications.
 
-## 🎯 Goals
-Insurance documents are notoriously lengthy, highly technical, and difficult to navigate. **InsureLLM** aims to break down this cognitive barrier using AI:
+> **💡 Inspiration:** The structural foundation of this project was inspired by [Week 5 of Ed Donner's "LLM Engineering" course](https://github.com/ed-donner/llm_engineering/tree/main/week5), which I significantly adapted to incorporate advanced metadata routing, conversational memory, and AI-driven data processing tailored for the insurance sector.
 
-* **Zero Hallucinations:** By leveraging a strict RAG approach, the LLM generates answers **exclusively** based on the clauses and text provided in the uploaded documents.
-* **Instant Semantic Search:** Retrieves the most relevant paragraphs in fractions of a second, going far beyond the limitations of traditional keyword search.
-* **Conversational Experience:** The assistant maintains conversational memory to handle follow-up questions effectively (e.g., "What happens if the accident occurs abroad instead?").
+---
 
-## 🛠️ Features & Architecture (RAG Pipeline)
-1.  **Document Ingestion & Text Splitting:** Parses insurance PDFs and splits them into optimal semantic chunks using LangChain.
-2.  **Embeddings & Vector Store:** Converts text chunks into vector embeddings and stores them in a Vector Database (e.g., ChromaDB / FAISS) for high-speed retrieval.
-3.  **Retrieval Chain:** Upon receiving a user query, the system performs a similarity search to fetch the most semantically relevant text fragments.
-4.  **Generation:** A Large Language Model (LLM) synthesizes the retrieved context into a clear, concise, and accurate response.
+## 🏗️ Advanced RAG Architecture & Features
+
+The pipeline is split into several highly specialized modules, handling everything from data ingestion to conversational querying:
+
+### 1. Document Ingestion & Metadata Tagging (`indexer.py`)
+The system parses a structured folder hierarchy of `.md` documents (e.g., `/company`, `/contracts`, `/employees`, `/products`). During the ingestion phase, the `Indexer` automatically injects a `doc_type` metadata tag into every LangChain `Document` based on its parent folder. This ensures that downstream retrieval can always trace the exact origin and category of the information.
+
+### 2. LLM-Powered Semantic Chunking (`splitter.py`)
+Instead of relying on naive character or token-based splitting (like standard Recursive Splitters), this project introduces a `CustomTextSplitter`. 
+It uses an LLM (`ChatOpenAI`) combined with **Pydantic** (`with_structured_output`) to intelligently parse and structure documents. Every chunk is dynamically reformatted into a strict schema:
+- **`headline`**: A brief heading optimized for vector semantic search queries.
+- **`summary`**: A generated summary answering common questions about the chunk.
+- **`original_text`**: The unedited raw text to ensure strict factual accuracy and prevent data distortion.
+
+### 3. Vector Storage & Retrieval (`indexer.py` & `retriever.py`)
+Embeddings are generated and stored inside a local **ChromaDB** vector database. The `Indexer` handles the automatic teardown and rebuild of the vector collections, while the `Retriever` module queries the database returning the top `k=10` most relevant semantic matches based on the user's prompt.
+
+### 4. History-Aware Context Generation (`rag.py`)
+To handle follow-up queries fluidly, the `Rag` class dynamically synthesizes the user's conversational history with their latest question. This creates a highly enriched context string that drastically improves the accuracy of the vector similarity search. The retrieved documents are then injected into a dynamically formatted System Prompt before being passed to the LLM for the final answer.
+
+---
 
 ## 💻 Tech Stack
-* **Language:** Python 3.x
-* **AI Framework:** LangChain
-* **LLM / Embeddings:** OpenAI / Llama 3 (or other open-source alternatives)
-* **Vector Database:** ChromaDB / FAISS
+- **Language:** Python 3.x
+- **Frameworks:** LangChain, Pydantic
+- **LLMs & Embeddings:** OpenAI (GPT-4o / GPT-4o-mini)
+- **Vector Database:** ChromaDB
+- **Package Management:** `uv` / `pyproject.toml`
+- **Utilities:** `python-dotenv` (secrets management), `tqdm` (progress tracking)
+
+---
 
 ## ⚙️ Installation & Setup
 
-1.  **Clone the repository and navigate to the project folder:**
-    ```bash
-    git clone [https://github.com/MarioAvolio/Portfolio.git](https://github.com/MarioAvolio/Portfolio.git)
-    cd Portfolio/Insurellm-Assistant
-    ```
+This project uses modern Python packaging with `pyproject.toml` and `uv` for lightning-fast dependency management.
 
-2.  **Create a virtual environment and install dependencies:**
-    ```bash
-    python -m venv .venv
-    source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-    pip install -r requirements.txt
-    ```
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/MarioAvolio/Portfolio.git](https://github.com/MarioAvolio/Portfolio.git)
+   cd Portfolio/Insurellm-Assistant
 
-3.  **Configure environment variables:**
-    Create a `.env` file in the root directory to safely store your API keys:
-    ```env
-    OPENAI_API_KEY=your_api_key_here
-    ```
+```
 
-4.  **Execution:**
-    * First, run the ingestion script (or Notebook cell) to process your test documents (place your sample policy PDFs in the designated `data` folder).
-    * Next, launch the interactive script to start querying the **Assistant**.
+2. **Install dependencies:**
+If you have [uv]() installed, you can simply sync the environment:
+```bash
+uv sync
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-## 🚀 Future Enhancements
-* **Multi-Document Comparison:** Integrate Agentic AI workflows (e.g., LangGraph) to compare coverages and deductibles across two different policies.
-* **Reranking:** Implement a Cross-Encoder reranking node to boost the precision of vector retrieval.
-* **Backend Integration:** Expose the assistant via a RESTful API using **FastAPI**.
+```
 
-## 👨‍💻 Author
-**Mario Avolio** - AI & Software Engineer  
-Specialized in Computer Vision, Gen/Agentic AI, Model Optimization, and Backend Infrastructure.  
-[GitHub Profile](https://github.com/MarioAvolio)
+
+*Alternatively, using standard pip:*
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -e .
+
+```
+
+
+3. **Configure Environment Variables:**
+Create a `.env` file in the root of the `Insurellm-Assistant` directory to securely provide your API keys:
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+
+```
+
+
+4. **Run the Application:**
+Execute the main entry point to initialize the ingestion, chunking, and embedding processes, and to trigger a test query ("What is Insurellm?"):
+```bash
+python src/Insurellm-Assistant/main.py
+
+```
+
+
+
+---
+
+## 🚀 Future Roadmap
+
+* **Agentic Routing:** Implement `LangGraph` to route queries dynamically depending on the `doc_type` metadata.
+* **Cross-Encoder Reranking:** Add a Cohere or BGE reranker post-retrieval to refine and re-order the top-k documents fetched from ChromaDB.
+* **API & UI Layer:** Expose the RAG engine via a **FastAPI** backend and build a conversational frontend using **Streamlit** or **Gradio**.
+
+---
