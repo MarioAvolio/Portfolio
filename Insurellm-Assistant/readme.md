@@ -52,40 +52,43 @@ This project uses modern Python packaging with `pyproject.toml` and `uv` for lig
    git clone [https://github.com/MarioAvolio/Portfolio.git](https://github.com/MarioAvolio/Portfolio.git)
    cd Portfolio/Insurellm-Assistant
 
-```
+   ```
 
 2. **Install dependencies:**
 If you have [uv]() installed, you can simply sync the environment:
-```bash
-uv sync
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-```
-
+   ```bash
+   uv sync
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   
+   ```
 
 *Alternatively, using standard pip:*
-```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -e .
 
-```
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   pip install -e .
+   
+   ```
 
 
 3. **Configure Environment Variables:**
 Create a `.env` file in the root of the `Insurellm-Assistant` directory to securely provide your API keys:
-```env
-OPENAI_API_KEY=your_openai_api_key_here
 
-```
+   ```env
+   OPENAI_API_KEY=your_openai_api_key_here
+   
+   ```
 
 
 4. **Run the Application:**
 Execute the main entry point to initialize the ingestion, chunking, and embedding processes, and to trigger a test query ("What is Insurellm?"):
-```bash
-python src/Insurellm-Assistant/main.py
 
-```
+   ```bash
+   python src/Insurellm-Assistant/main.py
+   
+   ```
 
 
 
@@ -98,3 +101,4 @@ python src/Insurellm-Assistant/main.py
 * **API & UI Layer:** Expose the RAG engine via a **FastAPI** backend and build a conversational frontend using **Streamlit** or **Gradio**.
 
 ---
+
