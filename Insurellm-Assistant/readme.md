@@ -63,14 +63,14 @@ If you have [uv]() installed, you can simply sync the environment:
    
    ```
 
-*Alternatively, using standard pip:*
-
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   pip install -e .
+   *Alternatively, using standard pip:*
    
-   ```
+      ```bash
+      python -m venv .venv
+      source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+      pip install -e .
+      
+      ```
 
 
 3. **Configure Environment Variables:**
@@ -101,4 +101,5 @@ Execute the main entry point to initialize the ingestion, chunking, and embeddin
 * **API & UI Layer:** Expose the RAG engine via a **FastAPI** backend and build a conversational frontend using **Streamlit** or **Gradio**.
 
 ---
+
 
