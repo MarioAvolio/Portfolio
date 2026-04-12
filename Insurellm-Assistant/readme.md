@@ -92,14 +92,3 @@ Execute the main entry point to initialize the ingestion, chunking, and embeddin
 
 
 
----
-
-## 🚀 Future Roadmap
-
-* **Agentic Routing:** Implement `LangGraph` to route queries dynamically depending on the `doc_type` metadata.
-* **Cross-Encoder Reranking:** Add a Cohere or BGE reranker post-retrieval to refine and re-order the top-k documents fetched from ChromaDB.
-* **API & UI Layer:** Expose the RAG engine via a **FastAPI** backend and build a conversational frontend using **Streamlit** or **Gradio**.
-
----
-
-
