@@ -184,7 +184,6 @@ products_vectorstore/
 .virtual_documents/
 WingIDE_Projekti/
 nohup.out
-*.png
 
 scraper_cache/
 challenge/
