@@ -64,14 +64,19 @@ class ResearchManager:
         num_completed = 0
         # Schedule each search immediately to maximize throughput.
         tasks = [asyncio.create_task(self.search(item)) for item in search_plan.searches]
+        # Store only successful summaries (failed searches return None).
         results = []
+        # Consume tasks in completion order, not creation order.
         for task in asyncio.as_completed(tasks):
+            # Await the next finished task and get its summary payload.
             result = await task
             if result is not None:
                 results.append(result)
+            # Update progress even when a single search fails.
             num_completed += 1
             print(f"Searching... {num_completed}/{len(tasks)} completed")
         print("Finished searching")
+        # Return all collected summaries for report synthesis.
         return results
 
     async def search(self, item: WebSearchItem) -> str | None:
