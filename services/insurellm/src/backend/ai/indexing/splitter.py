@@ -1,8 +1,8 @@
 from langchain_core.documents.base import Document
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
-from indexing.constants import AVERAGE_CHUNK_SIZE
-from indexing.helper import make_messages
+from backend.ai.indexing.constants import AVERAGE_CHUNK_SIZE
+from backend.ai.indexing.helper import make_messages
 from tqdm import tqdm
 
 
@@ -56,5 +56,4 @@ class CustomTextSplitter:
         chunks = []
         for document in tqdm(documents):
             chunks.extend(self._split_document(document))
-        print(f"Chunks created: {len(chunks)}")
         return chunks
