@@ -1,0 +1,14 @@
+services:
+  text-intelligence:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      ENVIRONMENT: local
+      LLM_PROVIDER: mock
+    # Liveness probe wired to the root /ping endpoint.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/ping')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
