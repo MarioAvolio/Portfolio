@@ -1,0 +1,28 @@
+# Portfolio microservices hub.
+#
+# Default `docker compose up` brings the gateway and the lightweight,
+# zero-cost text-intelligence service. The heavyweight services (insurellm,
+# deep-research) require API keys and large images, so they run locally via
+# their uv adapter — see services/<name>/readme.md. The gateway lists them as
+# "unreachable" until they are running, degrading gracefully.
+
+services:
+  gateway:
+    build: ./gateway
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: local
+      TEXT_INTELLIGENCE_URL: http://text-intelligence:5000
+      INSURELLM_URL: http://insurellm:5001
+      DEEP_RESEARCH_URL: http://deep-research:5002
+    depends_on:
+      - text-intelligence
+
+  text-intelligence:
+    build: ./services/text-intelligence
+    ports:
+      - "5000:5000"
+    environment:
+      ENVIRONMENT: local
+      LLM_PROVIDER: mock

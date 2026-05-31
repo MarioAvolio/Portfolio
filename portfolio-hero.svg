@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-label="AI Portfolio — Microservices Hub">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="0.55" stop-color="#111a33"/>
+      <stop offset="1" stop-color="#1a2a4f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#818cf8"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 46px 'Segoe UI', system-ui, sans-serif; fill: #f8fafc; }
+      .sub   { font: 400 20px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
+      .node  { font: 600 16px 'Segoe UI', system-ui, sans-serif; fill: #e2e8f0; }
+      .small { font: 400 12px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
+      .chip  { fill: #16203b; stroke: #2b3b63; stroke-width: 1.5; }
+      .gw    { fill: #15233f; stroke: url(#accent); stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="420" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1200" height="6" fill="url(#accent)"/>
+
+  <!-- Heading -->
+  <text x="70" y="92" class="title">AI Portfolio</text>
+  <text x="70" y="128" class="sub">Microservices Hub · Generative AI + Cloud</text>
+
+  <!-- Gateway -->
+  <g transform="translate(70,190)">
+    <rect class="gw" width="240" height="150" rx="14"/>
+    <text x="120" y="58" text-anchor="middle" class="node">gateway</text>
+    <text x="120" y="86" text-anchor="middle" class="small">service registry</text>
+    <text x="120" y="106" text-anchor="middle" class="small">health + routing</text>
+    <text x="120" y="132" text-anchor="middle" class="small">FastAPI · uv</text>
+  </g>
+
+  <!-- Connectors -->
+  <g stroke="url(#accent)" stroke-width="2" fill="none" opacity="0.8">
+    <path d="M310 232 H 470 V 150 H 540"/>
+    <path d="M310 265 H 540"/>
+    <path d="M310 298 H 470 V 380 H 540"/>
+  </g>
+
+  <!-- Services -->
+  <g transform="translate(540,110)">
+    <rect class="chip" width="320" height="82" rx="12"/>
+    <text x="22" y="34" class="node">text-intelligence</text>
+    <text x="22" y="60" class="small">structured text analysis · mock LLM ($0)</text>
+  </g>
+  <g transform="translate(540,224)">
+    <rect class="chip" width="320" height="82" rx="12"/>
+    <text x="22" y="34" class="node">insurellm</text>
+    <text x="22" y="60" class="small">RAG · LangChain + Chroma</text>
+  </g>
+  <g transform="translate(540,338)">
+    <rect class="chip" width="320" height="82" rx="12"/>
+    <text x="22" y="34" class="node">deep-research</text>
+    <text x="22" y="60" class="small">multi-agent web research · Agents SDK</text>
+  </g>
+
+  <!-- Pattern note -->
+  <g transform="translate(910,110)">
+    <text x="0" y="20" class="small">src/backend/</text>
+    <text x="0" y="44" class="small">├─ webserver/  routers · services</text>
+    <text x="0" y="68" class="small">│           models · deps · configs</text>
+    <text x="0" y="92" class="small">├─ ai/         providers · pipelines</text>
+    <text x="0" y="116" class="small">└─ common/     connectors</text>
+    <text x="0" y="158" class="small">Python · FastAPI · uv · Docker</text>
+    <text x="0" y="182" class="small">GitHub Actions · Cloud-ready</text>
+  </g>
+</svg>

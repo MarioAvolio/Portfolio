@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  # Lightweight services with a committed uv.lock: full locked sync.
+  gateway:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: gateway
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: uv run ruff check .
+      - run: uv run pytest -q
+
+  text-intelligence:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/text-intelligence
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: uv run ruff check .
+      - run: uv run pytest -q
+
+  # Heavyweight services (huge ML/agent dependency trees). We do not install the
+  # full environment in CI; instead we verify the microservice surface (app
+  # factory, routers, config) with a minimal toolchain. The AI core is imported
+  # lazily, so these probe tests pass without the heavy stack.
+  heavy-services:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [insurellm, deep-research]
+    defaults:
+      run:
+        working-directory: services/${{ matrix.service }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install minimal toolchain
+        run: pip install fastapi "uvicorn[standard]" pydantic httpx pytest ruff
+      - name: Lint new code
+        run: ruff check .
+      - name: Probe tests
+        run: pytest -q

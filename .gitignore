@@ -195,4 +195,15 @@ wandb/
 
 
 local/
-OpenAI Agent SDK/uv.lock
+
+# ── Secrets & credentials (never commit) ─────────────────────────────
+# Real secrets live only in local .env files; example templates are tracked.
+.env
+**/.env
+.env.*
+!.env.example
+!**/.env.example
+*.key
+*.pem
+secrets.*
+**/secrets.*
