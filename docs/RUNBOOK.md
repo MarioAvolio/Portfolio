@@ -45,13 +45,13 @@ uv run python -m backend      # serve
 
 ## Secrets
 
-Copy `.env.example` to `.env` in the service you want to run and fill in the
-keys. `.env` files are git-ignored and must never be committed. Pass secrets only
-through the environment — never hard-code them.
+Pass secrets through the environment — never hard-code them. Either export them
+in your shell or place them in a local `.env` file (git-ignored, never
+committed). Each service's readme lists the variables it reads.
 
 ```bash
 cd services/insurellm
-cp .env.example .env          # then edit .env with your OPENAI_API_KEY
+export OPENAI_API_KEY=sk-...   # or put it in a local .env file
 uv run python -m backend
 ```
 

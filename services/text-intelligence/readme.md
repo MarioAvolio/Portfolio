@@ -76,7 +76,8 @@ uv run python -m backend     # http://localhost:5000/ping
 docker compose up --build
 ```
 
-Configuration is environment-driven; see [`.env.example`](.env.example).
+Configuration is environment-driven: `ENVIRONMENT`, `API_PREFIX`, `LLM_PROVIDER`
+(`mock` by default), `LLM_MODEL`, `LLM_TIMEOUT_SECONDS`.
 
 ## Status
 

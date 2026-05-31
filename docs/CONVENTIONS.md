@@ -21,7 +21,7 @@ is intentional: any service can be read, run and reasoned about the same way.
     ai/ | job/ | polling/      # optional: AI cores / async workers
     common/connectors/         # optional: storage / external clients
   test/                        # pytest suite
-  pyproject.toml · Dockerfile · .env.example · readme.md
+  pyproject.toml · Dockerfile · readme.md
 ```
 
 ## Rules

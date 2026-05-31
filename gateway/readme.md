@@ -37,7 +37,7 @@ gateway returns `503 service_unavailable` — it degrades gracefully.
 Services are declared in [`configurations.py`](src/backend/webserver/configurations.py).
 Each base URL is environment-overridable (`TEXT_INTELLIGENCE_URL`,
 `INSURELLM_URL`, `DEEP_RESEARCH_URL`); defaults target the docker-compose
-service names. See [`.env.example`](.env.example).
+service names. `REQUEST_TIMEOUT_SECONDS` bounds each downstream call.
 
 ## Run
 
