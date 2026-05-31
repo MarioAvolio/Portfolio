@@ -61,10 +61,13 @@ demonstrable end to end.
 
 ## Configuration
 
-Configuration is environment-driven and centralised per service in
-`webserver/configurations.py` (cached). The gateway registry's downstream URLs
-default to the docker-compose service names and are overridable via environment
-variables (`TEXT_INTELLIGENCE_URL`, `INSURELLM_URL`, `DEEP_RESEARCH_URL`).
+Each service loads non-secret settings from a YAML file
+(`webserver/configs/files/<env>.yml`, selected by `ENVIRONMENT`), overlaid on
+Pydantic defaults and cached in `webserver/configurations.py`. No `.env` file is
+used; secrets (API keys) come from the environment only. The gateway registry is
+declared in its YAML, and each downstream `base_url` is still overridable via a
+`*_URL` environment variable (`TEXT_INTELLIGENCE_URL`, `INSURELLM_URL`,
+`DEEP_RESEARCH_URL`) — how docker-compose points it at in-network hostnames.
 
 See [CONVENTIONS.md](CONVENTIONS.md) for the service layout and [RUNBOOK.md](RUNBOOK.md)
 for how to run and test everything.

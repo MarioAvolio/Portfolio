@@ -11,7 +11,9 @@ is intentional: any service can be read, run and reasoned about the same way.
     webserver/                 # the FastAPI application
       __main__.py              #   app factory (get_app) + lifespan + uvicorn
       configs/configs.py       #   Pydantic settings models
-      configurations.py        #   env-driven, cached settings loader
+      configs/__init__.py      #   env anchors (ENVIRONMENT → CONFIG_FILE)
+      configs/files/local.yml  #   non-secret config overrides per environment
+      configurations.py        #   cached loader: defaults ← YAML overlay
       __init__.py              #   facade: get_configs / get_logger / Configs
       routers/                 #   API endpoints (alive · health · status · …)
       services/                #   business logic
@@ -41,8 +43,13 @@ is intentional: any service can be read, run and reasoned about the same way.
 6. **Lazy heavy imports.** Expensive AI/ML imports happen inside the call path,
    not at module load, so the app and its probe tests import without the heavy
    stack and degrade to `503` when unconfigured.
-7. **Config as code.** All settings come from the environment via
-   `configurations.py` (cached); no scattered `os.getenv` calls.
+7. **Config from YAML, not `.env`.** Non-secret settings live in
+   `configs/files/<env>.yml`. `configs/__init__.py` resolves the active
+   environment (`ENVIRONMENT`, default `local`) to a config file; in deployment
+   any non-local environment reads `/app/settings/config.yaml` (e.g. a mounted
+   configmap). `configurations.py` overlays that YAML on the Pydantic defaults
+   and caches the result. **Secrets** (API keys) are read from the environment
+   only — never from YAML, never from a committed `.env`.
 8. **uv everywhere.** Each service is managed with `uv` and a committed
    `uv.lock` (where the dependency tree is light enough to lock reliably).
 

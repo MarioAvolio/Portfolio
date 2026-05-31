@@ -1,15 +1,36 @@
-"""Environment-driven loader for the deep-research configuration."""
+"""Configuration loader for the deep-research service.
 
-import os
+Builds the cached :class:`Configs` from the YAML file selected by the active
+environment, overlaying it on the Pydantic defaults. ``OPENAI_API_KEY`` is read
+from the environment by the agents SDK, never from the YAML.
+"""
+
 from functools import lru_cache
+from pathlib import Path
+from typing import Any
 
+import yaml
+
+from .configs import CONFIG_FILE, CURRENT_ENV, MODE, ModeExecution
 from .configs.configs import Configs
 
 
-@lru_cache
+def _read_yaml(path: Path) -> dict[str, Any]:
+    """Reads a YAML file and returns the parsed mapping (empty when blank)."""
+    with open(path, "r", encoding="utf-8") as fp:
+        return yaml.safe_load(fp) or {}
+
+
+@lru_cache(maxsize=1)
 def get_configs() -> Configs:
-    """Builds the cached service configuration from the environment."""
-    return Configs(
-        environment=os.getenv("ENVIRONMENT", "local"),
-        api_prefix=os.getenv("API_PREFIX", "/deep-research/api/v1"),
-    )
+    """Builds and caches the active service configuration.
+
+    Returns:
+        The process-wide :class:`Configs` singleton.
+    """
+    overrides: dict[str, Any] = {}
+    if MODE == ModeExecution.DEFAULT.value and Path(CONFIG_FILE).exists():
+        overrides = _read_yaml(Path(CONFIG_FILE))
+
+    overrides.setdefault("environment", CURRENT_ENV)
+    return Configs(**overrides)

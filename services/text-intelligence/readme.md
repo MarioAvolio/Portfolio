@@ -76,8 +76,10 @@ uv run python -m backend     # http://localhost:5000/ping
 docker compose up --build
 ```
 
-Configuration is environment-driven: `ENVIRONMENT`, `API_PREFIX`, `LLM_PROVIDER`
-(`mock` by default), `LLM_MODEL`, `LLM_TIMEOUT_SECONDS`.
+Configuration lives in [`configs/files/local.yml`](src/backend/webserver/configs/files/local.yml)
+(`app_name`, `api_prefix`, and the `provider` block — `mock` by default). The
+active environment is selected by `ENVIRONMENT` (default `local`). A provider's
+API key, when needed, is read from the environment, not from the YAML.
 
 ## Status
 

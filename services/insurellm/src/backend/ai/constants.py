@@ -5,7 +5,6 @@ Embeddings are built lazily via :func:`get_embeddings` so importing this module
 query actually needs the pipeline.
 """
 
-import os
 from pathlib import Path
 
 MODEL_NAME = "gpt-4.1-nano"
@@ -16,18 +15,21 @@ KNOWLEDGE_BASE = str(_ROOT / "assets" / "knowledge-base")
 DB_NAME = str(_ROOT / "assets" / "vector_db")
 
 
-def get_embeddings():
-    """Builds the embeddings backend selected by ``INSURELLM_EMBEDDINGS``.
+def get_embeddings(backend: str = "openai"):
+    """Builds the selected embeddings backend.
 
     * ``openai`` (default) — ``text-embedding-3-small``: light and fast, no local
       ML stack, a fraction of a cent per build.
     * ``hf`` — local ``all-MiniLM-L6-v2`` via HuggingFace (no API calls, but
       pulls the sentence-transformers / torch stack, installed on demand).
 
+    Args:
+        backend: Embeddings backend identifier (``openai`` or ``hf``).
+
     Returns:
         A LangChain embeddings instance.
     """
-    if os.getenv("INSURELLM_EMBEDDINGS", "openai").lower() == "hf":
+    if backend.lower() == "hf":
         from langchain_huggingface import HuggingFaceEmbeddings
 
         return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")

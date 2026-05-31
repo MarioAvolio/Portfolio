@@ -31,7 +31,7 @@ class RagService:
             try:
                 from backend.ai.pipeline import build_rag
 
-                RagService._rag = build_rag()
+                RagService._rag = build_rag(self._configs)
             except Exception as exc:  # noqa: BLE001 - normalised into a domain error
                 logger.exception("Failed to build the RAG pipeline")
                 raise RagUnavailableError(detail=str(exc)) from exc

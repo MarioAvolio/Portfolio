@@ -2,9 +2,13 @@
 #
 # Default `docker compose up` brings the gateway and the lightweight,
 # zero-cost text-intelligence service. The heavyweight services (insurellm,
-# deep-research) require API keys and large images, so they run locally via
-# their uv adapter — see services/<name>/readme.md. The gateway lists them as
-# "unreachable" until they are running, degrading gracefully.
+# deep-research) require API keys and large images, so they run locally —
+# see services/<name>/readme.md. The gateway lists them as "unreachable"
+# until they are running, degrading gracefully.
+#
+# Each service reads its configuration from its bundled configs/files/local.yml
+# (ENVIRONMENT=local). The gateway additionally honours *_URL env vars to point
+# at the in-network service hostnames below.
 
 services:
   gateway:
@@ -25,4 +29,3 @@ services:
       - "5000:5000"
     environment:
       ENVIRONMENT: local
-      LLM_PROVIDER: mock

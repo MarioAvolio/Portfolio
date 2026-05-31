@@ -1,0 +1,29 @@
+# Gateway configuration for the local environment.
+# Non-secret values only. Downstream base URLs default to localhost and can be
+# overridden per service with the *_URL environment variables (e.g. in compose).
+app_name: gateway
+api_prefix: /gateway/api/v1
+request_timeout_seconds: 60
+
+services:
+  - name: text-intelligence
+    description: Structured text analysis (summary, sentiment, tags, language).
+    base_url: http://localhost:5000
+    health_path: /ping
+    query_path: /text-intelligence/api/v1/analyze
+    query_example:
+      text: I love this great product.
+  - name: insurellm
+    description: RAG assistant over the InsureLLM knowledge base.
+    base_url: http://localhost:5001
+    health_path: /ping
+    query_path: /insurellm/api/v1/query
+    query_example:
+      question: What is Insurellm?
+  - name: deep-research
+    description: Multi-agent web research producing a structured report.
+    base_url: http://localhost:5002
+    health_path: /ping
+    query_path: /deep-research/api/v1/query
+    query_example:
+      query: Latest trends in retrieval-augmented generation.

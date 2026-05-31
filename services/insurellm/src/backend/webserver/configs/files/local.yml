@@ -1,0 +1,13 @@
+# insurellm configuration for the local environment.
+# Non-secret values only. OPENAI_API_KEY is read from the environment.
+app_name: insurellm
+api_prefix: /insurellm/api/v1
+model_name: gpt-4.1-nano
+
+rag:
+  # Embeddings backend: "openai" (light, default) or "hf" (local, needs the hf extra).
+  embeddings: openai
+  # Chunking strategy: "simple" (free, default) or "llm" (richer, one call per doc).
+  chunking: simple
+  # Optional cap on indexed documents (null = all).
+  max_documents: null

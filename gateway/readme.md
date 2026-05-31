@@ -34,10 +34,12 @@ gateway returns `503 service_unavailable` — it degrades gracefully.
 
 ## Registry
 
-Services are declared in [`configurations.py`](src/backend/webserver/configurations.py).
-Each base URL is environment-overridable (`TEXT_INTELLIGENCE_URL`,
-`INSURELLM_URL`, `DEEP_RESEARCH_URL`); defaults target the docker-compose
-service names. `REQUEST_TIMEOUT_SECONDS` bounds each downstream call.
+Services are declared in [`configs/files/local.yml`](src/backend/webserver/configs/files/local.yml)
+(name, description, paths, example body, default `base_url`). Each base URL is
+overridable with a `*_URL` environment variable (`TEXT_INTELLIGENCE_URL`,
+`INSURELLM_URL`, `DEEP_RESEARCH_URL`) — used by docker-compose to point at the
+in-network service hostnames. `request_timeout_seconds` (in the YAML) bounds each
+downstream call.
 
 ## Run
 

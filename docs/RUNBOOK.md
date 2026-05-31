@@ -43,29 +43,36 @@ uv run python -m backend      # serve
 | insurellm | 5001 | no — needs `OPENAI_API_KEY` |
 | deep-research | 5002 | no — needs `OPENAI_API_KEY` |
 
-## Secrets
+## Configuration & secrets
 
-Pass secrets through the environment — never hard-code them. Either export them
-in your shell or place them in a local `.env` file (git-ignored, never
-committed). Each service's readme lists the variables it reads.
+Non-secret settings live in each service's `src/backend/webserver/configs/files/local.yml`
+and are loaded automatically (`ENVIRONMENT=local`). Edit that YAML to change
+behaviour — there is no `.env` for configuration.
+
+**Secrets** (API keys) are read from the environment only — never hard-code them
+and never put them in YAML. Export them in your shell (a local, git-ignored
+`.env` is fine for convenience, but it is never committed):
 
 ```bash
 cd services/insurellm
-export OPENAI_API_KEY=sk-...   # or put it in a local .env file
+export OPENAI_API_KEY=sk-...
 uv run python -m backend
 ```
 
 ## Per-service notes
 
 ### text-intelligence
-`LLM_PROVIDER=mock` (default) needs nothing. Real providers plug in behind the
-`LLMProvider` interface.
+The provider is set in `configs/files/local.yml` (`provider.name: mock` by
+default — no key needed). Real providers plug in behind the `LLMProvider`
+interface; their API key is read from the environment.
 
 ### insurellm
-* `INSURELLM_EMBEDDINGS=openai` (default) uses OpenAI embeddings — light, no local
-  ML stack. `=hf` uses local embeddings (install with `uv sync --extra hf`).
-* `INSURELLM_CHUNKING=simple` (default) indexes for free; `=llm` produces richer
-  chunks at one model call per document.
+Tuned via the `rag` block in `configs/files/local.yml`:
+* `rag.embeddings: openai` (default) — light, no local ML stack; `hf` uses local
+  embeddings (install with `uv sync --extra hf`).
+* `rag.chunking: simple` (default) indexes for free; `llm` produces richer chunks
+  at one model call per document.
+* `rag.max_documents` caps the indexed corpus (`null` = all).
 * The vector store is built once under `assets/vector_db` (git-ignored) and
   reused on subsequent runs.
 

@@ -45,7 +45,8 @@ src/backend/
 └─ webserver/
    ├─ __init__.py              # facade: get_configs / get_logger / Configs
    ├─ configs/configs.py       # Pydantic config
-   ├─ configurations.py        # env-driven loader
+   ├─ configs/files/local.yml  # non-secret config (app, prefix, rag block)
+   ├─ configurations.py        # cached loader: defaults ← YAML overlay
    ├─ dependency/deps.py       # DI
    ├─ errors.py                # domain errors + HTTP envelope
    ├─ models/query.py          # request/response models

@@ -1,30 +1,36 @@
-"""Environment-driven loader for the service configuration.
+"""Configuration loader for the text-intelligence service.
 
-``get_configs`` builds a :class:`Configs` instance from environment variables
-and caches it for the process lifetime. Centralising the lookup here keeps the
-rest of the codebase decoupled from ``os.environ`` and makes the active
-configuration overridable in tests by clearing the cache.
+Builds the cached :class:`Configs` from the YAML file selected by the active
+environment, overlaying it on the Pydantic defaults. The LLM provider's API key
+(for non-mock providers) is read from the environment, never from the YAML.
 """
 
-import os
 from functools import lru_cache
+from pathlib import Path
+from typing import Any
 
-from .configs.configs import Configs, ProviderConfig
+import yaml
+
+from .configs import CONFIG_FILE, CURRENT_ENV, MODE, ModeExecution
+from .configs.configs import Configs
 
 
-@lru_cache
+def _read_yaml(path: Path) -> dict[str, Any]:
+    """Reads a YAML file and returns the parsed mapping (empty when blank)."""
+    with open(path, "r", encoding="utf-8") as fp:
+        return yaml.safe_load(fp) or {}
+
+
+@lru_cache(maxsize=1)
 def get_configs() -> Configs:
-    """Builds the cached service configuration from the environment.
+    """Builds and caches the active service configuration.
 
     Returns:
         The process-wide :class:`Configs` singleton.
     """
-    return Configs(
-        environment=os.getenv("ENVIRONMENT", "local"),
-        api_prefix=os.getenv("API_PREFIX", "/text-intelligence/api/v1"),
-        provider=ProviderConfig(
-            name=os.getenv("LLM_PROVIDER", "mock"),
-            model=os.getenv("LLM_MODEL", "mock-1"),
-            timeout_seconds=int(os.getenv("LLM_TIMEOUT_SECONDS", "30")),
-        ),
-    )
+    overrides: dict[str, Any] = {}
+    if MODE == ModeExecution.DEFAULT.value and Path(CONFIG_FILE).exists():
+        overrides = _read_yaml(Path(CONFIG_FILE))
+
+    overrides.setdefault("environment", CURRENT_ENV)
+    return Configs(**overrides)

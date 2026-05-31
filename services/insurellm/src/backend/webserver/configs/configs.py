@@ -1,6 +1,20 @@
 """Configuration models for the insurellm service."""
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+
+class RagConfig(BaseModel):
+    """Tuning knobs for the RAG pipeline.
+
+    Attributes:
+        embeddings: Embeddings backend, ``openai`` (default) or ``hf`` (local).
+        chunking: Chunking strategy, ``simple`` (default) or ``llm``.
+        max_documents: Optional cap on indexed documents (``None`` = all).
+    """
+
+    embeddings: str = "openai"
+    chunking: str = "simple"
+    max_documents: int | None = None
 
 
 class Configs(BaseModel):
@@ -12,6 +26,7 @@ class Configs(BaseModel):
         environment: Short environment label.
         api_prefix: Base URL prefix shared by the functional routers.
         model_name: Chat model used by the RAG generation step.
+        rag: RAG pipeline tuning block.
     """
 
     app_name: str = "insurellm"
@@ -19,3 +34,4 @@ class Configs(BaseModel):
     environment: str = "local"
     api_prefix: str = "/insurellm/api/v1"
     model_name: str = "gpt-4.1-nano"
+    rag: RagConfig = Field(default_factory=RagConfig)
