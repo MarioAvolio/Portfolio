@@ -1,4 +1,4 @@
-"""Domain errors for the insurellm service and their HTTP translation."""
+"""Domain errors for the portfolio-assistant service and their HTTP translation."""
 
 from typing import Any
 
@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 
 class ServiceError(Exception):
-    """Base class for insurellm domain errors."""
+    """Base class for portfolio-assistant domain errors."""
 
     status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR
     error_code: str = "internal_error"

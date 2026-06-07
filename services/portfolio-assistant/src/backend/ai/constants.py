@@ -9,7 +9,7 @@ from pathlib import Path
 
 MODEL_NAME = "gpt-4.1-nano"
 
-# Project root: .../services/insurellm  (this file is at src/backend/ai/constants.py)
+# Project root: .../services/portfolio-assistant  (this file is at src/backend/ai/constants.py)
 _ROOT = Path(__file__).resolve().parents[3]
 KNOWLEDGE_BASE = str(_ROOT / "assets" / "knowledge-base")
 DB_NAME = str(_ROOT / "assets" / "vector_db")

@@ -1,4 +1,4 @@
-"""Configuration loader for the insurellm service.
+"""Configuration loader for the portfolio-assistant service.
 
 Builds the cached :class:`Configs` from the YAML file selected by the active
 environment, overlaying it on the Pydantic defaults. ``OPENAI_API_KEY`` is read

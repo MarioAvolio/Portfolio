@@ -1,4 +1,4 @@
-"""Request and response models for the insurellm ``/query`` endpoint."""
+"""Request and response models for the portfolio-assistant ``/query`` endpoint."""
 
 from pydantic import BaseModel, Field
 
@@ -7,7 +7,7 @@ class QueryRequest(BaseModel):
     """Body accepted by ``POST /query``.
 
     Attributes:
-        question: Natural-language question about Insurellm.
+        question: Natural-language question about Mario Avolio's portfolio.
     """
 
     question: str = Field(min_length=1, max_length=2_000)

@@ -1,45 +1,42 @@
-# insurellm
+# portfolio-assistant
 
 RAG microservice of the **[Portfolio microservices hub](../../readme.md)**. It
-answers natural-language questions about the fictional *Insurellm* company,
-grounding each answer in a domain knowledge base (LangChain + Chroma + OpenAI).
-
-Originally a standalone RAG project, it has been refactored to the hub's
-production microservice layout: the RAG logic lives under `ai/`, wrapped by a
-thin `webserver` layer (app factory, probes, DI, domain-error envelope).
+answers natural-language questions about Mario Avolio's professional profile —
+bio, skills, projects, experience, education, and publications — grounding each
+answer in a local knowledge base (LangChain + Chroma + OpenAI).
 
 ## Endpoints
 
 | Method | Path | Description |
 | --- | --- | --- |
 | `GET` | `/ping` | Liveness probe |
-| `GET` | `/insurellm/api/v1/health` | Health check |
-| `GET` | `/insurellm/api/v1/status` | Service metadata |
-| `POST` | `/insurellm/api/v1/query` | Grounded answer over the knowledge base |
+| `GET` | `/portfolio-assistant/api/v1/health` | Health check |
+| `GET` | `/portfolio-assistant/api/v1/status` | Service metadata |
+| `GET` | `/portfolio-assistant/api/v1/ready` | Readiness probe |
+| `POST` | `/portfolio-assistant/api/v1/query` | Grounded answer over the knowledge base |
 
 ### `POST /query`
 
 ```jsonc
 // request
-{ "question": "What is Insurellm?" }
+{ "question": "What technologies does Mario know?" }
 
 // response
-{ "answer": "Insurellm is ...", "sources": ["assets/knowledge-base/company/overview.md"] }
+{ "answer": "Mario's primary stack is ...", "sources": ["assets/knowledge-base/skills/tech-stack.md"] }
 ```
 
-Requires an `OPENAI_API_KEY` (chat model). Without it — or without the ML
-dependencies installed — the endpoint returns `503 rag_unavailable`, so the hub
-stays demonstrable when this service is not configured.
+Requires an `OPENAI_API_KEY` (chat model + embeddings). Without it the endpoint
+returns `503 rag_unavailable` — the hub stays demonstrable.
 
 ## Architecture
 
 ```text
 src/backend/
 ├─ __main__.py                 # app factory (get_app) + lifespan + uvicorn
-├─ ai/                         # the RAG core (vendored project code)
+├─ ai/                         # the RAG core
 │  ├─ pipeline.py              #   build_rag(): indexing → retrieval → generation
 │  ├─ constants.py             #   paths, model, lazy embeddings
-│  ├─ indexing/                #   document loading + LLM-assisted chunking
+│  ├─ indexing/                #   document loading + chunking strategies
 │  ├─ retrieval/retriever.py   #   context retrieval
 │  └─ llm/rag.py               #   grounded answer generation
 └─ webserver/
@@ -50,20 +47,29 @@ src/backend/
    ├─ dependency/deps.py       # DI
    ├─ errors.py                # domain errors + HTTP envelope
    ├─ models/query.py          # request/response models
-   ├─ routers/                 # alive · health · status · query
+   ├─ routers/                 # alive · health · ready · status · query
    └─ services/rag_service.py  # lazy-builds and caches the pipeline
 ```
 
-The pipeline is imported and built **lazily** on the first query, so the app
-and its probe tests import without the ML stack.
+## Knowledge base
+
+```text
+assets/knowledge-base/
+  profile/          ← bio.md, contact.md
+  skills/           ← tech-stack.md, specializations.md
+  projects/         ← ai-microservices-hub.md, future-work.md
+  experience/       ← machine-learning-reply.md, research-fellow.md
+  education/        ← msc-bicocca.md, bsc-calabria.md
+  publications/     ← iciap-2025.md, kr-2023.md
+```
+
+The first query builds a Chroma vector store under `assets/vector_db` (git-ignored)
+and reuses it on subsequent runs.
 
 ## Run
 
 ```bash
 uv sync
-uv run pytest -q                 # probe tests (no key, no cost)
+uv run python -m pytest -q              # probe tests (no key, no cost)
 OPENAI_API_KEY=sk-... uv run python -m backend   # http://localhost:5001/ping
 ```
-
-Knowledge base lives under [`assets/knowledge-base/`](assets/knowledge-base).
-The first query builds a local Chroma store under `assets/vector_db`.

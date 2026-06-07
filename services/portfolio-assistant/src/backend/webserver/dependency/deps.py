@@ -1,4 +1,4 @@
-"""FastAPI dependency wiring for the insurellm service."""
+"""FastAPI dependency wiring for the portfolio-assistant service."""
 
 from typing import Annotated
 

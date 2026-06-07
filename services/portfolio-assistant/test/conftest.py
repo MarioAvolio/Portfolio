@@ -1,4 +1,4 @@
-"""Shared test fixtures for the insurellm service."""
+"""Shared test fixtures for the portfolio-assistant service."""
 
 import pytest
 from fastapi.testclient import TestClient
