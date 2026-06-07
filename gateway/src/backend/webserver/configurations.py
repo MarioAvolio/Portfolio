@@ -20,7 +20,7 @@ from .configs.configs import Configs
 # Maps a registered service name to the env var overriding its base URL.
 _URL_ENV = {
     "text-intelligence": "TEXT_INTELLIGENCE_URL",
-    "insurellm": "INSURELLM_URL",
+    "portfolio-assistant": "PORTFOLIO_ASSISTANT_URL",
     "deep-research": "DEEP_RESEARCH_URL",
 }
 

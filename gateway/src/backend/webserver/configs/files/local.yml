@@ -13,13 +13,13 @@ services:
     query_path: /text-intelligence/api/v1/analyze
     query_example:
       text: I love this great product.
-  - name: insurellm
-    description: RAG assistant over the InsureLLM knowledge base.
+  - name: portfolio-assistant
+    description: RAG chatbot answering questions about Mario Avolio's professional profile.
     base_url: http://localhost:5001
     health_path: /ping
-    query_path: /insurellm/api/v1/query
+    query_path: /portfolio-assistant/api/v1/query
     query_example:
-      question: What is Insurellm?
+      question: What technologies does Mario know?
   - name: deep-research
     description: Multi-agent web research producing a structured report.
     base_url: http://localhost:5002
