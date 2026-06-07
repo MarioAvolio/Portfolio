@@ -11,7 +11,7 @@ the gateway's uniform routing API.
 | --- | --- | --- |
 | `gateway` | 8000 | Service registry, health aggregation, query routing |
 | `text-intelligence` | 5000 | Structured text analysis over a pluggable LLM provider |
-| `insurellm` | 5001 | RAG assistant over a local knowledge base |
+| `portfolio-assistant` | 5001 | RAG chatbot over Mario Avolio's professional profile |
 | `deep-research` | 5002 | Multi-agent web research producing a markdown report |
 
 ## Topology
@@ -25,7 +25,7 @@ the gateway's uniform routing API.
                                       │ httpx
             ┌─────────────────────────┼──────────────────────────┐
             ▼                         ▼                          ▼
-    text-intelligence            insurellm                  deep-research
+    text-intelligence            portfolio-assistant                  deep-research
 ```
 
 ## Request flow (routed query)
@@ -54,7 +54,7 @@ services concurrently and reports each as `healthy` or `unreachable`.
 ## Cost & degradation
 
 The default path runs at ~$0: `gateway` and `text-intelligence` need no API key
-(the latter defaults to a deterministic mock provider). `insurellm` and
+(the latter defaults to a deterministic mock provider). `portfolio-assistant` and
 `deep-research` perform real model calls and require an `OPENAI_API_KEY`; without
 it their `/query` returns `503` while their probes keep working — the hub stays
 demonstrable end to end.
