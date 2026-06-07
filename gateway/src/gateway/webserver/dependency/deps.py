@@ -5,8 +5,8 @@ from typing import Annotated
 import httpx
 from fastapi import Depends, Request
 
-from backend.webserver import Configs, get_configs
-from backend.webserver.services.gateway_service import GatewayService
+from gateway.webserver import Configs, get_configs
+from gateway.webserver.services.gateway_service import GatewayService
 
 
 def get_http_client(request: Request) -> httpx.AsyncClient:

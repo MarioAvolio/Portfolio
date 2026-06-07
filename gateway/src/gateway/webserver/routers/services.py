@@ -5,9 +5,9 @@ from typing import Annotated
 from fastapi import APIRouter, Body, Depends, status
 from fastapi.responses import JSONResponse
 
-from backend.webserver.dependency.deps import get_gateway_service
-from backend.webserver.models.gateway import ServiceInfo
-from backend.webserver.services.gateway_service import GatewayService
+from gateway.webserver.dependency.deps import get_gateway_service
+from gateway.webserver.models.gateway import ServiceInfo
+from gateway.webserver.services.gateway_service import GatewayService
 
 router = APIRouter(tags=["services"])
 

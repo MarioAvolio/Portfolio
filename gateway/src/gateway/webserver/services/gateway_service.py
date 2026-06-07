@@ -11,10 +11,10 @@ import asyncio
 
 import httpx
 
-from backend.webserver import Configs, get_logger
-from backend.webserver.configs.configs import ServiceEndpoint
-from backend.webserver.errors import ServiceNotFoundError, ServiceUnavailableError
-from backend.webserver.models.gateway import QueryResponse, ServiceInfo
+from gateway.webserver import Configs, get_logger
+from gateway.webserver.configs.configs import ServiceEndpoint
+from gateway.webserver.errors import ServiceNotFoundError, ServiceUnavailableError
+from gateway.webserver.models.gateway import QueryResponse, ServiceInfo
 
 logger = get_logger(__name__)
 

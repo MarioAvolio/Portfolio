@@ -13,15 +13,15 @@ from collections.abc import Iterator
 import pytest
 from fastapi.testclient import TestClient
 
-from backend.__main__ import get_app
-from backend.webserver.configurations import get_configs
+from gateway.__main__ import get_app
+from gateway.webserver.configurations import get_configs
 
 
 @pytest.fixture
 def client(monkeypatch: pytest.MonkeyPatch) -> Iterator[TestClient]:
     """Yields a TestClient whose registry points at a dead port."""
     monkeypatch.setenv("TEXT_INTELLIGENCE_URL", "http://127.0.0.1:0")
-    monkeypatch.setenv("INSURELLM_URL", "http://127.0.0.1:0")
+    monkeypatch.setenv("PORTFOLIO_ASSISTANT_URL", "http://127.0.0.1:0")
     monkeypatch.setenv("DEEP_RESEARCH_URL", "http://127.0.0.1:0")
     get_configs.cache_clear()
     with TestClient(get_app()) as test_client:
