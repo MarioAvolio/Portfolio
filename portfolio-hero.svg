@@ -1,8 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 460" role="img" aria-label="AI Portfolio - Microservices Hub">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 380" role="img" aria-label="AI Portfolio - Microservices Hub">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#0b1020"/>
-      <stop offset="0.55" stop-color="#111a33"/>
       <stop offset="1" stop-color="#1a2a4f"/>
     </linearGradient>
     <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
@@ -10,106 +9,81 @@
       <stop offset="1" stop-color="#818cf8"/>
     </linearGradient>
     <style>
-      .title  { font: 700 44px 'Segoe UI', system-ui, sans-serif; fill: #f8fafc; }
-      .sub    { font: 400 19px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
-      .node   { font: 600 15px 'Segoe UI', system-ui, sans-serif; fill: #e2e8f0; }
-      .small  { font: 400 12px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
-      .port   { font: 500 11px 'Segoe UI', system-ui, sans-serif; fill: #38bdf8; }
-      .label  { font: 400 11px 'Segoe UI', system-ui, sans-serif; fill: #64748b; }
-      .chip   { fill: #16203b; stroke: #2b3b63; stroke-width: 1.5; }
-      .gw     { fill: #15233f; stroke: url(#accent); stroke-width: 2; }
-      .client { fill: #0f1e38; stroke: #38bdf8; stroke-width: 1.5; stroke-dasharray: 5,3; }
+      .title { font: 700 40px 'Segoe UI', system-ui, sans-serif; fill: #f8fafc; }
+      .sub   { font: 400 16px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
+      .svc   { font: 600 14px 'Segoe UI', system-ui, sans-serif; fill: #e2e8f0; }
+      .desc  { font: 400 12px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
+      .port  { font: 500 11px 'Segoe UI', system-ui, sans-serif; fill: #38bdf8; }
+      .node  { fill: #16203b; stroke: #2b3b63; stroke-width: 1.5; rx: 10; }
+      .gw    { fill: #15233f; stroke: url(#accent); stroke-width: 2; rx: 10; }
+      .cli   { fill: #111b36; stroke: #2b3b63; stroke-width: 1.5; rx: 8; }
     </style>
   </defs>
 
-  <!-- Background -->
-  <rect width="1200" height="460" fill="url(#bg)"/>
-  <rect x="0" y="0" width="1200" height="5" fill="url(#accent)"/>
+  <rect width="1000" height="380" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1000" height="4" fill="url(#accent)"/>
 
-  <!-- Heading -->
-  <text x="70" y="88" class="title">AI Portfolio</text>
-  <text x="70" y="122" class="sub">Microservices Hub  |  Generative AI + Cloud Engineering</text>
+  <!-- Title -->
+  <text x="45" y="65" class="title">AI Portfolio</text>
+  <text x="45" y="90" class="sub">Microservices Hub</text>
 
-  <!-- Client box -->
-  <g transform="translate(20, 215)">
-    <rect class="client" width="110" height="60" rx="10"/>
-    <text x="55" y="28" text-anchor="middle" class="node">client</text>
-    <text x="55" y="48" text-anchor="middle" class="small">POST /query</text>
-  </g>
-
-  <!-- Arrow: client -> gateway -->
-  <g stroke="url(#accent)" stroke-width="1.5" fill="none" opacity="0.7">
-    <line x1="130" y1="245" x2="185" y2="245"/>
-    <polygon points="185,240 195,245 185,250" fill="#38bdf8" opacity="0.7"/>
+  <!-- Client -->
+  <g transform="translate(200, 167)">
+    <rect class="cli" width="72" height="36"/>
+    <text x="36" y="23" text-anchor="middle" class="svc">client</text>
   </g>
 
   <!-- Gateway -->
-  <g transform="translate(195, 175)">
-    <rect class="gw" width="200" height="140" rx="14"/>
-    <text x="100" y="38" text-anchor="middle" class="node">gateway</text>
-    <text x="100" y="58" text-anchor="middle" class="port">:8000</text>
-    <text x="100" y="82" text-anchor="middle" class="small">service registry</text>
-    <text x="100" y="100" text-anchor="middle" class="small">health aggregation</text>
-    <text x="100" y="118" text-anchor="middle" class="small">HTTP routing</text>
-    <text x="100" y="135" text-anchor="middle" class="label">FastAPI  uv  Docker</text>
+  <g transform="translate(340, 140)">
+    <rect class="gw" width="170" height="90"/>
+    <text x="85" y="30" text-anchor="middle" class="svc">gateway</text>
+    <text x="85" y="48" text-anchor="middle" class="port">:8000</text>
+    <text x="85" y="70" text-anchor="middle" class="desc">service registry</text>
+    <text x="85" y="84" text-anchor="middle" class="desc">query routing</text>
   </g>
 
-  <!-- Connectors: gateway -> services -->
-  <g stroke="url(#accent)" stroke-width="1.5" fill="none" opacity="0.6">
-    <!-- to text-intelligence -->
-    <path d="M395 218 H 455 V 196 H 490"/>
-    <polygon points="490,191 500,196 490,201" fill="#818cf8" opacity="0.7"/>
-    <!-- to portfolio-assistant -->
-    <path d="M395 245 H 490"/>
-    <polygon points="490,240 500,245 490,250" fill="#818cf8" opacity="0.7"/>
-    <!-- to deep-research -->
-    <path d="M395 272 H 455 V 294 H 490"/>
-    <polygon points="490,289 500,294 490,299" fill="#818cf8" opacity="0.7"/>
+  <!-- Arrow client -> gateway -->
+  <g stroke="#38bdf8" stroke-width="1.5" fill="none" opacity="0.6">
+    <path d="M272 185 H330"/>
   </g>
+  <polygon points="330,180 342,185 330,190" fill="#38bdf8" opacity="0.6"/>
 
   <!-- text-intelligence -->
-  <g transform="translate(500, 155)">
-    <rect class="chip" width="310" height="82" rx="12"/>
-    <text x="18" y="28" class="node">text-intelligence</text>
-    <text x="18" y="46" class="port">:5000</text>
-    <text x="18" y="64" class="small">structured text analysis  |  pluggable LLM (free mock default)</text>
-    <text x="18" y="78" class="label">FastAPI  uv  pytest</text>
+  <g transform="translate(610, 92)">
+    <rect class="node" width="290" height="60"/>
+    <text x="16" y="23" class="svc">text-intelligence  :5000</text>
+    <text x="16" y="41" class="desc">structured text analysis</text>
+    <text x="16" y="55" class="desc">pluggable LLM  |  free mock default</text>
   </g>
 
   <!-- portfolio-assistant -->
-  <g transform="translate(500, 257)">
-    <rect class="chip" width="310" height="82" rx="12"/>
-    <text x="18" y="28" class="node">portfolio-assistant</text>
-    <text x="18" y="46" class="port">:5001</text>
-    <text x="18" y="64" class="small">RAG chatbot over Mario's profile  |  multi-provider LLM</text>
-    <text x="18" y="78" class="label">LangChain  ChromaDB  OpenAI / Google / HF</text>
+  <g transform="translate(610, 167)">
+    <rect class="node" width="290" height="60"/>
+    <text x="16" y="23" class="svc">portfolio-assistant  :5001</text>
+    <text x="16" y="41" class="desc">RAG chatbot  |  LangChain + ChromaDB</text>
+    <text x="16" y="55" class="desc">OpenAI / Google / HF / Ollama</text>
   </g>
 
   <!-- deep-research -->
-  <g transform="translate(500, 359)">
-    <rect class="chip" width="310" height="82" rx="12"/>
-    <text x="18" y="28" class="node">deep-research</text>
-    <text x="18" y="46" class="port">:5002</text>
-    <text x="18" y="64" class="small">multi-agent web research  |  structured report output</text>
-    <text x="18" y="78" class="label">OpenAI Agents SDK  uv  pytest</text>
+  <g transform="translate(610, 242)">
+    <rect class="node" width="290" height="60"/>
+    <text x="16" y="23" class="svc">deep-research  :5002</text>
+    <text x="16" y="41" class="desc">multi-agent web research</text>
+    <text x="16" y="55" class="desc">OpenAI Agents SDK</text>
   </g>
 
-  <!-- Pattern panel -->
-  <g transform="translate(858, 155)">
-    <rect fill="#0e1b35" stroke="#1e3050" stroke-width="1" width="310" height="286" rx="12"/>
-    <text x="20" y="30" class="node">shared layout</text>
-    <text x="20" y="55" class="small">src/</text>
-    <text x="20" y="75" class="small">  gateway/</text>
-    <text x="20" y="91" class="small">  text_intelligence/</text>
-    <text x="20" y="107" class="small">  portfolio_assistant/</text>
-    <text x="20" y="123" class="small">  deep_research/</text>
-    <text x="20" y="149" class="small">each package exposes:</text>
-    <text x="20" y="169" class="small">  webserver/  routers  services</text>
-    <text x="20" y="185" class="small">            configs  deps</text>
-    <text x="20" y="201" class="small">  ai/        providers  pipelines</text>
-    <text x="20" y="227" class="small">probe routes: /ping  /health</text>
-    <text x="20" y="243" class="small">              /ready  /status</text>
-    <text x="20" y="263" class="small">Python 3.12  uv workspace  Docker</text>
-    <text x="20" y="279" class="small">GitHub Actions CI  Cloud-ready</text>
+  <!-- Arrows gateway -> services -->
+  <g stroke="#38bdf8" stroke-width="1.5" fill="none" opacity="0.6">
+    <path d="M510 155 H570 V122 H600"/>
+    <path d="M510 185 H600"/>
+    <path d="M510 215 H570 V272 H600"/>
   </g>
+  <g fill="#38bdf8" opacity="0.6">
+    <polygon points="600,117 612,122 600,127"/>
+    <polygon points="600,180 612,185 600,190"/>
+    <polygon points="600,267 612,272 600,277"/>
+  </g>
+
+  <!-- Footer -->
+  <text x="45" y="360" class="desc">Mario Avolio  |  AI and Cloud Engineer  |  github.com/MarioAvolio</text>
 </svg>
