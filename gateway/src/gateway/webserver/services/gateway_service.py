@@ -43,9 +43,7 @@ class GatewayService:
 
     async def list_services(self) -> list[ServiceInfo]:
         """Returns every registered service with a live health probe."""
-        probes = await asyncio.gather(
-            *(self._probe(service) for service in self._configs.services)
-        )
+        probes = await asyncio.gather(*(self._probe(service) for service in self._configs.services))
         return list(probes)
 
     async def _probe(self, service: ServiceEndpoint) -> ServiceInfo:

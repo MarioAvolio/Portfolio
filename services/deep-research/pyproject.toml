@@ -17,8 +17,10 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8.0",
+    "pytest-cov>=5.0",
     "ruff>=0.6",
     "mypy>=1.8",
+    "bandit[toml]>=1.8",
     "types-pyyaml>=6.0",
 ]
 
@@ -45,3 +47,7 @@ files = ["src/deep_research"]
 ignore_missing_imports = true
 # The vendored agent code under ai/ is untyped; type-check only the new code.
 exclude = ['src/deep_research/ai/']
+
+[tool.bandit]
+exclude_dirs = ["test", "src/deep_research/ai"]
+skips = ["B104"]

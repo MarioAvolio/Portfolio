@@ -14,8 +14,29 @@ from text_intelligence.webserver.models.analyze import AnalysisResult, Sentiment
 _POSITIVE = {"good", "great", "love", "excellent", "happy", "buono", "ottimo", "bene"}
 _NEGATIVE = {"bad", "terrible", "hate", "awful", "sad", "brutto", "male", "pessimo"}
 _STOPWORDS = {
-    "the", "a", "an", "and", "or", "of", "to", "in", "is", "it", "this", "that",
-    "il", "lo", "la", "un", "una", "e", "di", "che", "per", "con", "del",
+    "the",
+    "a",
+    "an",
+    "and",
+    "or",
+    "of",
+    "to",
+    "in",
+    "is",
+    "it",
+    "this",
+    "that",
+    "il",
+    "lo",
+    "la",
+    "un",
+    "una",
+    "e",
+    "di",
+    "che",
+    "per",
+    "con",
+    "del",
 }
 _WORD = re.compile(r"[A-Za-zÀ-ÿ']+")
 

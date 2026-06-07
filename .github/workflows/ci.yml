@@ -18,7 +18,10 @@ jobs:
           enable-cache: true
       - run: uv sync --frozen
       - run: uv run ruff check .
-      - run: uv run pytest -q
+      - run: uv run ruff format --check .
+      - run: uv run mypy src/gateway --ignore-missing-imports
+      - run: uv run bandit -c pyproject.toml -r src/
+      - run: uv run pytest -q --cov=src/ --cov-report=term-missing
 
   text-intelligence:
     runs-on: ubuntu-latest
@@ -32,7 +35,10 @@ jobs:
           enable-cache: true
       - run: uv sync --frozen
       - run: uv run ruff check .
-      - run: uv run pytest -q
+      - run: uv run ruff format --check .
+      - run: uv run mypy src/text_intelligence --ignore-missing-imports
+      - run: uv run bandit -c pyproject.toml -r src/
+      - run: uv run pytest -q --cov=src/ --cov-report=term-missing
 
   # Heavyweight services (huge ML/agent dependency trees). We do not install the
   # full environment in CI; instead we verify the microservice surface (app
@@ -52,8 +58,12 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install minimal toolchain
-        run: pip install fastapi "uvicorn[standard]" pydantic httpx pytest ruff
-      - name: Lint new code
+        run: pip install fastapi "uvicorn[standard]" pydantic httpx pytest ruff bandit
+      - name: Lint
         run: ruff check .
+      - name: Format check
+        run: ruff format --check .
+      - name: Security scan
+        run: bandit -c pyproject.toml -r src/
       - name: Probe tests
         run: pytest -q

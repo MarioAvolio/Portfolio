@@ -36,8 +36,10 @@ ollama = [
 [dependency-groups]
 dev = [
     "pytest>=8.0",
+    "pytest-cov>=5.0",
     "ruff>=0.6",
     "mypy>=1.8",
+    "bandit[toml]>=1.8",
     "types-pyyaml>=6.0",
 ]
 
@@ -64,3 +66,7 @@ files = ["src/portfolio_assistant"]
 ignore_missing_imports = true
 # The RAG core under ai/ is untyped; type-check only the webserver layer.
 exclude = ['src/portfolio_assistant/ai/']
+
+[tool.bandit]
+exclude_dirs = ["test", "src/portfolio_assistant/ai"]
+skips = ["B104"]
