@@ -40,7 +40,7 @@ uv run python -m backend      # serve
 | --- | --- | --- |
 | gateway | 8000 | yes |
 | text-intelligence | 5000 | yes (mock provider) |
-| insurellm | 5001 | no — needs `OPENAI_API_KEY` |
+| portfolio-assistant | 5001 | no — needs `OPENAI_API_KEY` |
 | deep-research | 5002 | no — needs `OPENAI_API_KEY` |
 
 ## Configuration & secrets
@@ -54,7 +54,7 @@ and never put them in YAML. Export them in your shell (a local, git-ignored
 `.env` is fine for convenience, but it is never committed):
 
 ```bash
-cd services/insurellm
+cd services/portfolio-assistant
 export OPENAI_API_KEY=sk-...
 uv run python -m backend
 ```
@@ -66,7 +66,7 @@ The provider is set in `configs/files/local.yml` (`provider.name: mock` by
 default — no key needed). Real providers plug in behind the `LLMProvider`
 interface; their API key is read from the environment.
 
-### insurellm
+### portfolio-assistant
 Tuned via the `rag` block in `configs/files/local.yml`:
 * `rag.embeddings: openai` (default) — light, no local ML stack; `hf` uses local
   embeddings (install with `uv sync --extra hf`).
@@ -90,7 +90,7 @@ surface with a minimal toolchain (their AI cores are imported lazily).
 
 ```bash
 # from the repo root
-for s in gateway services/text-intelligence services/insurellm services/deep-research; do
+for s in gateway services/text-intelligence services/portfolio-assistant services/deep-research; do
   ( cd "$s" && uv run pytest -q )
 done
 ```

@@ -22,9 +22,9 @@ decoupled services — each with its own environment, dependencies and container
                                       │
             ┌─────────────────────────┼──────────────────────────┐
             ▼                         ▼                          ▼
-  text-intelligence            insurellm                  deep-research
-  structured text analysis     RAG over a knowledge base  multi-agent web research
-  (mock LLM → free)            (LangChain + Chroma)        (OpenAI Agents SDK)
+  text-intelligence       portfolio-assistant             deep-research
+  structured text analysis  RAG over a knowledge base   multi-agent web research
+  (mock LLM → free)         (LangChain + Chroma)        (OpenAI Agents SDK)
 ```
 
 One way in: `POST /gateway/api/v1/services/{name}/query`. The gateway forwards
@@ -37,7 +37,7 @@ service is down or unconfigured it returns `503` — the hub degrades gracefully
 | --- | --- | --- | --- |
 | [`gateway`](gateway/readme.md) | `/gateway/api/v1` | ✅ | Registry, health aggregation, query routing |
 | [`text-intelligence`](services/text-intelligence/readme.md) | `/text-intelligence/api/v1` | ✅ | Structured text analysis over a pluggable LLM provider (free mock default) |
-| [`insurellm`](services/insurellm/readme.md) | `/insurellm/api/v1` | ✅ probes · 🔑 query | RAG assistant over the InsureLLM knowledge base (LangChain + Chroma) |
+| [`portfolio-assistant`](services/portfolio-assistant/readme.md) | `/portfolio-assistant/api/v1` | ✅ probes · 🔑 query | RAG chatbot over Mario Avolio's professional profile (LangChain + Chroma) |
 | [`deep-research`](services/deep-research/README.md) | `/deep-research/api/v1` | ✅ probes · 🔑 query | Multi-agent web research producing a structured report (OpenAI Agents SDK) |
 
 `✅` runs at **~$0** (no API key). `🔑 query` = the functional `/query` route needs
@@ -52,7 +52,7 @@ Portfolio/
 ├─ gateway/                  # API gateway: registry + routing (FastAPI, uv)
 ├─ services/
 │  ├─ text-intelligence/     # GenAI text analysis (src/backend layout)
-│  ├─ insurellm/             # RAG project + FastAPI adapter
+│  ├─ portfolio-assistant/             # RAG project + FastAPI adapter
 │  └─ deep-research/         # multi-agent project + FastAPI adapter
 ├─ docker-compose.yml        # orchestrates gateway + text-intelligence
 ├─ .github/workflows/ci.yml  # lint + tests (uv) per service
@@ -79,7 +79,7 @@ cd gateway            && uv sync && uv run pytest -q && uv run python -m backend
 cd services/text-intelligence && uv sync && uv run pytest -q && uv run python -m backend
 ```
 
-Heavy services (`insurellm`, `deep-research`) run locally via `uv run python -m
+Heavy services (`portfolio-assistant`, `deep-research`) run locally via `uv run python -m
 backend` with an `OPENAI_API_KEY` — see each service's readme.
 
 ## Documentation
@@ -97,7 +97,7 @@ competency:
 
 1. **Hub foundation** ✅ — gateway (registry + routing), `text-intelligence`
    (GenAI, free mock), uv everywhere, Docker, CI.
-2. **Existing projects onboarded** ✅ — `insurellm` and `deep-research`
+2. **Existing projects onboarded** ✅ — `portfolio-assistant` and `deep-research`
    refactored into the `src/backend` layout as full microservices behind the
    gateway.
 3. **Real LLM providers** — Gemini (free tier) and OpenAI behind the
