@@ -91,8 +91,11 @@ portfolio-assistant supports multiple LLM providers. Set `llm_provider` in
 | Provider | `llm_provider` | Model | API key |
 | --- | --- | --- | --- |
 | OpenAI | `openai` | `gpt-4.1-nano` | `OPENAI_API_KEY` |
-| Google | `google` | `gemini-1.5-flash` | `GOOGLE_API_KEY` (Google AI Studio) |
+| Google | `google` | `gemini-2.0-flash` | `GOOGLE_API_KEY` (Google AI Studio) |
 | HuggingFace | `hf` | `HuggingFaceH4/zephyr-7b-beta` | `HF_TOKEN` |
+| Ollama | `ollama` | `llama3.2:1b` | none (local inference) |
+
+Pull the Ollama model: `ollama pull llama3.2:1b`
 
 Embeddings are configured separately via `rag.embeddings`.
 
