@@ -24,7 +24,7 @@ def _make_splitter(chunking: str):
     return RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 
 
-def build_rag(configs) -> Rag:
+def build_rag(configs) -> "Rag":
     """Builds the full RAG pipeline (indexing -> retrieval -> generation).
 
     The vector store is persisted and reused across runs; only the answer step
