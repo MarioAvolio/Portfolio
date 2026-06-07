@@ -1,7 +1,7 @@
 [project]
-name = "insurellm"
+name = "portfolio-assistant"
 version = "0.1.0"
-description = "RAG microservice answering questions about the fictional Insurellm company, grounded in a local knowledge base."
+description = "RAG microservice answering questions about Mario Avolio's professional portfolio, grounded in a local knowledge base."
 readme = "readme.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -19,7 +19,7 @@ dependencies = [
     "tqdm>=4.66",
 ]
 
-# Optional local-embeddings backend (INSURELLM_EMBEDDINGS=hf). Heavy (torch);
+# Optional local-embeddings backend (PORTFOLIO_ASSISTANT_EMBEDDINGS=hf). Heavy (torch);
 # install with: uv sync --extra hf
 [project.optional-dependencies]
 hf = [
@@ -49,12 +49,10 @@ testpaths = ["test"]
 [tool.ruff]
 line-length = 100
 src = ["src", "test"]
-# The vendored RAG core under ai/ keeps its original style; lint only new code.
 extend-exclude = ["src/backend/ai"]
 
 [tool.mypy]
 python_version = "3.11"
 files = ["src/backend"]
 ignore_missing_imports = true
-# The vendored RAG core under ai/ is untyped; type-check only the new code.
 exclude = ['src/backend/ai/']

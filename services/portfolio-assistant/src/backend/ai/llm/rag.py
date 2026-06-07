@@ -10,8 +10,10 @@ class Rag:
         )
 
         self._system_prompt = """
-                                You are a knowledgeable, friendly assistant representing the company Insurellm.
-                                You are chatting with a user about Insurellm.
+                                You are a knowledgeable assistant for Mario Avolio's professional portfolio.
+                                You help recruiters, collaborators, and visitors learn about Mario's
+                                background, skills, projects, experience, education, and publications.
+                                Answer questions about Mario concisely and accurately.
                                 If relevant, use the given context to answer any question.
                                 If you don't know the answer, say so.
                                 Context:

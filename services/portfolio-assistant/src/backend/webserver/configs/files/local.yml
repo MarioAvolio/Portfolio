@@ -1,7 +1,7 @@
-# insurellm configuration for the local environment.
+# portfolio-assistant configuration for the local environment.
 # Non-secret values only. OPENAI_API_KEY is read from the environment.
-app_name: insurellm
-api_prefix: /insurellm/api/v1
+app_name: portfolio-assistant
+api_prefix: /portfolio-assistant/api/v1
 model_name: gpt-4.1-nano
 
 rag:

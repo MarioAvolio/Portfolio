@@ -1,4 +1,4 @@
-"""Business logic for the insurellm RAG service.
+"""Business logic for the portfolio-assistant RAG service.
 
 The heavyweight RAG pipeline (LangChain, Chroma, embeddings, OpenAI) is imported
 and built **lazily** on the first query and cached thereafter. This keeps the
@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 
 
 class RagService:
-    """Answers questions against the InsureLLM knowledge base."""
+    """Answers questions against Mario Avolio's portfolio knowledge base."""
 
     _rag = None  # cached pipeline, built on first use
 

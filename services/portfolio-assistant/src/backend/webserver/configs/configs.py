@@ -1,4 +1,4 @@
-"""Configuration models for the insurellm service."""
+"""Configuration models for the portfolio-assistant service."""
 
 from pydantic import BaseModel, Field
 
@@ -18,7 +18,7 @@ class RagConfig(BaseModel):
 
 
 class Configs(BaseModel):
-    """Top-level configuration for the insurellm RAG service.
+    """Top-level configuration for the portfolio-assistant RAG service.
 
     Attributes:
         app_name: Logical service name.
@@ -29,9 +29,9 @@ class Configs(BaseModel):
         rag: RAG pipeline tuning block.
     """
 
-    app_name: str = "insurellm"
+    app_name: str = "portfolio-assistant"
     version: str = "0.1.0"
     environment: str = "local"
-    api_prefix: str = "/insurellm/api/v1"
+    api_prefix: str = "/portfolio-assistant/api/v1"
     model_name: str = "gpt-4.1-nano"
     rag: RagConfig = Field(default_factory=RagConfig)

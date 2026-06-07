@@ -16,7 +16,7 @@ async def query(
     payload: QueryRequest,
     service: Annotated[RagService, Depends(get_rag_service)],
 ) -> QueryResponse:
-    """Answers a question against the InsureLLM knowledge base.
+    """Answers a question against Mario Avolio's portfolio knowledge base.
 
     Raises:
         RagUnavailableError: Translated to ``503`` when the pipeline is not

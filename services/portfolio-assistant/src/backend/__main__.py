@@ -1,4 +1,4 @@
-"""Application entrypoint and FastAPI app factory for the insurellm service."""
+"""Application entrypoint and FastAPI app factory for the portfolio-assistant service."""
 
 import asyncio
 from collections.abc import AsyncIterator
@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 
 def get_app() -> FastAPI:
-    """Builds and returns the configured insurellm application."""
+    """Builds and returns the configured portfolio-assistant application."""
     configs = get_configs()
 
     app = FastAPI(title=configs.app_name, version=configs.version, lifespan=lifespan)
