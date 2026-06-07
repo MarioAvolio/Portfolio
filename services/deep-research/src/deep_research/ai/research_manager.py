@@ -9,30 +9,42 @@ class ResearchManager:
     """Coordinate planning, web research, and report generation."""
 
     async def run(self, query: str):
-        """Run the deep research workflow and stream progress updates.
+        """Run the deep research workflow and stream structured events.
 
         Args:
             query: The user research request to investigate.
 
         Yields:
-            str: Progress messages, trace URL, and finally the markdown report.
+            dict: Either a step event or the final report event.
+                  Step: {"type": "step", "agent": str, "content": str}
+                  Report: {"type": "report", "agent": "writer", "content": str}
         """
-        # Generate and expose a trace so the full execution can be inspected later.
         trace_id = gen_trace_id()
         with trace("Research trace", trace_id=trace_id):
-            print(f"View trace: https://platform.openai.com/traces/trace?trace_id={trace_id}")
-            yield f"View trace: https://platform.openai.com/traces/trace?trace_id={trace_id}"
-            print("Starting research...")
-            # Step 1: Ask the planner agent which searches should run.
+            trace_url = f"https://platform.openai.com/traces/trace?trace_id={trace_id}"
+            yield {"type": "step", "agent": "tracer", "content": f"Trace: {trace_url}"}
+
             search_plan = await self.plan_searches(query)
-            yield "Searches planned, starting to search..."
-            # Step 2: Execute searches concurrently and collect successful results.
+            yield {
+                "type": "step",
+                "agent": "planner",
+                "content": f"Planned {len(search_plan.searches)} searches.",
+            }
+
             search_results = await self.perform_searches(search_plan)
-            yield "Searches complete, writing report..."
-            # Step 3: Hand gathered evidence to the writer agent.
+            yield {
+                "type": "step",
+                "agent": "search",
+                "content": f"Completed {len(search_results)} searches successfully.",
+            }
+
             report = await self.write_report(query, search_results)
-            yield "Report written."
-            yield report.markdown_report
+            yield {
+                "type": "step",
+                "agent": "writer",
+                "content": "Report written.",
+            }
+            yield {"type": "report", "agent": "writer", "content": report.markdown_report}
 
     async def plan_searches(self, query: str) -> WebSearchPlan:
         """Create a search plan for the input query.

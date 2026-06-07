@@ -47,6 +47,25 @@ class ResearchUnavailableError(ServiceError):
         return {"detail": self.detail}
 
 
+class JobNotFoundError(ServiceError):
+    """Raised when a job_id does not exist in the store.
+
+    Attributes:
+        job_id: The unknown job identifier.
+    """
+
+    status_code = status.HTTP_404_NOT_FOUND
+    error_code = "job_not_found"
+    message = "Job not found."
+
+    def __init__(self, job_id: str) -> None:
+        super().__init__()
+        self.job_id = job_id
+
+    def extra_payload(self) -> dict[str, Any]:
+        return {"job_id": self.job_id}
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     """Registers a handler translating :class:`ServiceError` subclasses."""
 
