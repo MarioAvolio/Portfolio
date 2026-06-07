@@ -13,16 +13,10 @@ Chunking strategy (``rag.chunking``):
   the cost of one model call per document.
 """
 
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-from backend.ai.constants import DB_NAME, KNOWLEDGE_BASE, get_embeddings
-from backend.ai.indexing.indexer import Indexer
-from backend.ai.llm.rag import Rag
-from backend.ai.retrieval.retriever import Retriever
-
-
 def _make_splitter(chunking: str):
     """Builds the chunking strategy named by ``chunking``."""
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+
     if chunking.lower() == "llm":
         from backend.ai.indexing.splitter import CustomTextSplitter
 
@@ -31,7 +25,7 @@ def _make_splitter(chunking: str):
 
 
 def build_rag(configs) -> Rag:
-    """Builds the full RAG pipeline (indexing → retrieval → generation).
+    """Builds the full RAG pipeline (indexing -> retrieval -> generation).
 
     The vector store is persisted and reused across runs; only the answer step
     (and OpenAI embeddings, when selected) require an ``OPENAI_API_KEY``.
@@ -43,6 +37,12 @@ def build_rag(configs) -> Rag:
     Returns:
         A :class:`Rag` ready to answer questions.
     """
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    from backend.ai.constants import DB_NAME, KNOWLEDGE_BASE, get_embeddings
+    from backend.ai.indexing.indexer import Indexer
+    from backend.ai.llm.rag import Rag
+    from backend.ai.retrieval.retriever import Retriever
+
     rag = configs.rag
     vector_store = Indexer(
         knowledge_base=KNOWLEDGE_BASE,

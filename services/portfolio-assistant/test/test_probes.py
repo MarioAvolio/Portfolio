@@ -22,3 +22,8 @@ def test_status_reports_metadata(client: TestClient) -> None:
     body = client.get(f"{PREFIX}/status").json()
     assert body["app_name"] == "portfolio-assistant"
     assert "model" in body
+
+
+def test_ready(client: TestClient) -> None:
+    resp = client.get(f"{PREFIX}/ready")
+    assert resp.status_code == 200
