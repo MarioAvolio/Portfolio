@@ -2,7 +2,7 @@
 
 from fastapi.testclient import TestClient
 
-PREFIX = "/insurellm/api/v1"
+PREFIX = "/portfolio-assistant/api/v1"
 
 
 def test_ready(client: TestClient) -> None:
