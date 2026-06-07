@@ -1,0 +1,7 @@
+[tool.uv.workspace]
+members = [
+    "gateway",
+    "services/text-intelligence",
+    "services/portfolio-assistant",
+    "services/deep-research",
+]

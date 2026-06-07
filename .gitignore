@@ -210,3 +210,6 @@ secrets.*
 # Plans and internal files from superpowers/opencode — local only.
 docs/superpowers/
 _opencode_spec_*.md
+# Claude Code project-local settings and memory (machine-specific, never public)
+.claude/
+CLAUDE.md
