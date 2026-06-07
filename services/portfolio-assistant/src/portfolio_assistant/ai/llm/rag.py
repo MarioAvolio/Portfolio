@@ -16,7 +16,7 @@ class Rag:
             retriever: Retriever instance used to fetch context documents.
             llm_provider: LLM backend to use (``openai``, ``google``, or ``hf``).
         """
-        from backend.ai.constants import get_llm
+        from portfolio_assistant.ai.constants import get_llm
 
         self._llm = get_llm(provider=llm_provider, model_name=model_name)
 

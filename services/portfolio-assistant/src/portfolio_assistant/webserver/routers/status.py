@@ -4,7 +4,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from backend.webserver import Configs, get_configs
+from portfolio_assistant.webserver import Configs, get_configs
 
 router = APIRouter(tags=["status"])
 

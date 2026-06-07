@@ -18,7 +18,7 @@ def _make_splitter(chunking: str):
     from langchain_text_splitters import RecursiveCharacterTextSplitter
 
     if chunking.lower() == "llm":
-        from backend.ai.indexing.splitter import CustomTextSplitter
+        from portfolio_assistant.ai.indexing.splitter import CustomTextSplitter
 
         return CustomTextSplitter()
     return RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
@@ -38,10 +38,10 @@ def build_rag(configs) -> "Rag":
         A :class:`Rag` ready to answer questions.
     """
     from langchain_text_splitters import RecursiveCharacterTextSplitter
-    from backend.ai.constants import DB_NAME, KNOWLEDGE_BASE, get_embeddings
-    from backend.ai.indexing.indexer import Indexer
-    from backend.ai.llm.rag import Rag
-    from backend.ai.retrieval.retriever import Retriever
+    from portfolio_assistant.ai.constants import DB_NAME, KNOWLEDGE_BASE, get_embeddings
+    from portfolio_assistant.ai.indexing.indexer import Indexer
+    from portfolio_assistant.ai.llm.rag import Rag
+    from portfolio_assistant.ai.retrieval.retriever import Retriever
 
     rag = configs.rag
     vector_store = Indexer(

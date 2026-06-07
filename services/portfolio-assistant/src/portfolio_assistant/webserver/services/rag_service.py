@@ -6,8 +6,8 @@ app — and the probe tests — importable without the ML stack, and lets the
 service degrade gracefully (``503``) when it is not configured.
 """
 
-from backend.webserver import Configs, get_logger
-from backend.webserver.errors import RagUnavailableError
+from portfolio_assistant.webserver import Configs, get_logger
+from portfolio_assistant.webserver.errors import RagUnavailableError
 
 logger = get_logger(__name__)
 
@@ -29,7 +29,7 @@ class RagService:
         """
         if RagService._rag is None:
             try:
-                from backend.ai.pipeline import build_rag
+                from portfolio_assistant.ai.pipeline import build_rag
 
                 RagService._rag = build_rag(self._configs)
             except Exception as exc:  # noqa: BLE001 - normalised into a domain error

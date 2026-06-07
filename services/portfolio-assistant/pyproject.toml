@@ -43,7 +43,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/backend"]
+packages = ["src/portfolio_assistant"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
@@ -53,11 +53,11 @@ testpaths = ["test"]
 line-length = 100
 src = ["src", "test"]
 # The RAG core under ai/ is untyped vendored code; lint only the webserver layer.
-extend-exclude = ["src/backend/ai"]
+extend-exclude = ["src/portfolio_assistant/ai"]
 
 [tool.mypy]
 python_version = "3.11"
-files = ["src/backend"]
+files = ["src/portfolio_assistant"]
 ignore_missing_imports = true
 # The RAG core under ai/ is untyped; type-check only the webserver layer.
-exclude = ['src/backend/ai/']
+exclude = ['src/portfolio_assistant/ai/']

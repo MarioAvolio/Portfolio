@@ -4,9 +4,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from backend.webserver.dependency.deps import get_rag_service
-from backend.webserver.models.query import QueryRequest, QueryResponse
-from backend.webserver.services.rag_service import RagService
+from portfolio_assistant.webserver.dependency.deps import get_rag_service
+from portfolio_assistant.webserver.models.query import QueryRequest, QueryResponse
+from portfolio_assistant.webserver.services.rag_service import RagService
 
 router = APIRouter(tags=["query"])
 

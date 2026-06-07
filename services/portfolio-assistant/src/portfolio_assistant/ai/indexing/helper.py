@@ -1,5 +1,5 @@
 from langchain_core.documents.base import Document
-from backend.ai.indexing.constants import AVERAGE_CHUNK_SIZE
+from portfolio_assistant.ai.indexing.constants import AVERAGE_CHUNK_SIZE
 
 
 def make_prompt(document: Document, chunk_size: int = AVERAGE_CHUNK_SIZE):

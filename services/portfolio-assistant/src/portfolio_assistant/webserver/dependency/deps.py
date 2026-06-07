@@ -4,8 +4,8 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from backend.webserver import Configs, get_configs
-from backend.webserver.services.rag_service import RagService
+from portfolio_assistant.webserver import Configs, get_configs
+from portfolio_assistant.webserver.services.rag_service import RagService
 
 
 def get_rag_service(configs: Annotated[Configs, Depends(get_configs)]) -> RagService:

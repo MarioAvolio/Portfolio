@@ -1,8 +1,8 @@
 from langchain_core.documents.base import Document
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
-from backend.ai.indexing.constants import AVERAGE_CHUNK_SIZE
-from backend.ai.indexing.helper import make_messages
+from portfolio_assistant.ai.indexing.constants import AVERAGE_CHUNK_SIZE
+from portfolio_assistant.ai.indexing.helper import make_messages
 from tqdm import tqdm
 
 

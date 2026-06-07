@@ -3,8 +3,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from backend.__main__ import get_app
-from backend.webserver.configurations import get_configs
+from portfolio_assistant.__main__ import get_app
+from portfolio_assistant.webserver.configurations import get_configs
 
 
 @pytest.fixture

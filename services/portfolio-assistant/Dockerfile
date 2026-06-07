@@ -23,4 +23,4 @@ RUN uv sync --frozen --no-dev
 
 EXPOSE 5001
 
-CMD ["uv", "run", "--no-sync", "uvicorn", "backend.__main__:get_app", "--factory", "--host", "0.0.0.0", "--port", "5001"]
+CMD ["uv", "run", "--no-sync", "uvicorn", "portfolio_assistant.__main__:get_app", "--factory", "--host", "0.0.0.0", "--port", "5001"]

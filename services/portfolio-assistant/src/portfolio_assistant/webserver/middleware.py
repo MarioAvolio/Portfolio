@@ -7,7 +7,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 
-from backend.webserver import request_id_ctx
+from portfolio_assistant.webserver import request_id_ctx
 
 
 class RequestIdMiddleware(BaseHTTPMiddleware):
