@@ -205,3 +205,8 @@ local/
 *.pem
 secrets.*
 **/secrets.*
+
+# ── AI assistant tooling (never commit) ──────────────────────────────
+# Plans and internal files from superpowers/opencode — local only.
+docs/superpowers/
+_opencode_spec_*.md
