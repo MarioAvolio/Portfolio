@@ -49,10 +49,12 @@ testpaths = ["test"]
 [tool.ruff]
 line-length = 100
 src = ["src", "test"]
+# The RAG core under ai/ is untyped vendored code; lint only the webserver layer.
 extend-exclude = ["src/backend/ai"]
 
 [tool.mypy]
 python_version = "3.11"
 files = ["src/backend"]
 ignore_missing_imports = true
+# The RAG core under ai/ is untyped; type-check only the webserver layer.
 exclude = ['src/backend/ai/']
