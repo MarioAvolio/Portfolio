@@ -27,7 +27,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/backend"]
+packages = ["src/deep_research"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
@@ -37,11 +37,11 @@ testpaths = ["test"]
 line-length = 100
 src = ["src", "test"]
 # The vendored agent code under ai/ keeps its original style; lint only new code.
-extend-exclude = ["src/backend/ai"]
+extend-exclude = ["src/deep_research/ai"]
 
 [tool.mypy]
 python_version = "3.12"
-files = ["src/backend"]
+files = ["src/deep_research"]
 ignore_missing_imports = true
 # The vendored agent code under ai/ is untyped; type-check only the new code.
-exclude = ['src/backend/ai/']
+exclude = ['src/deep_research/ai/']

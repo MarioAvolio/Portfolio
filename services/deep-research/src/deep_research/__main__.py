@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     async def _serve() -> None:
         """Boots uvicorn against the :func:`get_app` factory."""
-        config = Config("backend.__main__:get_app", host="0.0.0.0", port=5002, factory=True)
+        config = Config("deep_research.__main__:get_app", host="0.0.0.0", port=5002, factory=True)
         await Server(config).serve()
 
     asyncio.run(_serve())

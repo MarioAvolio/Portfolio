@@ -4,9 +4,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from backend.webserver.dependency.deps import get_research_service
-from backend.webserver.models.query import QueryRequest, QueryResponse
-from backend.webserver.services.research_service import ResearchService
+from deep_research.webserver.dependency.deps import get_research_service
+from deep_research.webserver.models.query import QueryRequest, QueryResponse
+from deep_research.webserver.services.research_service import ResearchService
 
 router = APIRouter(tags=["query"])
 

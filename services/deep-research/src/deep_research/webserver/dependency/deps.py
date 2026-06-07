@@ -4,8 +4,8 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from backend.webserver import Configs, get_configs
-from backend.webserver.services.research_service import ResearchService
+from deep_research.webserver import Configs, get_configs
+from deep_research.webserver.services.research_service import ResearchService
 
 
 def get_research_service(configs: Annotated[Configs, Depends(get_configs)]) -> ResearchService:

@@ -1,7 +1,7 @@
 from agents import Runner, trace, gen_trace_id
-from backend.ai.search_agent import search_agent
-from backend.ai.planner_agent import planner_agent, WebSearchItem, WebSearchPlan
-from backend.ai.writer_agent import writer_agent, ReportData
+from deep_research.ai.search_agent import search_agent
+from deep_research.ai.planner_agent import planner_agent, WebSearchItem, WebSearchPlan
+from deep_research.ai.writer_agent import writer_agent, ReportData
 import asyncio
 
 

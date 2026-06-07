@@ -5,8 +5,8 @@ query, so the app and its probe tests import without the agent stack and the
 service degrades gracefully (``503``) when it is not configured.
 """
 
-from backend.webserver import Configs, get_logger
-from backend.webserver.errors import ResearchUnavailableError
+from deep_research.webserver import Configs, get_logger
+from deep_research.webserver.errors import ResearchUnavailableError
 
 logger = get_logger(__name__)
 
@@ -29,7 +29,7 @@ class ResearchService:
                 API key or dependencies).
         """
         try:
-            from backend.ai.research_manager import ResearchManager
+            from deep_research.ai.research_manager import ResearchManager
 
             report = ""
             async for chunk in ResearchManager().run(query):
