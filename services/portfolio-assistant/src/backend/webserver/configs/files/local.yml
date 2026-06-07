@@ -11,3 +11,8 @@ rag:
   chunking: simple
   # Optional cap on indexed documents (null = all).
   max_documents: null
+  # LLM provider: "openai" | "google" | "hf"
+  # openai: model_name e.g. gpt-4.1-nano  -- needs OPENAI_API_KEY
+  # google: model_name e.g. gemini-2.0-flash-lite -- needs GOOGLE_API_KEY
+  # hf:     model_name e.g. HuggingFaceH4/zephyr-7b-beta -- needs HF_TOKEN
+  llm_provider: openai

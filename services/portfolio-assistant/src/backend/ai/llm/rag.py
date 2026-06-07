@@ -1,12 +1,24 @@
 from langchain_core.messages import HumanMessage, SystemMessage, convert_to_messages
-from langchain_openai import ChatOpenAI
 
 
 class Rag:
-    def __init__(self, model_name, retriever) -> None:
-        self._llm = ChatOpenAI(
-            temperature=0, model_name=model_name  # more deterministic
-        )
+    """Grounded answer generation using a RAG chain.
+
+    Retrieves context documents, formats a prompt with conversation history,
+    and invokes the selected LLM to produce a grounded answer.
+    """
+
+    def __init__(self, model_name: str, retriever, llm_provider: str = "openai") -> None:
+        """Initialises the Rag chain with the selected LLM backend.
+
+        Args:
+            model_name: Model identifier passed to the LLM backend.
+            retriever: Retriever instance used to fetch context documents.
+            llm_provider: LLM backend to use (``openai``, ``google``, or ``hf``).
+        """
+        from backend.ai.constants import get_llm
+
+        self._llm = get_llm(provider=llm_provider, model_name=model_name)
 
         self._system_prompt = """
                                 You are a knowledgeable assistant for Mario Avolio's professional portfolio.

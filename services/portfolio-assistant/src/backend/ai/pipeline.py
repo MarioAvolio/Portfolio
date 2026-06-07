@@ -31,8 +31,8 @@ def build_rag(configs) -> Rag:
     (and OpenAI embeddings, when selected) require an ``OPENAI_API_KEY``.
 
     Args:
-        configs: The service configuration carrying the ``rag`` block and the
-            chat ``model_name``.
+        configs: The service configuration carrying the ``rag`` block (including
+            ``llm_provider``), the chat ``model_name``, and path settings.
 
     Returns:
         A :class:`Rag` ready to answer questions.
@@ -51,4 +51,4 @@ def build_rag(configs) -> Rag:
         splitter=_make_splitter(rag.chunking),
         max_documents=rag.max_documents,
     ).get_vector_store()
-    return Rag(model_name=configs.model_name, retriever=Retriever(vector_store))
+    return Rag(model_name=configs.model_name, retriever=Retriever(vector_store), llm_provider=configs.rag.llm_provider)

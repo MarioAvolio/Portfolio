@@ -10,11 +10,13 @@ class RagConfig(BaseModel):
         embeddings: Embeddings backend, ``openai`` (default) or ``hf`` (local).
         chunking: Chunking strategy, ``simple`` (default) or ``llm``.
         max_documents: Optional cap on indexed documents (``None`` = all).
+        llm_provider: LLM backend, ``openai`` (default), ``google``, or ``hf``.
     """
 
     embeddings: str = "openai"
     chunking: str = "simple"
     max_documents: int | None = None
+    llm_provider: str = "openai"
 
 
 class Configs(BaseModel):
