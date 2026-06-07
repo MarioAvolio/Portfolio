@@ -30,7 +30,8 @@ is intentional: any service can be read, run and reasoned about the same way.
 
 1. **App factory.** `get_app()` builds the `FastAPI` instance, registers routers,
    error handlers and middleware. A `lifespan` hook logs startup/shutdown. The
-   module is runnable with `python -m backend`.
+   module is runnable with \`python -m <package>\` (e.g. \`gateway\`, \`text_intelligence\`,
+   \`portfolio_assistant\`, \`deep_research\`).
 2. **Operational probes.** `GET /ping` at the root (no prefix); `GET /{prefix}/health`,
    `GET /{prefix}/ready`, and `GET /{prefix}/status` under the API prefix.
    All four must be covered by zero-cost probe tests.
@@ -63,9 +64,11 @@ is intentional: any service can be read, run and reasoned about the same way.
 
 ## Naming
 
-* Package root is always `backend`; imports are absolute (`from backend...`).
+* Each service exposes a unique Python package: \`gateway\`, \`text_intelligence\`,
+  \`portfolio_assistant\`, \`deep_research\`. Imports are absolute (\`from gateway...\`).
 * API prefix is `/{service-name}/api/v1`.
-* Vendored project code lives under `ai/` with imports rewritten to `backend.ai.*`.
+* Vendored project code lives under \`ai/\` with imports rewritten to the service package
+  (e.g. \`from gateway.ai.*\`).
 
 ## Testing
 

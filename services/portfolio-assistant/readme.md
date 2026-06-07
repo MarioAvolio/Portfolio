@@ -25,8 +25,8 @@ answer in a local knowledge base (LangChain + Chroma + OpenAI).
 { "answer": "Mario's primary stack is ...", "sources": ["assets/knowledge-base/skills/tech-stack.md"] }
 ```
 
-Requires an `OPENAI_API_KEY` (chat model + embeddings). Without it the endpoint
-returns `503 rag_unavailable` — the hub stays demonstrable.
+Requires an API key for the configured provider (see LLM Provider below).
+Without it the endpoint returns \`503 rag_unavailable\` — the hub stays demonstrable.
 
 ## Architecture
 
@@ -51,6 +51,19 @@ src/backend/
    └─ services/rag_service.py  # lazy-builds and caches the pipeline
 ```
 
+## LLM Provider
+
+portfolio-assistant supports three providers, controlled via `llm_provider` in
+`src/backend/webserver/configs/files/local.yml`:
+
+| Provider | `llm_provider` | Model | API key |
+| --- | --- | --- | --- |
+| OpenAI (default) | `openai` | `gpt-4.1-nano` | `OPENAI_API_KEY` |
+| Google | `google` | `gemini-1.5-flash` | `GOOGLE_API_KEY` (Google AI Studio) |
+| HuggingFace | `hf` | `HuggingFaceH4/zephyr-7b-beta` | `HF_TOKEN` |
+
+Embeddings are independent of `llm_provider` — set via `rag.embeddings`.
+
 ## Knowledge base
 
 ```text
@@ -71,5 +84,5 @@ and reuses it on subsequent runs.
 ```bash
 uv sync
 uv run python -m pytest -q              # probe tests (no key, no cost)
-OPENAI_API_KEY=sk-... uv run python -m backend   # http://localhost:5001/ping
+OPENAI_API_KEY=sk-... uv run python -m portfolio_assistant   # http://localhost:5001/ping
 ```

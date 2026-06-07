@@ -54,7 +54,7 @@ Portfolio/
 │  ├─ text-intelligence/     # GenAI text analysis (src/backend layout)
 │  ├─ portfolio-assistant/             # RAG project + FastAPI adapter
 │  └─ deep-research/         # multi-agent project + FastAPI adapter
-├─ docker-compose.yml        # orchestrates gateway + text-intelligence
+├─ docker-compose.yml        # orchestrates all 4 services
 ├─ .github/workflows/ci.yml  # lint + tests (uv) per service
 └─ readme.md
 ```
@@ -75,12 +75,26 @@ curl -X POST localhost:8000/gateway/api/v1/services/text-intelligence/query \
   -H 'content-type: application/json' -d '{"text": "I love this product."}'
 
 # 2) Or run a single service directly (uv)
-cd gateway            && uv sync && uv run pytest -q && uv run python -m backend
-cd services/text-intelligence && uv sync && uv run pytest -q && uv run python -m backend
+cd gateway            && uv sync && uv run pytest -q && uv run python -m gateway
+cd services/text-intelligence && uv sync && uv run pytest -q && uv run python -m text_intelligence
 ```
 
-Heavy services (`portfolio-assistant`, `deep-research`) run locally via `uv run python -m
-backend` with an `OPENAI_API_KEY` — see each service's readme.
+Heavy services (\`portfolio-assistant\`, \`deep-research\`) run locally via \`uv run python -m
+portfolio_assistant\` / \`uv run python -m deep_research\` with the relevant
+API key — see each service's readme.
+
+## LLM Providers
+
+portfolio-assistant supports multiple LLM providers. Set `llm_provider` in
+`services/portfolio-assistant/src/backend/webserver/configs/files/local.yml`:
+
+| Provider | `llm_provider` | Model | API key |
+| --- | --- | --- | --- |
+| OpenAI | `openai` | `gpt-4.1-nano` | `OPENAI_API_KEY` |
+| Google | `google` | `gemini-1.5-flash` | `GOOGLE_API_KEY` (Google AI Studio) |
+| HuggingFace | `hf` | `HuggingFaceH4/zephyr-7b-beta` | `HF_TOKEN` |
+
+Embeddings are configured separately via `rag.embeddings`.
 
 ## Documentation
 
@@ -100,8 +114,9 @@ competency:
 2. **Existing projects onboarded** ✅ — `portfolio-assistant` and `deep-research`
    refactored into the `src/backend` layout as full microservices behind the
    gateway.
-3. **Real LLM providers** — Gemini (free tier) and OpenAI behind the
-   `text-intelligence` provider interface.
+3. **Real LLM providers** ✅ — OpenAI, Google, and HuggingFace providers for
+   \`portfolio-assistant\`; Gemini + OpenAI behind the \`text-intelligence\`
+   provider interface.
 4. **Cloud storage** — S3-compatible `StorageClient` (MinIO → Cloudflare R2),
    persisting requests as a JSONL landing zone.
 5. **Cloud deployment** — gateway + services to Google Cloud Run (free tier);
