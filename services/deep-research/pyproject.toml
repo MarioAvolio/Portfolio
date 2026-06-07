@@ -18,6 +18,8 @@ dependencies = [
 dev = [
     "pytest>=8.0",
     "ruff>=0.6",
+    "mypy>=1.8",
+    "types-pyyaml>=6.0",
 ]
 
 [build-system]
@@ -36,3 +38,10 @@ line-length = 100
 src = ["src", "test"]
 # The vendored agent code under ai/ keeps its original style; lint only new code.
 extend-exclude = ["src/backend/ai"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src/backend"]
+ignore_missing_imports = true
+# The vendored agent code under ai/ is untyped; type-check only the new code.
+exclude = ['src/backend/ai/']

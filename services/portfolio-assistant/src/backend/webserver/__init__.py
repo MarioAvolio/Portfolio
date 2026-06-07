@@ -1,4 +1,4 @@
-"""Webserver package facade for the deep-research service.
+"""Webserver package facade for the insurellm service.
 
 Re-exports the symbols the application depends on and configures structured
 logging. A per-request id (set by the request-id middleware) is injected into

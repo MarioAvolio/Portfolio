@@ -1,18 +1,56 @@
-"""Webserver package facade for the gateway."""
+"""Webserver package facade for the gateway.
+
+Re-exports the symbols the application depends on and configures structured
+logging. A per-request id (set by the request-id middleware) is injected into
+every log line via :data:`request_id_ctx`.
+"""
 
 import logging
+from contextvars import ContextVar
 
 from .configs.configs import Configs
 from .configurations import get_configs
 
-_LOG_FORMAT = "%(asctime)s %(levelname)s %(name)s - %(message)s"
+#: Correlation id of the in-flight request, surfaced in every log record.
+request_id_ctx: ContextVar[str] = ContextVar("request_id", default="-")
 
-logging.basicConfig(level=logging.INFO, format=_LOG_FORMAT)
-
-
-def get_logger(name: str) -> logging.Logger:
-    """Returns a module-scoped logger sharing the service log format."""
-    return logging.getLogger(name)
+_LOG_FORMAT = "%(asctime)s | %(levelname)-7s | %(name)s | req=%(request_id)s | %(message)s"
+_ROOT_LOGGER = "backend"
 
 
-__all__ = ["Configs", "get_configs", "get_logger"]
+class _RequestIdFilter(logging.Filter):
+    """Injects the current request id into each log record."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        setattr(record, "request_id", request_id_ctx.get())
+        return True
+
+
+def _configure() -> None:
+    """Configures the ``backend`` logger once (handler, format, level)."""
+    root = logging.getLogger(_ROOT_LOGGER)
+    if root.handlers:
+        return
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter(_LOG_FORMAT))
+    handler.addFilter(_RequestIdFilter())
+    root.addHandler(handler)
+    root.setLevel(logging.INFO)
+    root.propagate = False
+
+
+def get_logger(name: str | None = None) -> logging.Logger:
+    """Returns the service logger, or a module-scoped child of it.
+
+    Args:
+        name: Usually ``__name__``; module loggers (``backend.*``) propagate to
+            the configured ``backend`` logger.
+
+    Returns:
+        A configured :class:`logging.Logger`.
+    """
+    _configure()
+    return logging.getLogger(name or _ROOT_LOGGER)
+
+
+__all__ = ["Configs", "get_configs", "get_logger", "request_id_ctx"]

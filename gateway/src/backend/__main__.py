@@ -4,20 +4,26 @@ import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
+import httpx
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from uvicorn import Config, Server
 
 from .webserver import get_configs, get_logger
 from .webserver.errors import register_exception_handlers
-from .webserver.routers import alive, health, services, status
+from .webserver.middleware import RequestIdMiddleware
+from .webserver.routers import alive, health, ready, services, status
 
 logger = get_logger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """Logs startup and shutdown, listing the routed services."""
+    """Manages the shared HTTP client and logs startup/shutdown.
+
+    A single :class:`httpx.AsyncClient` is created for the process and reused by
+    every routed call (connection pooling), then closed on shutdown.
+    """
     configs = get_configs()
     logger.info(
         "Starting %s (environment=%s, services=%s)",
@@ -25,9 +31,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         configs.environment,
         [s.name for s in configs.services],
     )
+    app.state.http_client = httpx.AsyncClient(timeout=configs.request_timeout_seconds)
     try:
         yield
     finally:
+        await app.state.http_client.aclose()
         logger.info("Shutting down %s", configs.app_name)
 
 
@@ -39,11 +47,13 @@ def get_app() -> FastAPI:
 
     app.include_router(alive.router)
     app.include_router(health.router, prefix=configs.api_prefix)
+    app.include_router(ready.router, prefix=configs.api_prefix)
     app.include_router(status.router, prefix=configs.api_prefix)
     app.include_router(services.router, prefix=configs.api_prefix)
 
     register_exception_handlers(app)
 
+    app.add_middleware(RequestIdMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],

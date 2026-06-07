@@ -16,7 +16,8 @@ from uvicorn import Config, Server
 
 from .webserver import get_configs, get_logger
 from .webserver.errors import register_exception_handlers
-from .webserver.routers import alive, analyze, health, status
+from .webserver.middleware import RequestIdMiddleware
+from .webserver.routers import alive, analyze, health, ready, status
 
 logger = get_logger(__name__)
 
@@ -61,11 +62,13 @@ def get_app() -> FastAPI:
 
     app.include_router(alive.router)
     app.include_router(health.router, prefix=configs.api_prefix)
+    app.include_router(ready.router, prefix=configs.api_prefix)
     app.include_router(status.router, prefix=configs.api_prefix)
     app.include_router(analyze.router, prefix=configs.api_prefix)
 
     register_exception_handlers(app)
 
+    app.add_middleware(RequestIdMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
