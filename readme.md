@@ -35,14 +35,14 @@ service is down or unconfigured it returns `503` — the hub degrades gracefully
 
 | Service | Path prefix | Status | What it does |
 | --- | --- | --- | --- |
-| [`gateway`](gateway/readme.md) | `/gateway/api/v1` | ✅ | Registry, health aggregation, query routing |
-| [`text-intelligence`](services/text-intelligence/readme.md) | `/text-intelligence/api/v1` | ✅ | Structured text analysis over a pluggable LLM provider (free mock default) |
-| [`portfolio-assistant`](services/portfolio-assistant/readme.md) | `/portfolio-assistant/api/v1` | ✅ probes · 🔑 query | RAG chatbot over Mario Avolio's professional profile (LangChain + Chroma) |
-| [`deep-research`](services/deep-research/README.md) | `/deep-research/api/v1` | ✅ probes · 🔑 query | Multi-agent web research producing a structured report (OpenAI Agents SDK) |
+| [`gateway`](gateway/readme.md) | `/gateway/api/v1` | [free] | Registry, health aggregation, query routing |
+| [`text-intelligence`](services/text-intelligence/readme.md) | `/text-intelligence/api/v1` | [free] | Structured text analysis over a pluggable LLM provider (free mock default) |
+| [`portfolio-assistant`](services/portfolio-assistant/readme.md) | `/portfolio-assistant/api/v1` | [free] probes · [key:query] | RAG chatbot over Mario Avolio's professional profile (LangChain + Chroma) |
+| [`deep-research`](services/deep-research/README.md) | `/deep-research/api/v1` | [free] probes · [key:query] | Multi-agent web research producing a structured report (OpenAI Agents SDK) |
 
-`✅` runs at **~$0** (no API key). `🔑 query` = the functional `/query` route needs
+`[free]` runs at **~$0** (no API key). `[key:query]` = the functional `/query` route needs
 an `OPENAI_API_KEY`; without it the service returns `503` and the hub still runs.
-All four services share the same `src/backend/{webserver,ai}` layout — the two
+All four services share the same `src/<package>` layout — the two
 former standalone projects were refactored into full microservices, not wrapped.
 
 ## Repository structure
@@ -61,7 +61,7 @@ Portfolio/
 
 Each service is self-contained: its own `pyproject.toml`, [**uv**](https://docs.astral.sh/uv/)
 lockfile, tests and Dockerfile. The `text-intelligence` and `gateway` services
-follow the production `src/backend/{webserver,ai,common}` layout (app factory,
+follow the `src/<package>` layout (app factory,
 operational probes, dependency injection, domain-error envelopes).
 
 ## Getting started
@@ -86,7 +86,7 @@ API key — see each service's readme.
 ## LLM Providers
 
 portfolio-assistant supports multiple LLM providers. Set `llm_provider` in
-`services/portfolio-assistant/src/backend/webserver/configs/files/local.yml`:
+`services/portfolio-assistant/src/portfolio_assistant/webserver/configs/files/local.yml`:
 
 | Provider | `llm_provider` | Model | API key |
 | --- | --- | --- | --- |
@@ -109,12 +109,12 @@ Internal documentation lives in [`docs/`](docs/):
 Each step is a self-contained increment (a PR) adding one demonstrable
 competency:
 
-1. **Hub foundation** ✅ — gateway (registry + routing), `text-intelligence`
+1. **Hub foundation** [done] — gateway (registry + routing), `text-intelligence`
    (GenAI, free mock), uv everywhere, Docker, CI.
-2. **Existing projects onboarded** ✅ — `portfolio-assistant` and `deep-research`
-   refactored into the `src/backend` layout as full microservices behind the
+2. **Existing projects onboarded** [done] — `portfolio-assistant` and `deep-research`
+   refactored into the `src/<package>` layout as full microservices behind the
    gateway.
-3. **Real LLM providers** ✅ — OpenAI, Google, and HuggingFace providers for
+3. **Real LLM providers** [done] — OpenAI, Google, and HuggingFace providers for
    \`portfolio-assistant\`; Gemini + OpenAI behind the \`text-intelligence\`
    provider interface.
 4. **Cloud storage** — S3-compatible `StorageClient` (MinIO → Cloudflare R2),
@@ -130,3 +130,9 @@ competency:
 Python · uv · FastAPI · Pydantic · httpx · pytest · Docker · GitHub Actions ·
 LangChain · ChromaDB · OpenAI Agents SDK · (planned) Gemini / OpenAI / Azure
 OpenAI · MinIO / R2 / Azure Blob · Cloud Run / Azure Container Apps · DuckDB.
+
+---
+
+Mario Avolio - AI & Cloud Engineer
+GitHub: https://github.com/MarioAvolio
+LinkedIn: https://www.linkedin.com/in/mario-avolio-b6a52b1b8
