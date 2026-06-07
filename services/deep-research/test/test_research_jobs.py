@@ -64,13 +64,21 @@ def test_get_known_job_returns_record(client: TestClient) -> None:
     assert data["report"] is None
 
 
-def test_job_status_transitions_to_failed_on_error(client: TestClient) -> None:
-    """When the research workflow raises, the job transitions to failed."""
-    with patch(
-        "deep_research.webserver.services.research_service.ResearchService.submit",
-        new_callable=AsyncMock,
-        side_effect=Exception("workflow broken"),
-    ):
-        response = client.post(f"{PREFIX}/research", json={"query": "break it"})
+def test_job_transitions_to_failed_when_workflow_errors(client: TestClient) -> None:
+    """GET /research/jobs/{id} reflects failed status when the background workflow errors."""
+    import asyncio
 
-    assert response.status_code in (202, 503)
+    from deep_research.webserver.dependency.deps import get_job_store
+
+    store = get_job_store()
+    asyncio.get_event_loop().run_until_complete(store.create("fail-id", "fail query"))
+    asyncio.get_event_loop().run_until_complete(store.set_error("fail-id", "something broke"))
+    asyncio.get_event_loop().run_until_complete(
+        store.update_status("fail-id", JobStatus.failed)
+    )
+
+    response = client.get(f"{PREFIX}/research/jobs/fail-id")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "failed"
+    assert data["error"] == "something broke"

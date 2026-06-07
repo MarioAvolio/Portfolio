@@ -16,7 +16,9 @@ production microservice layout: the agents live under `ai/`, wrapped by a thin
 | `GET` | `/ping` | Liveness probe |
 | `GET` | `/deep-research/api/v1/health` | Health check |
 | `GET` | `/deep-research/api/v1/status` | Service metadata |
-| `POST` | `/deep-research/api/v1/query` | Run the research workflow |
+| `POST` | `/deep-research/api/v1/query` | Run the research workflow synchronously |
+| `POST` | `/deep-research/api/v1/research` | Start an async research job (202 Accepted) |
+| `GET` | `/deep-research/api/v1/research/jobs/{job_id}` | Poll a job's status, steps and report |
 
 ### `POST /query`
 
@@ -26,6 +28,37 @@ production microservice layout: the agents live under `ai/`, wrapped by a thin
 
 // response
 { "report": "# Research report\n\n..." }
+```
+
+### `POST /research` (async)
+
+```jsonc
+// request
+{ "query": "Latest trends in retrieval-augmented generation." }
+
+// response (202 Accepted)
+{ "job_id": "abc123", "status": "pending" }
+```
+
+### `GET /research/jobs/{job_id}`
+
+```jsonc
+// response (done)
+{ "job_id": "abc123", "status": "done", "steps": [{"agent": "planner", "content": "...", "timestamp": "..."}], "report": "# Research report\n\n..." }
+```
+
+#### Polling sequence (curl)
+
+```bash
+# 1. Submit the research request
+curl -X POST localhost:5002/deep-research/api/v1/research \
+  -H 'content-type: application/json' \
+  -d '{"query": "Latest trends in RAG."}'
+# -> {"job_id": "abc123", "status": "pending"}
+
+# 2. Poll until status == "done"
+curl localhost:5002/deep-research/api/v1/research/jobs/abc123
+# -> {"job_id": "abc123", "status": "done", "steps": [...], "report": "..."}
 ```
 
 Requires an `OPENAI_API_KEY` (Agents SDK + web search). Without it — or without

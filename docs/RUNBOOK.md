@@ -80,6 +80,12 @@ Tuned via the `rag` block in `configs/files/local.yml`:
 Runs the multi-agent workflow (planner → web searches → writer). Needs
 `OPENAI_API_KEY`; a single run performs several model calls and web searches.
 
+Two query modes:
+- **Synchronous** — `POST /deep-research/api/v1/query` returns the report inline.
+- **Async (job-based)** — `POST /deep-research/api/v1/research` returns a `job_id`
+  (`202 Accepted`); poll `GET /deep-research/api/v1/research/jobs/{job_id}` until
+  `status` is `done`. The job response includes agent `steps` and the final `report`.
+
 ## CI
 
 `.github/workflows/ci.yml` runs lint + tests for every service. The lightweight

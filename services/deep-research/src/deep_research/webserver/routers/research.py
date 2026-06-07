@@ -5,7 +5,6 @@ from typing import Annotated
 from fastapi import APIRouter, BackgroundTasks, Depends, status
 
 from deep_research.webserver.dependency.deps import get_research_service
-from deep_research.webserver.errors import ResearchUnavailableError
 from deep_research.webserver.models.job import JobRecord, JobSubmitResponse
 from deep_research.webserver.models.query import QueryRequest
 from deep_research.webserver.services.research_service import ResearchService
@@ -31,11 +30,8 @@ async def submit_research(
     Returns:
         JobSubmitResponse with job_id and initial pending status.
     """
-    try:
-        job = await service.submit(payload.query, background_tasks)
-        return JobSubmitResponse(job_id=job.job_id, status=job.status)
-    except Exception as exc:
-        raise ResearchUnavailableError(detail=str(exc)) from exc
+    job = await service.submit(payload.query, background_tasks)
+    return JobSubmitResponse(job_id=job.job_id, status=job.status)
 
 
 @router.get("/research/jobs/{job_id}", response_model=JobRecord)

@@ -12,7 +12,7 @@ the gateway's uniform routing API.
 | `gateway` | 8000 | Service registry, health aggregation, query routing |
 | `text-intelligence` | 5000 | Structured text analysis over a pluggable LLM provider |
 | `portfolio-assistant` | 5001 | RAG chatbot over Mario Avolio's professional profile |
-| `deep-research` | 5002 | Multi-agent web research producing a markdown report |
+| `deep-research` | 5002 | Multi-agent web research producing a markdown report (async job via POST /research, poll via GET /research/jobs/{id}) |
 
 ## Topology
 
