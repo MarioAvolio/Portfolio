@@ -31,8 +31,9 @@ is intentional: any service can be read, run and reasoned about the same way.
 1. **App factory.** `get_app()` builds the `FastAPI` instance, registers routers,
    error handlers and middleware. A `lifespan` hook logs startup/shutdown. The
    module is runnable with `python -m backend`.
-2. **Operational probes.** `GET /ping` at the root; `GET /{prefix}/health` and
-   `GET /{prefix}/status` under the API prefix.
+2. **Operational probes.** `GET /ping` at the root (no prefix); `GET /{prefix}/health`,
+   `GET /{prefix}/ready`, and `GET /{prefix}/status` under the API prefix.
+   All four must be covered by zero-cost probe tests.
 3. **Layering.** `router → service → (provider | connector | ai core)`. Routers
    handle HTTP only; services hold logic; the `ai/` layer holds models/agents.
 4. **Dependency injection.** Routers depend on factories in `dependency/deps.py`,
@@ -50,8 +51,15 @@ is intentional: any service can be read, run and reasoned about the same way.
    configmap). `configurations.py` overlays that YAML on the Pydantic defaults
    and caches the result. **Secrets** (API keys) are read from the environment
    only — never from YAML, never from a committed `.env`.
-8. **uv everywhere.** Each service is managed with `uv` and a committed
-   `uv.lock` (where the dependency tree is light enough to lock reliably).
+8. **uv everywhere.** Each service has its own `pyproject.toml` and `uv.lock`.
+   A root `pyproject.toml` declares a uv workspace (`[tool.uv.workspace]`) so
+   `uv sync` at the repo root installs all services into a single shared `.venv`.
+9. **Docstrings.** Every public function, method and class must have a
+   Google-style docstring (`Args:`, `Returns:`, `Raises:` sections). One-liners
+   with no parameters are fine as-is. No comments unless the WHY is non-obvious.
+10. **Dockerfile.** Copy `readme.md` (or `README.md`) alongside `pyproject.toml`
+    and `uv.lock` before the first `RUN uv sync` step — hatchling requires the
+    readme to build the package metadata.
 
 ## Naming
 
