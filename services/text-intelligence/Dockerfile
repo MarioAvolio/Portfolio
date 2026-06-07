@@ -13,7 +13,7 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 
 # Install dependencies first (cached) using the lockfile, without dev tools.
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock readme.md ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 # Then add the application source and install the project itself.
