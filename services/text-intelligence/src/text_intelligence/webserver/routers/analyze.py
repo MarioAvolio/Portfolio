@@ -4,9 +4,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from backend.webserver.dependency.deps import get_analysis_service
-from backend.webserver.models.analyze import AnalysisResult, AnalyzeRequest
-from backend.webserver.services.analysis import AnalysisService
+from text_intelligence.webserver.dependency.deps import get_analysis_service
+from text_intelligence.webserver.models.analyze import AnalysisResult, AnalyzeRequest
+from text_intelligence.webserver.services.analysis import AnalysisService
 
 router = APIRouter(tags=["analyze"])
 

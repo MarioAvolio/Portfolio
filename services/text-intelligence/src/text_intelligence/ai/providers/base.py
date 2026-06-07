@@ -8,7 +8,7 @@ implementation, so adding a provider never touches the routing or service code.
 
 from abc import ABC, abstractmethod
 
-from backend.webserver.models.analyze import AnalysisResult
+from text_intelligence.webserver.models.analyze import AnalysisResult
 
 
 class LLMProvider(ABC):

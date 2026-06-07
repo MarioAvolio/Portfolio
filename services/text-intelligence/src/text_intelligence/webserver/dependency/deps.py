@@ -9,11 +9,11 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from backend.ai.providers.base import LLMProvider
-from backend.ai.providers.mock import MockProvider
-from backend.webserver import Configs, get_configs
-from backend.webserver.errors import ProviderNotSupportedError
-from backend.webserver.services.analysis import AnalysisService
+from text_intelligence.ai.providers.base import LLMProvider
+from text_intelligence.ai.providers.mock import MockProvider
+from text_intelligence.webserver import Configs, get_configs
+from text_intelligence.webserver.errors import ProviderNotSupportedError
+from text_intelligence.webserver.services.analysis import AnalysisService
 
 
 def get_provider(configs: Annotated[Configs, Depends(get_configs)]) -> LLMProvider:

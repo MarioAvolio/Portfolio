@@ -15,7 +15,7 @@ from typing import Any
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
-from backend.webserver import get_logger
+from text_intelligence.webserver import get_logger
 
 logger = get_logger(__name__)
 

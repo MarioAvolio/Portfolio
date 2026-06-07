@@ -1,9 +1,9 @@
 """Business logic for text analysis."""
 
-from backend.ai.providers.base import LLMProvider
-from backend.webserver import Configs, get_logger
-from backend.webserver.errors import EmptyTextError, ProviderFailedError
-from backend.webserver.models.analyze import AnalysisResult
+from text_intelligence.ai.providers.base import LLMProvider
+from text_intelligence.webserver import Configs, get_logger
+from text_intelligence.webserver.errors import EmptyTextError, ProviderFailedError
+from text_intelligence.webserver.models.analyze import AnalysisResult
 
 logger = get_logger(__name__)
 

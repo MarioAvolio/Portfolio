@@ -3,8 +3,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from backend.__main__ import get_app
-from backend.webserver.configurations import get_configs
+from text_intelligence.__main__ import get_app
+from text_intelligence.webserver.configurations import get_configs
 
 
 @pytest.fixture

@@ -8,8 +8,8 @@ the reference implementation real providers are validated against.
 
 import re
 
-from backend.ai.providers.base import LLMProvider
-from backend.webserver.models.analyze import AnalysisResult, Sentiment
+from text_intelligence.ai.providers.base import LLMProvider
+from text_intelligence.webserver.models.analyze import AnalysisResult, Sentiment
 
 _POSITIVE = {"good", "great", "love", "excellent", "happy", "buono", "ottimo", "bene"}
 _NEGATIVE = {"bad", "terrible", "hate", "awful", "sad", "brutto", "male", "pessimo"}
