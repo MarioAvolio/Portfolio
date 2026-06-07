@@ -38,7 +38,7 @@ is intentional: any service can be read, run and reasoned about the same way.
 3. **Layering.** `router → service → (provider | connector | ai core)`. Routers
    handle HTTP only; services hold logic; the `ai/` layer holds models/agents.
 4. **Dependency injection.** Routers depend on factories in `dependency/deps.py`,
-   never on concrete implementations — swapping a backend is a config change.
+   never on concrete implementations - swapping a backend is a config change.
 5. **Domain errors.** Business code raises typed exceptions; a single handler in
    `errors.py` maps them to a stable JSON envelope:
    `{"error_code": "...", "message": "...", ...}`.
@@ -51,7 +51,7 @@ is intentional: any service can be read, run and reasoned about the same way.
    any non-local environment reads `/app/settings/config.yaml` (e.g. a mounted
    configmap). `configurations.py` overlays that YAML on the Pydantic defaults
    and caches the result. **Secrets** (API keys) are read from the environment
-   only — never from YAML, never from a committed `.env`.
+   only - never from YAML, never from a committed `.env`.
 8. **uv everywhere.** Each service has its own `pyproject.toml` and `uv.lock`.
    A root `pyproject.toml` declares a uv workspace (`[tool.uv.workspace]`) so
    `uv sync` at the repo root installs all services into a single shared `.venv`.
@@ -59,7 +59,7 @@ is intentional: any service can be read, run and reasoned about the same way.
    Google-style docstring (`Args:`, `Returns:`, `Raises:` sections). One-liners
    with no parameters are fine as-is. No comments unless the WHY is non-obvious.
 10. **Dockerfile.** Copy `readme.md` (or `README.md`) alongside `pyproject.toml`
-    and `uv.lock` before the first `RUN uv sync` step — hatchling requires the
+    and `uv.lock` before the first `RUN uv sync` step - hatchling requires the
     readme to build the package metadata.
 
 ## Naming
@@ -73,5 +73,5 @@ is intentional: any service can be read, run and reasoned about the same way.
 ## Testing
 
 * Probe tests exercise the microservice surface (app factory, routers, config)
-  without the heavy stack — they run anywhere at zero cost.
+  without the heavy stack - they run anywhere at zero cost.
 * Functional tests that need a real model are opt-in and require an API key.
