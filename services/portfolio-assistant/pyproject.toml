@@ -29,6 +29,9 @@ hf = [
 google = [
     "langchain-google-genai>=2.0",
 ]
+ollama = [
+    "langchain-ollama>=0.2",
+]
 
 [dependency-groups]
 dev = [
