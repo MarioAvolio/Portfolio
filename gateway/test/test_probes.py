@@ -18,6 +18,6 @@ def test_status_lists_registry(client: TestClient) -> None:
     assert body["app_name"] == "gateway"
     assert set(body["registered_services"]) == {
         "text-intelligence",
-        "insurellm",
+        "portfolio-assistant",
         "deep-research",
     }
