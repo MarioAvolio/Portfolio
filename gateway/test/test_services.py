@@ -12,6 +12,7 @@ def test_list_services_reports_unreachable(client: TestClient) -> None:
     assert {s["name"] for s in services} == {
         "portfolio-assistant",
         "deep-research",
+        "market-sentinel",
     }
     # No downstream is running, so every probe must degrade gracefully.
     assert all(s["health"] == "unreachable" for s in services)

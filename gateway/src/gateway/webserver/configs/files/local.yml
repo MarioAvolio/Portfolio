@@ -20,3 +20,13 @@ services:
     query_path: /deep-research/api/v1/query
     query_example:
       query: Latest trends in retrieval-augmented generation.
+  - name: market-sentinel
+    description: SWOT competitive intelligence via CrewAI + SerperDev + SQLite.
+    base_url: http://localhost:5003
+    health_path: /ping
+    query_path: /market-sentinel/api/v1/research
+    query_example:
+      product: ChatGPT
+      competitors:
+        - Gemini
+        - Copilot

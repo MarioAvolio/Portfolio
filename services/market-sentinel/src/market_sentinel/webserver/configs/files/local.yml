@@ -1,0 +1,6 @@
+app_name: market-sentinel
+version: "0.1.0"
+environment: local
+api_prefix: /market-sentinel/api/v1
+db_path: market_sentinel.db
+openai_model: gpt-4o-mini

@@ -1,0 +1,26 @@
+research_task:
+  description: >
+    Research {product} and each competitor in this list: {competitors}.
+    For each entity find: main features, pricing model, target market,
+    any product news from the past 6 months, and publicly known
+    strengths and weaknesses. Return structured notes.
+  expected_output: >
+    A markdown document with one H2 section per entity ({product} +
+    each competitor). Each section contains: Overview, Key Features,
+    Pricing, Recent News, Strengths, Weaknesses.
+  agent: market_researcher
+
+analysis_task:
+  description: >
+    Using the research notes, produce a SWOT analysis for {product}
+    relative to the competitors ({competitors}). Then write a
+    strategic briefing (300-500 words) covering: top 3 opportunities,
+    top 3 threats, and 3 concrete product or go-to-market recommendations.
+  expected_output: >
+    A markdown document with two sections:
+    1. SWOT Analysis formatted as a 2x2 table.
+    2. Strategic Briefing with Opportunities, Threats, and Recommendations
+       subsections.
+  agent: strategic_analyst
+  context:
+    - research_task

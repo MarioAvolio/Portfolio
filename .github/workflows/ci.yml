@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [portfolio-assistant, deep-research]
+        service: [portfolio-assistant, deep-research, market-sentinel]
     defaults:
       run:
         working-directory: services/${{ matrix.service }}
@@ -41,7 +41,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install minimal toolchain
-        run: pip install fastapi "uvicorn[standard]" pydantic httpx pytest ruff bandit pyyaml
+        run: pip install fastapi "uvicorn[standard]" pydantic httpx pytest ruff bandit pyyaml "sqlalchemy[asyncio]" aiosqlite
       - name: Lint
         run: ruff check .
       - name: Format check

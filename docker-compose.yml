@@ -1,7 +1,7 @@
 # Portfolio microservices hub.
 #
-# `docker compose up` starts all three services. The heavyweight services
-# (portfolio-assistant, deep-research) require OPENAI_API_KEY in a root .env file:
+# `docker compose up` starts all four services. The heavyweight services
+# (portfolio-assistant, deep-research, market-sentinel) require API keys in a root .env:
 #
 #   echo "OPENAI_API_KEY=sk-..." > .env
 #
@@ -16,9 +16,11 @@ services:
       ENVIRONMENT: local
       PORTFOLIO_ASSISTANT_URL: http://portfolio-assistant:5001
       DEEP_RESEARCH_URL: http://deep-research:5002
+      MARKET_SENTINEL_URL: http://market-sentinel:5003
     depends_on:
       - portfolio-assistant
       - deep-research
+      - market-sentinel
 
   portfolio-assistant:
     build: ./services/portfolio-assistant
@@ -35,3 +37,12 @@ services:
     environment:
       ENVIRONMENT: local
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+
+  market-sentinel:
+    build: ./services/market-sentinel
+    ports:
+      - "5003:5003"
+    environment:
+      ENVIRONMENT: local
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      SERPER_API_KEY: ${SERPER_API_KEY:-}

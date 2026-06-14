@@ -19,4 +19,5 @@ def test_status_lists_registry(client: TestClient) -> None:
     assert set(body["registered_services"]) == {
         "portfolio-assistant",
         "deep-research",
+        "market-sentinel",
     }

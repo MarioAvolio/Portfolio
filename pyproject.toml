@@ -3,4 +3,5 @@ members = [
     "gateway",
     "services/portfolio-assistant",
     "services/deep-research",
+    "services/market-sentinel",
 ]

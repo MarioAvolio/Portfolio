@@ -38,7 +38,7 @@ service is down or unconfigured it returns `503` -- the hub degrades gracefully.
 | [`gateway`](gateway/readme.md) | `/gateway/api/v1` | [free] | Registry, health aggregation, query routing |
 | [`portfolio-assistant`](services/portfolio-assistant/readme.md) | `/portfolio-assistant/api/v1` | [free] probes, [key:query] | RAG chatbot over Mario Avolio's professional profile (LangChain + Chroma) |
 | [`deep-research`](services/deep-research/README.md) | `/deep-research/api/v1` | [free] probes, [key:query] | Multi-agent web research producing a structured report (OpenAI Agents SDK) |
-| `market-sentinel` *(planned)* | `/market-sentinel/api/v1` | [key:query] | SWOT competitive intelligence (CrewAI + SerperDev + SQLite) |
+| [`market-sentinel`](services/market-sentinel/readme.md) | `/market-sentinel/api/v1` | [key:query] | SWOT competitive intelligence (CrewAI + SerperDev + SQLite) |
 
 `[free]` runs at **~$0** (no API key). `[key:query]` = the functional `/query` route needs
 an `OPENAI_API_KEY`; without it the service returns `503` and the hub still runs.
@@ -52,7 +52,7 @@ Portfolio/
 ├─ services/
 │  ├─ portfolio-assistant/   # RAG chatbot + FastAPI adapter (LangChain + Chroma)
 │  ├─ deep-research/         # multi-agent research + FastAPI adapter (OpenAI Agents SDK)
-│  └─ market-sentinel/       # competitive intelligence (CrewAI + SQLite) [planned]
+│  └─ market-sentinel/       # competitive intelligence (CrewAI + SQLite)
 ├─ docker-compose.yml        # orchestrates all services
 ├─ .github/workflows/ci.yml  # lint + tests per service
 └─ readme.md
