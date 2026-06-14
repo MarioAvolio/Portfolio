@@ -5,6 +5,14 @@ independent FastAPI services. Each service is self-contained -- its own
 environment, dependencies, tests and container -- and is reachable only through
 the gateway's uniform routing API.
 
+## Diagrams
+
+| Diagram | Description |
+| --- | --- |
+| [Gateway routing flow](diagrams/flow-gateway.svg) | How a client query traverses the gateway to a microservice |
+| [Async job pattern](diagrams/flow-async-job.svg) | Fire-and-forget job submission, polling, and background execution |
+| [RAG pipeline](diagrams/flow-rag.svg) | Retrieval-Augmented Generation inside portfolio-assistant |
+
 ## Components
 
 | Component | Port | Role |
@@ -12,7 +20,7 @@ the gateway's uniform routing API.
 | `gateway` | 8000 | Service registry, health aggregation, query routing |
 | `portfolio-assistant` | 5001 | RAG chatbot over Mario Avolio's professional profile |
 | `deep-research` | 5002 | Multi-agent web research producing a markdown report |
-| `market-sentinel` | 5003 | Competitive intelligence SWOT via CrewAI + SQLite *(planned)* |
+| `market-sentinel` | 5003 | Competitive intelligence SWOT via CrewAI + SQLite |
 
 ## Topology
 

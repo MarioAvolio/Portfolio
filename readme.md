@@ -24,7 +24,7 @@ decoupled services -- each with its own environment, dependencies and container.
              ▼                         ▼                          ▼
    portfolio-assistant         deep-research              market-sentinel
    RAG over a knowledge base   multi-agent web research   competitive intelligence
-   (LangChain + Chroma)        (OpenAI Agents SDK)        (CrewAI + SQLite) [planned]
+   (LangChain + Chroma)        (OpenAI Agents SDK)        (CrewAI + SQLite)
 ```
 
 One way in: `POST /gateway/api/v1/services/{name}/query`. The gateway forwards
@@ -99,10 +99,17 @@ Embeddings are configured separately via `rag.embeddings`.
 Internal documentation lives in [`docs/`](docs/):
 
 - [Architecture](docs/ARCHITECTURE.md) -- components, topology, request flow, health model
-
 - [Conventions](docs/CONVENTIONS.md) -- the shared `src/<package>` service layout and rules
-
 - [Runbook](docs/RUNBOOK.md) -- how to run, test and operate every service
+
+**Flow diagrams:**
+
+| | |
+|---|---|
+| [![Gateway routing](docs/diagrams/flow-gateway.svg)](docs/diagrams/flow-gateway.svg) | [![Async job pattern](docs/diagrams/flow-async-job.svg)](docs/diagrams/flow-async-job.svg) |
+| Gateway routing flow | Async job pattern |
+| [![RAG pipeline](docs/diagrams/flow-rag.svg)](docs/diagrams/flow-rag.svg) | |
+| RAG pipeline (portfolio-assistant) | |
 
 ## Roadmap
 
