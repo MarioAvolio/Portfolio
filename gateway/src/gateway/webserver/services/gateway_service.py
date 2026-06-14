@@ -8,6 +8,7 @@ created once at startup (connection pooling).
 """
 
 import asyncio
+from typing import Literal
 
 import httpx
 
@@ -52,7 +53,7 @@ class GatewayService:
 
     async def _probe(self, service: ServiceEndpoint) -> ServiceInfo:
         """Pings a single service's health path, never raising."""
-        health = "unreachable"
+        health: Literal["healthy", "unreachable"] = "unreachable"
         try:
             response = await self._client.get(
                 f"{service.base_url}{service.health_path}", timeout=_HEALTH_TIMEOUT
