@@ -23,23 +23,6 @@ jobs:
       - run: uv run bandit -c pyproject.toml -r src/
       - run: uv run pytest -q --cov=src/ --cov-report=term-missing
 
-  text-intelligence:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: services/text-intelligence
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - run: uv sync --frozen
-      - run: uv run ruff check .
-      - run: uv run ruff format --check .
-      - run: uv run mypy src/text_intelligence --ignore-missing-imports
-      - run: uv run bandit -c pyproject.toml -r src/
-      - run: uv run pytest -q --cov=src/ --cov-report=term-missing
-
   # Heavyweight services (huge ML/agent dependency trees). We do not install the
   # full environment in CI; instead we verify the microservice surface (app
   # factory, routers, config) with a minimal toolchain. The AI core is imported

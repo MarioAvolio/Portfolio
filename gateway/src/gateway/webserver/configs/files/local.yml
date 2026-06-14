@@ -6,13 +6,6 @@ api_prefix: /gateway/api/v1
 request_timeout_seconds: 60
 
 services:
-  - name: text-intelligence
-    description: Structured text analysis (summary, sentiment, tags, language).
-    base_url: http://localhost:5000
-    health_path: /ping
-    query_path: /text-intelligence/api/v1/analyze
-    query_example:
-      text: I love this great product.
   - name: portfolio-assistant
     description: RAG chatbot answering questions about Mario Avolio's professional profile.
     base_url: http://localhost:5001

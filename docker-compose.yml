@@ -1,12 +1,11 @@
 # Portfolio microservices hub.
 #
-# `docker compose up` starts all four services. The heavyweight services
+# `docker compose up` starts all three services. The heavyweight services
 # (portfolio-assistant, deep-research) require OPENAI_API_KEY in a root .env file:
 #
 #   echo "OPENAI_API_KEY=sk-..." > .env
 #
 # docker-compose automatically reads .env from this directory.
-# text-intelligence is free (no API key needed).
 
 services:
   gateway:
@@ -15,20 +14,11 @@ services:
       - "8000:8000"
     environment:
       ENVIRONMENT: local
-      TEXT_INTELLIGENCE_URL: http://text-intelligence:5000
       PORTFOLIO_ASSISTANT_URL: http://portfolio-assistant:5001
       DEEP_RESEARCH_URL: http://deep-research:5002
     depends_on:
-      - text-intelligence
       - portfolio-assistant
       - deep-research
-
-  text-intelligence:
-    build: ./services/text-intelligence
-    ports:
-      - "5000:5000"
-    environment:
-      ENVIRONMENT: local
 
   portfolio-assistant:
     build: ./services/portfolio-assistant

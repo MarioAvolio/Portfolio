@@ -10,7 +10,6 @@ def test_list_services_reports_unreachable(client: TestClient) -> None:
     assert response.status_code == 200
     services = response.json()
     assert {s["name"] for s in services} == {
-        "text-intelligence",
         "portfolio-assistant",
         "deep-research",
     }
@@ -25,6 +24,6 @@ def test_query_unknown_service_returns_404(client: TestClient) -> None:
 
 
 def test_query_known_but_down_returns_503(client: TestClient) -> None:
-    response = client.post(f"{PREFIX}/services/text-intelligence/query", json={"text": "hi"})
+    response = client.post(f"{PREFIX}/services/portfolio-assistant/query", json={"question": "hi"})
     assert response.status_code == 503
     assert response.json()["error_code"] == "service_unavailable"

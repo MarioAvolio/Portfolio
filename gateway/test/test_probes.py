@@ -17,7 +17,6 @@ def test_status_lists_registry(client: TestClient) -> None:
     body = client.get(f"{PREFIX}/status").json()
     assert body["app_name"] == "gateway"
     assert set(body["registered_services"]) == {
-        "text-intelligence",
         "portfolio-assistant",
         "deep-research",
     }

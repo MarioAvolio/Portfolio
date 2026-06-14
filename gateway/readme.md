@@ -22,10 +22,10 @@ pattern.
 ### Routing a query
 
 ```bash
-# unified entrypoint -> analyses text via the text-intelligence service
-curl -X POST localhost:8000/gateway/api/v1/services/text-intelligence/query \
+# unified entrypoint -> queries a service
+curl -X POST localhost:8000/gateway/api/v1/services/portfolio-assistant/query \
   -H 'content-type: application/json' \
-  -d '{"text": "I love this great product."}'
+  -d '{"question": "What technologies does Mario know?"}'
 ```
 
 The body is forwarded as-is; each service documents its own schema (surfaced in
@@ -36,8 +36,8 @@ gateway returns `503 service_unavailable` -- it degrades gracefully.
 
 Services are declared in [`configs/files/local.yml`](src/gateway/webserver/configs/files/local.yml)
 (name, description, paths, example body, default `base_url`). Each base URL is
-overridable with a `*_URL` environment variable (`TEXT_INTELLIGENCE_URL`,
-`PORTFOLIO_ASSISTANT_URL`, `DEEP_RESEARCH_URL`) -- used by docker-compose to point at the
+overridable with a `*_URL` environment variable (`PORTFOLIO_ASSISTANT_URL`,
+`DEEP_RESEARCH_URL`) -- used by docker-compose to point at the
 in-network service hostnames. `request_timeout_seconds` (in the YAML) bounds each
 downstream call.
 
