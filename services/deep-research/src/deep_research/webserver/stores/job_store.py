@@ -1,7 +1,7 @@
 """In-memory job store for async research jobs."""
 
 import asyncio
-from datetime import datetime
+from datetime import UTC, datetime
 
 from deep_research.webserver.models.job import JobRecord, JobStatus, ResearchStep
 
@@ -27,7 +27,7 @@ class JobStore:
         Returns:
             The newly created JobRecord.
         """
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         job = JobRecord(
             job_id=job_id,
             query=query,
@@ -61,7 +61,7 @@ class JobStore:
             job = self._jobs.get(job_id)
             if job:
                 self._jobs[job_id] = job.model_copy(
-                    update={"status": status, "updated_at": datetime.utcnow()}
+                    update={"status": status, "updated_at": datetime.now(UTC)}
                 )
 
     async def add_step(self, job_id: str, step: ResearchStep) -> None:
@@ -75,7 +75,7 @@ class JobStore:
             job = self._jobs.get(job_id)
             if job:
                 self._jobs[job_id] = job.model_copy(
-                    update={"steps": [*job.steps, step], "updated_at": datetime.utcnow()}
+                    update={"steps": [*job.steps, step], "updated_at": datetime.now(UTC)}
                 )
 
     async def set_result(self, job_id: str, report: str) -> None:
@@ -89,7 +89,7 @@ class JobStore:
             job = self._jobs.get(job_id)
             if job:
                 self._jobs[job_id] = job.model_copy(
-                    update={"report": report, "updated_at": datetime.utcnow()}
+                    update={"report": report, "updated_at": datetime.now(UTC)}
                 )
 
     async def set_error(self, job_id: str, error: str) -> None:
@@ -103,5 +103,5 @@ class JobStore:
             job = self._jobs.get(job_id)
             if job:
                 self._jobs[job_id] = job.model_copy(
-                    update={"error": error, "updated_at": datetime.utcnow()}
+                    update={"error": error, "updated_at": datetime.now(UTC)}
                 )

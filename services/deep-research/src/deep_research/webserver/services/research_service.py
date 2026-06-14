@@ -47,7 +47,7 @@ class ResearchService:
                 if event["type"] == "report":
                     report = event["content"]
             return report
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             logger.exception("Research workflow failed")
             raise ResearchUnavailableError(detail=str(exc)) from exc
 
@@ -92,7 +92,7 @@ class ResearchService:
         """
         await self._job_store.update_status(job_id, JobStatus.running)
         try:
-            from datetime import datetime
+            from datetime import UTC, datetime
 
             from deep_research.ai.research_manager import ResearchManager
 
@@ -101,13 +101,13 @@ class ResearchService:
                     step = ResearchStep(
                         agent=event["agent"],
                         content=event["content"],
-                        timestamp=datetime.utcnow(),
+                        timestamp=datetime.now(UTC),
                     )
                     await self._job_store.add_step(job_id, step)
                 elif event["type"] == "report":
                     await self._job_store.set_result(job_id, event["content"])
             await self._job_store.update_status(job_id, JobStatus.done)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             logger.exception("Background research job %s failed", job_id)
             await self._job_store.set_error(job_id, str(exc))
             await self._job_store.update_status(job_id, JobStatus.failed)

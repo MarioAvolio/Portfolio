@@ -4,11 +4,13 @@ All tests run without OPENAI_API_KEY -- the ResearchService is mocked or
 the store is pre-populated via dependency_overrides.
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
+
+import asyncio
 
 from deep_research.webserver.models.job import JobRecord, JobStatus, ResearchStep
 
@@ -21,8 +23,8 @@ def test_submit_research_returns_202_with_job_id(client: TestClient) -> None:
         job_id="test-job-id",
         query="test query",
         status=JobStatus.pending,
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow(),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
 
     with patch(
@@ -51,8 +53,7 @@ def test_get_known_job_returns_record(client: TestClient) -> None:
 
     store = get_job_store()
 
-    import asyncio
-    job = asyncio.get_event_loop().run_until_complete(store.create("known-id", "test query"))
+    job = asyncio.run(store.create("known-id", "test query"))
 
     response = client.get(f"{PREFIX}/research/jobs/known-id")
     assert response.status_code == 200
@@ -66,16 +67,12 @@ def test_get_known_job_returns_record(client: TestClient) -> None:
 
 def test_job_transitions_to_failed_when_workflow_errors(client: TestClient) -> None:
     """GET /research/jobs/{id} reflects failed status when the background workflow errors."""
-    import asyncio
-
     from deep_research.webserver.dependency.deps import get_job_store
 
     store = get_job_store()
-    asyncio.get_event_loop().run_until_complete(store.create("fail-id", "fail query"))
-    asyncio.get_event_loop().run_until_complete(store.set_error("fail-id", "something broke"))
-    asyncio.get_event_loop().run_until_complete(
-        store.update_status("fail-id", JobStatus.failed)
-    )
+    asyncio.run(store.create("fail-id", "fail query"))
+    asyncio.run(store.set_error("fail-id", "something broke"))
+    asyncio.run(store.update_status("fail-id", JobStatus.failed))
 
     response = client.get(f"{PREFIX}/research/jobs/fail-id")
     assert response.status_code == 200
