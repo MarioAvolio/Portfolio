@@ -32,6 +32,34 @@ The body is forwarded as-is; each service documents its own schema (surfaced in
 `query_example` by `GET /services`). If a service is down or unconfigured the
 gateway returns `503 service_unavailable` -- it degrades gracefully.
 
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant GW as Gateway
+    participant Reg as Service Registry
+    participant DS as Downstream Service
+
+    Client->>GW: POST /services/{name}/query
+    GW->>Reg: lookup(name)
+    alt name unknown
+        Reg-->>GW: not found
+        GW-->>Client: 404 service_not_found
+    end
+    Reg-->>GW: base_url, query_path
+
+    GW->>DS: POST {base_url}{query_path} (body forwarded verbatim)
+    alt service unreachable / timeout
+        DS-->>GW: connection error
+        GW-->>Client: 503 service_unavailable
+    end
+    DS-->>GW: response (any status)
+    GW-->>Client: relay response
+
+    Note over GW,Reg: GET /services aggregates health<br/>of all registered services concurrently
+```
+
 ## Registry
 
 Services are declared in [`configs/files/local.yml`](src/gateway/webserver/configs/files/local.yml)
