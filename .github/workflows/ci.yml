@@ -58,7 +58,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install minimal toolchain
-        run: pip install fastapi "uvicorn[standard]" pydantic httpx pytest ruff bandit
+        run: pip install fastapi "uvicorn[standard]" pydantic httpx pytest ruff bandit pyyaml
       - name: Lint
         run: ruff check .
       - name: Format check
