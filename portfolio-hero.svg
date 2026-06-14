@@ -1,92 +1,120 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 380" role="img" aria-label="AI Portfolio - Microservices Hub">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" role="img" aria-label="AI Portfolio - Mario Avolio">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0b1020"/>
-      <stop offset="1" stop-color="#1a2a4f"/>
+      <stop offset="0" stop-color="#070d1f"/>
+      <stop offset="1" stop-color="#111e40"/>
     </linearGradient>
     <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#38bdf8"/>
       <stop offset="1" stop-color="#818cf8"/>
     </linearGradient>
+    <linearGradient id="title-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f0f9ff"/>
+      <stop offset="0.5" stop-color="#bae6fd"/>
+      <stop offset="1" stop-color="#c7d2fe"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#38bdf8" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#818cf8" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="blur-sm">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <filter id="blur-xs">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
     <style>
-      .title { font: 700 40px 'Segoe UI', system-ui, sans-serif; fill: #f8fafc; }
-      .sub   { font: 400 15px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
-      .svc   { font: 600 13px 'Segoe UI', system-ui, sans-serif; fill: #e2e8f0; }
-      .desc  { font: 400 11px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
-      .tag   { font: 500 10px 'Segoe UI', system-ui, sans-serif; fill: #38bdf8; }
-      .node  { fill: #16203b; stroke: #2b3b63; stroke-width: 1.5; }
-      .gw    { fill: #15233f; stroke: url(#accent); stroke-width: 2; }
-      .cli   { fill: #111b36; stroke: #2b3b63; stroke-width: 1.5; }
+      .title  { font: 700 64px 'Segoe UI', system-ui, sans-serif; fill: url(#title-grad); }
+      .sub    { font: 300 18px 'Segoe UI', system-ui, sans-serif; fill: #7dd3fc; letter-spacing: 1px; }
+      .pill   { fill: #0f1e3a; stroke: #1e3a5f; stroke-width: 1; }
+      .pill-t { font: 500 12px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
+      .dot    { fill: #1e3a5f; }
+      .line   { stroke: #1e3a5f; stroke-width: 1; fill: none; }
+      .footer { font: 400 12px 'Segoe UI', system-ui, sans-serif; fill: #334155; }
+      .sep    { fill: #334155; }
     </style>
   </defs>
 
   <!-- Background -->
-  <rect width="1000" height="380" fill="url(#bg)"/>
+  <rect width="1000" height="340" fill="url(#bg)"/>
+
+  <!-- Ambient glow blobs -->
+  <ellipse cx="200" cy="160" rx="280" ry="180" fill="#1d4ed8" opacity="0.06" filter="url(#blur-sm)"/>
+  <ellipse cx="800" cy="180" rx="260" ry="160" fill="#7c3aed" opacity="0.07" filter="url(#blur-sm)"/>
+  <ellipse cx="500" cy="80" rx="200" ry="100" fill="#0ea5e9" opacity="0.05" filter="url(#blur-sm)"/>
+
+  <!-- Dot grid (decorative) -->
+  <g class="dot" opacity="0.35">
+    <!-- row 1 -->
+    <circle cx="60"  cy="40"  r="1.5"/><circle cx="100" cy="40"  r="1.5"/><circle cx="140" cy="40"  r="1.5"/>
+    <circle cx="180" cy="40"  r="1.5"/><circle cx="220" cy="40"  r="1.5"/><circle cx="260" cy="40"  r="1.5"/>
+    <circle cx="780" cy="40"  r="1.5"/><circle cx="820" cy="40"  r="1.5"/><circle cx="860" cy="40"  r="1.5"/>
+    <circle cx="900" cy="40"  r="1.5"/><circle cx="940" cy="40"  r="1.5"/>
+    <!-- row 2 -->
+    <circle cx="60"  cy="80"  r="1.5"/><circle cx="100" cy="80"  r="1.5"/><circle cx="140" cy="80"  r="1.5"/>
+    <circle cx="180" cy="80"  r="1.5"/><circle cx="220" cy="80"  r="1.5"/>
+    <circle cx="820" cy="80"  r="1.5"/><circle cx="860" cy="80"  r="1.5"/><circle cx="900" cy="80"  r="1.5"/>
+    <circle cx="940" cy="80"  r="1.5"/>
+    <!-- bottom rows -->
+    <circle cx="60"  cy="270" r="1.5"/><circle cx="100" cy="270" r="1.5"/><circle cx="140" cy="270" r="1.5"/>
+    <circle cx="860" cy="270" r="1.5"/><circle cx="900" cy="270" r="1.5"/><circle cx="940" cy="270" r="1.5"/>
+    <circle cx="60"  cy="310" r="1.5"/><circle cx="100" cy="310" r="1.5"/>
+    <circle cx="900" cy="310" r="1.5"/><circle cx="940" cy="310" r="1.5"/>
+  </g>
+
+  <!-- Decorative corner lines -->
+  <polyline points="20,20 20,70 70,70" class="line" opacity="0.3"/>
+  <polyline points="980,20 980,70 930,70" class="line" opacity="0.3"/>
+  <polyline points="20,320 20,270 70,270" class="line" opacity="0.3"/>
+  <polyline points="980,320 980,270 930,270" class="line" opacity="0.3"/>
+
   <!-- Top accent bar -->
-  <rect x="0" y="0" width="1000" height="4" fill="url(#accent)"/>
+  <rect x="0" y="0" width="1000" height="3" fill="url(#accent)"/>
 
-  <!-- Title block -->
-  <text x="45" y="65" class="title">AI Portfolio</text>
-  <text x="45" y="88" class="sub">Microservices Hub  |  FastAPI  |  Python  |  Docker</text>
+  <!-- Glow under title -->
+  <rect x="200" y="110" width="600" height="80" fill="url(#glow)" filter="url(#blur-xs)" rx="40"/>
 
-  <!-- Client box -->
-  <g transform="translate(50, 163)">
-    <rect class="cli" width="80" height="40" rx="8"/>
-    <text x="40" y="26" text-anchor="middle" class="svc">client</text>
+  <!-- Main title -->
+  <text x="500" y="170" text-anchor="middle" class="title">AI Portfolio</text>
+
+  <!-- Subtitle -->
+  <text x="500" y="208" text-anchor="middle" class="sub">Microservices Hub</text>
+
+  <!-- Tech pills row -->
+  <g transform="translate(500, 240)">
+    <!-- FastAPI -->
+    <rect x="-340" y="0" width="76" height="26" rx="13" class="pill"/>
+    <text x="-302" y="17" text-anchor="middle" class="pill-t">FastAPI</text>
+    <!-- Python -->
+    <rect x="-254" y="0" width="68" height="26" rx="13" class="pill"/>
+    <text x="-220" y="17" text-anchor="middle" class="pill-t">Python</text>
+    <!-- Docker -->
+    <rect x="-176" y="0" width="68" height="26" rx="13" class="pill"/>
+    <text x="-142" y="17" text-anchor="middle" class="pill-t">Docker</text>
+    <!-- LangChain -->
+    <rect x="-98" y="0" width="84" height="26" rx="13" class="pill"/>
+    <text x="-56" y="17" text-anchor="middle" class="pill-t">LangChain</text>
+    <!-- CrewAI -->
+    <rect x="-4" y="0" width="68" height="26" rx="13" class="pill"/>
+    <text x="30" y="17" text-anchor="middle" class="pill-t">CrewAI</text>
+    <!-- ChromaDB -->
+    <rect x="74" y="0" width="82" height="26" rx="13" class="pill"/>
+    <text x="115" y="17" text-anchor="middle" class="pill-t">ChromaDB</text>
+    <!-- OpenAI SDK -->
+    <rect x="166" y="0" width="90" height="26" rx="13" class="pill"/>
+    <text x="211" y="17" text-anchor="middle" class="pill-t">OpenAI SDK</text>
+    <!-- GitHub Actions -->
+    <rect x="266" y="0" width="108" height="26" rx="13" class="pill"/>
+    <text x="320" y="17" text-anchor="middle" class="pill-t">GitHub Actions</text>
   </g>
 
-  <!-- Arrow client -> gateway -->
-  <line x1="130" y1="183" x2="216" y2="183" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
-  <polygon points="216,178 228,183 216,188" fill="#38bdf8" opacity="0.6"/>
-
-  <!-- Gateway box -->
-  <g transform="translate(228, 138)">
-    <rect class="gw" width="160" height="90" rx="10"/>
-    <text x="80" y="28" text-anchor="middle" class="svc">gateway</text>
-    <text x="80" y="46" text-anchor="middle" class="tag">service registry</text>
-    <text x="80" y="62" text-anchor="middle" class="desc">health aggregation</text>
-    <text x="80" y="76" text-anchor="middle" class="desc">query routing</text>
-  </g>
-
-  <!-- Arrows gateway -> services -->
-  <g stroke="#38bdf8" stroke-width="1.5" fill="none" opacity="0.6">
-    <!-- to node 1 (top) -->
-    <path d="M388 158 H480 V107 H560"/>
-    <!-- to node 2 (middle) -->
-    <path d="M388 183 H560"/>
-    <!-- to node 3 (bottom) -->
-    <path d="M388 208 H480 V259 H560"/>
-  </g>
-  <g fill="#38bdf8" opacity="0.6">
-    <polygon points="560,102 572,107 560,112"/>
-    <polygon points="560,178 572,183 560,188"/>
-    <polygon points="560,254 572,259 560,264"/>
-  </g>
-
-  <!-- Service node 1: RAG + Knowledge Base -->
-  <g transform="translate(572, 80)">
-    <rect class="node" width="360" height="56" rx="8"/>
-    <text x="16" y="22" class="svc">RAG + Knowledge Base</text>
-    <text x="16" y="38" class="desc">conversational AI grounded on curated documents</text>
-    <text x="16" y="50" class="desc">pluggable LLM provider (OpenAI / Google / HF / local)</text>
-  </g>
-
-  <!-- Service node 2: Agentic Research -->
-  <g transform="translate(572, 156)">
-    <rect class="node" width="360" height="56" rx="8"/>
-    <text x="16" y="22" class="svc">Agentic Research</text>
-    <text x="16" y="38" class="desc">async multi-agent web research pipeline</text>
-    <text x="16" y="50" class="desc">structured report  |  async job pattern</text>
-  </g>
-
-  <!-- Service node 3: Competitive Intelligence -->
-  <g transform="translate(572, 232)">
-    <rect class="node" width="360" height="56" rx="8"/>
-    <text x="16" y="22" class="svc">Competitive Intelligence</text>
-    <text x="16" y="38" class="desc">SWOT analysis via multi-agent crew + web search</text>
-    <text x="16" y="50" class="desc">persistent reports  |  async job pattern</text>
-  </g>
+  <!-- Bottom accent line -->
+  <rect x="380" y="296" width="240" height="1" fill="url(#accent)" opacity="0.3"/>
 
   <!-- Footer -->
-  <text x="45" y="362" class="desc">Mario Avolio  |  AI and Cloud Engineer  |  github.com/MarioAvolio</text>
+  <text x="500" y="320" text-anchor="middle" class="footer">Mario Avolio</text>
+  <rect x="558" y="311" width="3" height="3" rx="1.5" class="sep"/>
+  <text x="572" y="320" class="footer">AI and Cloud Engineer</text>
+  <rect x="714" y="311" width="3" height="3" rx="1.5" class="sep"/>
+  <text x="728" y="320" class="footer">github.com/MarioAvolio</text>
 </svg>
