@@ -22,7 +22,7 @@ pattern.
 ### Routing a query
 
 ```bash
-# unified entrypoint → analyses text via the text-intelligence service
+# unified entrypoint -> analyses text via the text-intelligence service
 curl -X POST localhost:8000/gateway/api/v1/services/text-intelligence/query \
   -H 'content-type: application/json' \
   -d '{"text": "I love this great product."}'
@@ -30,14 +30,14 @@ curl -X POST localhost:8000/gateway/api/v1/services/text-intelligence/query \
 
 The body is forwarded as-is; each service documents its own schema (surfaced in
 `query_example` by `GET /services`). If a service is down or unconfigured the
-gateway returns `503 service_unavailable` — it degrades gracefully.
+gateway returns `503 service_unavailable` -- it degrades gracefully.
 
 ## Registry
 
-Services are declared in [`configs/files/local.yml`](src/backend/webserver/configs/files/local.yml)
+Services are declared in [`configs/files/local.yml`](src/gateway/webserver/configs/files/local.yml)
 (name, description, paths, example body, default `base_url`). Each base URL is
 overridable with a `*_URL` environment variable (`TEXT_INTELLIGENCE_URL`,
-`INSURELLM_URL`, `DEEP_RESEARCH_URL`) — used by docker-compose to point at the
+`PORTFOLIO_ASSISTANT_URL`, `DEEP_RESEARCH_URL`) -- used by docker-compose to point at the
 in-network service hostnames. `request_timeout_seconds` (in the YAML) bounds each
 downstream call.
 
@@ -46,7 +46,7 @@ downstream call.
 ```bash
 uv sync
 uv run pytest -q
-uv run python -m backend          # http://localhost:8000/ping
+uv run python -m gateway          # http://localhost:8000/ping
 ```
 
 The whole hub (gateway + services) is orchestrated from the

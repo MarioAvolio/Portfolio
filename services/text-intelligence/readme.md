@@ -6,7 +6,7 @@ language) through a **pluggable LLM provider**.
 
 The layout mirrors the production microservice pattern: an app factory with a
 lifespan hook, operational probes, a thin service layer, dependency-injected
-providers, and a domain-error → HTTP envelope translation.
+providers, and a domain-error -> HTTP envelope translation.
 
 ## Endpoints
 
@@ -36,7 +36,7 @@ providers, and a domain-error → HTTP envelope translation.
 ## Architecture
 
 ```text
-src/backend/
+src/text_intelligence/
 ├─ __main__.py              # app factory (get_app) + lifespan + uvicorn
 ├─ ai/
 │  └─ providers/            # LLMProvider abstraction
@@ -49,13 +49,13 @@ src/backend/
    ├─ dependency/deps.py    # DI: provider + service wiring
    ├─ errors.py             # domain errors + HTTP envelope
    ├─ models/analyze.py     # request/response models
-   ├─ routers/              # alive · health · status · analyze
+   ├─ routers/              # alive + health + status + analyze
    └─ services/analysis.py  # business logic
 ```
 
 The webserver layer depends only on the `LLMProvider` contract, so new backends
 (Gemini, OpenAI, Azure OpenAI) plug in by adding one file and one branch in
-`deps.py` — no routing or service changes.
+`deps.py` -- no routing or service changes.
 
 ## Run
 
@@ -66,23 +66,23 @@ dependency manager. The locked environment is reproducible from `uv.lock`.
 # create the virtualenv and install everything from the lockfile
 uv sync
 
-# run tests (mock provider → no API key, no cost)
+# run tests (mock provider -> no API key, no cost)
 uv run pytest -q
 
 # serve locally
-uv run python -m backend     # http://localhost:5000/ping
+uv run python -m text_intelligence     # http://localhost:5000/ping
 
 # or via Docker
 docker compose up --build
 ```
 
-Configuration lives in [`configs/files/local.yml`](src/backend/webserver/configs/files/local.yml)
-(`app_name`, `api_prefix`, and the `provider` block — `mock` by default). The
+Configuration lives in [`configs/files/local.yml`](src/text_intelligence/webserver/configs/files/local.yml)
+(`app_name`, `api_prefix`, and the `provider` block -- `mock` by default). The
 active environment is selected by `ENVIRONMENT` (default `local`). A provider's
 API key, when needed, is read from the environment, not from the YAML.
 
 ## Status
 
 Current scope: core routes on the **mock** provider. Real providers, object
-storage and deployment land in later roadmap steps — see the
+storage and deployment land in later roadmap steps -- see the
 [hub roadmap](../readme.md#roadmap).

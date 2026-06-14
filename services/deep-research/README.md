@@ -60,19 +60,19 @@ curl -X POST localhost:5002/deep-research/api/v1/research \
 curl localhost:5002/deep-research/api/v1/research/jobs/abc123
 # -> {"job_id": "abc123", "status": "done", "steps": [...], "report": "..."}
 ```
+Requires an `OPENAI_API_KEY` (Agents SDK + web search). Without it -- or without
 
-Requires an `OPENAI_API_KEY` (Agents SDK + web search). Without it — or without
-the agent dependencies installed — the endpoint returns `503
+the agent dependencies installed -- the endpoint returns `503
 research_unavailable`, so the hub stays demonstrable when this service is not
 configured.
 
 ## Architecture
 
 ```text
-src/backend/
+src/deep_research/
 ├─ __main__.py                  # app factory (get_app) + lifespan + uvicorn
 ├─ ai/                          # the multi-agent core (vendored project code)
-│  ├─ research_manager.py       #   orchestrates plan → search → write
+│  ├─ research_manager.py       #   orchestrates plan + search + write
 │  ├─ planner_agent.py          #   decides which searches to run
 │  ├─ search_agent.py           #   performs a single web search
 │  └─ writer_agent.py           #   writes the final report
@@ -83,7 +83,9 @@ src/backend/
    ├─ dependency/deps.py        # DI
    ├─ errors.py                 # domain errors + HTTP envelope
    ├─ models/query.py           # request/response models
-   ├─ routers/                  # alive · health · status · query
+   ├─ models/job.py             # job + step models for async research
+   ├─ stores/job_store.py       # in-memory job store
+   ├─ routers/                  # alive + health + status + query + research
    └─ services/research_service.py  # lazy-runs the agent workflow
 ```
 
@@ -95,5 +97,5 @@ its probe tests import without the agent stack.
 ```bash
 uv sync
 uv run pytest -q                 # probe tests (no key, no cost)
-OPENAI_API_KEY=sk-... uv run python -m backend   # http://localhost:5002/ping
+OPENAI_API_KEY=sk-... uv run python -m deep_research   # http://localhost:5002/ping
 ```

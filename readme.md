@@ -1,4 +1,4 @@
-# AI Portfolio — Microservices Hub
+# AI Portfolio -- Microservices Hub
 
 ![AI Portfolio Hero](./portfolio-hero.svg)
 
@@ -9,7 +9,7 @@ entrypoint and is queried through the same route.
 
 The architecture follows a classic **API-gateway / service-registry** pattern:
 the gateway holds a registry, aggregates health, and routes queries over HTTP to
-decoupled services — each with its own environment, dependencies and container.
+decoupled services -- each with its own environment, dependencies and container.
 
 ## Architecture
 
@@ -29,20 +29,20 @@ decoupled services — each with its own environment, dependencies and container
 
 One way in: `POST /gateway/api/v1/services/{name}/query`. The gateway forwards
 the request body verbatim to the target service and relays the response. If a
-service is down or unconfigured it returns `503` — the hub degrades gracefully.
+service is down or unconfigured it returns `503` -- the hub degrades gracefully.
 
 ## Services
 
 | Service | Path prefix | Status | What it does |
 | --- | --- | --- | --- |
 | [`gateway`](gateway/readme.md) | `/gateway/api/v1` | [free] | Registry, health aggregation, query routing |
-| [`text-intelligence`](services/text-intelligence/readme.md) | `/text-intelligence/api/v1` | [free] | Structured text analysis over a pluggable LLM provider (free mock default) |
-| [`portfolio-assistant`](services/portfolio-assistant/readme.md) | `/portfolio-assistant/api/v1` | [free] probes · [key:query] | RAG chatbot over Mario Avolio's professional profile (LangChain + Chroma) |
-| [`deep-research`](services/deep-research/README.md) | `/deep-research/api/v1` | [free] probes · [key:query] | Multi-agent web research producing a structured report (OpenAI Agents SDK) |
+| [`text-intelligence`](services/text-intelligence/README.md) | `/text-intelligence/api/v1` | [free] | Structured text analysis over a pluggable LLM provider (free mock default) |
+| [`portfolio-assistant`](services/portfolio-assistant/readme.md) | `/portfolio-assistant/api/v1` | [free] probes, [key:query] | RAG chatbot over Mario Avolio's professional profile (LangChain + Chroma) |
+| [`deep-research`](services/deep-research/README.md) | `/deep-research/api/v1` | [free] probes, [key:query] | Multi-agent web research producing a structured report (OpenAI Agents SDK) |
 
 `[free]` runs at **~$0** (no API key). `[key:query]` = the functional `/query` route needs
 an `OPENAI_API_KEY`; without it the service returns `503` and the hub still runs.
-All four services share the same `src/<package>` layout — the two
+All four services share the same `src/<package>` layout -- the two
 former standalone projects were refactored into full microservices, not wrapped.
 
 ## Repository structure
@@ -51,7 +51,7 @@ former standalone projects were refactored into full microservices, not wrapped.
 Portfolio/
 ├─ gateway/                  # API gateway: registry + routing (FastAPI, uv)
 ├─ services/
-│  ├─ text-intelligence/     # GenAI text analysis (src/backend layout)
+│  ├─ text-intelligence/     # GenAI text analysis (src/text_intelligence)
 │  ├─ portfolio-assistant/             # RAG project + FastAPI adapter
 │  └─ deep-research/         # multi-agent project + FastAPI adapter
 ├─ docker-compose.yml        # orchestrates all 4 services
@@ -61,8 +61,8 @@ Portfolio/
 
 Each service is self-contained: its own `pyproject.toml`, [**uv**](https://docs.astral.sh/uv/)
 lockfile, tests and Dockerfile. The `text-intelligence` and `gateway` services
-follow the `src/<package>` layout (app factory,
-operational probes, dependency injection, domain-error envelopes).
+follow the `src/<package>` layout (app factory, operational probes,
+dependency injection, domain-error envelopes).
 
 ## Getting started
 
@@ -81,7 +81,7 @@ cd services/text-intelligence && uv sync && uv run pytest -q && uv run python -m
 
 Heavy services (\`portfolio-assistant\`, \`deep-research\`) run locally via \`uv run python -m
 portfolio_assistant\` / \`uv run python -m deep_research\` with the relevant
-API key — see each service's readme.
+API key -- see each service's readme.
 
 ## LLM Providers
 
@@ -103,36 +103,38 @@ Embeddings are configured separately via `rag.embeddings`.
 
 Internal documentation lives in [`docs/`](docs/):
 
-- [Architecture](docs/ARCHITECTURE.md) — components, topology, request flow, health model
-- [Conventions](docs/CONVENTIONS.md) — the shared `src/backend` service layout and rules
-- [Runbook](docs/RUNBOOK.md) — how to run, test and operate every service
+- [Architecture](docs/ARCHITECTURE.md) -- components, topology, request flow, health model
+
+- [Conventions](docs/CONVENTIONS.md) -- the shared `src/<package>` service layout and rules
+
+- [Runbook](docs/RUNBOOK.md) -- how to run, test and operate every service
 
 ## Roadmap
 
 Each step is a self-contained increment (a PR) adding one demonstrable
 competency:
 
-1. **Hub foundation** [done] — gateway (registry + routing), `text-intelligence`
+1. **Hub foundation** [done] -- gateway (registry + routing), `text-intelligence`
    (GenAI, free mock), uv everywhere, Docker, CI.
-2. **Existing projects onboarded** [done] — `portfolio-assistant` and `deep-research`
+2. **Existing projects onboarded** [done] -- `portfolio-assistant` and `deep-research`
    refactored into the `src/<package>` layout as full microservices behind the
    gateway.
-3. **Real LLM providers** [done] — OpenAI, Google, and HuggingFace providers for
+3. **Real LLM providers** [done] -- OpenAI, Google, and HuggingFace providers for
    \`portfolio-assistant\`; Gemini + OpenAI behind the \`text-intelligence\`
    provider interface.
-4. **Cloud storage** — S3-compatible `StorageClient` (MinIO → Cloudflare R2),
+4. **Cloud storage** -- S3-compatible `StorageClient` (MinIO -> Cloudflare R2),
    persisting requests as a JSONL landing zone.
-5. **Cloud deployment** — gateway + services to Google Cloud Run (free tier);
+5. **Cloud deployment** -- gateway + services to Google Cloud Run (free tier);
    extend CI into CD.
-6. **Agentic AI** — a dedicated agent service with LLM tool-calling.
-7. **Multi-cloud + lakehouse** — Azure OpenAI / Azure Blob, Container Apps;
-   batch job folding JSONL → Parquet, queried with DuckDB; observability.
+6. **Agentic AI** -- a dedicated agent service with LLM tool-calling.
+7. **Multi-cloud + lakehouse** -- Azure OpenAI / Azure Blob, Container Apps;
+   batch job folding JSONL -> Parquet, queried with DuckDB; observability.
 
 ## Tech
 
-Python · uv · FastAPI · Pydantic · httpx · pytest · Docker · GitHub Actions ·
-LangChain · ChromaDB · OpenAI Agents SDK · (planned) Gemini / OpenAI / Azure
-OpenAI · MinIO / R2 / Azure Blob · Cloud Run / Azure Container Apps · DuckDB.
+Python, uv, FastAPI, Pydantic, httpx, pytest, Docker, GitHub Actions,
+LangChain, ChromaDB, OpenAI Agents SDK, (planned) Gemini / OpenAI / Azure
+OpenAI, MinIO / R2 / Azure Blob, Cloud Run / Azure Container Apps, DuckDB.
 
 ---
 

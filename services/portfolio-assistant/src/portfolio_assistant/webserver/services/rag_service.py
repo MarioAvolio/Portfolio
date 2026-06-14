@@ -2,7 +2,7 @@
 
 The heavyweight RAG pipeline (LangChain, Chroma, embeddings, OpenAI) is imported
 and built **lazily** on the first query and cached thereafter. This keeps the
-app — and the probe tests — importable without the ML stack, and lets the
+app -- and the probe tests -- importable without the ML stack, and lets the
 service degrade gracefully (``503``) when it is not configured.
 """
 

@@ -1,8 +1,8 @@
 """Routing logic: health aggregation and query proxying.
 
 The gateway is a thin reverse proxy over the service registry. It never
-interprets a service's payload schema — it forwards the request body verbatim
-and returns the downstream response — which keeps it fully decoupled from each
+interprets a service's payload schema -- it forwards the request body verbatim
+and returns the downstream response -- which keeps it fully decoupled from each
 service's contract. All calls go through a shared :class:`httpx.AsyncClient`
 created once at startup (connection pooling).
 """
@@ -42,7 +42,11 @@ class GatewayService:
         raise ServiceNotFoundError(service=name)
 
     async def list_services(self) -> list[ServiceInfo]:
-        """Returns every registered service with a live health probe."""
+        """Returns every registered service with a live health probe.
+
+        Returns:
+            A list of :class:`ServiceInfo` with health status.
+        """
         probes = await asyncio.gather(*(self._probe(service) for service in self._configs.services))
         return list(probes)
 

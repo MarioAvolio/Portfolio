@@ -1,8 +1,8 @@
 # portfolio-assistant
 
 RAG microservice of the **[Portfolio microservices hub](../../readme.md)**. It
-answers natural-language questions about Mario Avolio's professional profile —
-bio, skills, projects, experience, education, and publications — grounding each
+answers natural-language questions about Mario Avolio's professional profile --
+bio, skills, projects, experience, education, and publications -- grounding each
 answer in a local knowledge base (LangChain + Chroma + OpenAI).
 
 ## Endpoints
@@ -26,15 +26,15 @@ answer in a local knowledge base (LangChain + Chroma + OpenAI).
 ```
 
 Requires an API key for the configured provider (see LLM Provider below).
-Without it the endpoint returns \`503 rag_unavailable\` — the hub stays demonstrable.
+Without it the endpoint returns \`503 rag_unavailable\` -- the hub stays demonstrable.
 
 ## Architecture
 
 ```text
-src/backend/
+src/portfolio_assistant/
 ├─ __main__.py                 # app factory (get_app) + lifespan + uvicorn
 ├─ ai/                         # the RAG core
-│  ├─ pipeline.py              #   build_rag(): indexing → retrieval → generation
+│  ├─ pipeline.py              #   build_rag(): indexing + retrieval + generation
 │  ├─ constants.py             #   paths, model, lazy embeddings
 │  ├─ indexing/                #   document loading + chunking strategies
 │  ├─ retrieval/retriever.py   #   context retrieval
@@ -43,26 +43,26 @@ src/backend/
    ├─ __init__.py              # facade: get_configs / get_logger / Configs
    ├─ configs/configs.py       # Pydantic config
    ├─ configs/files/local.yml  # non-secret config (app, prefix, rag block)
-   ├─ configurations.py        # cached loader: defaults ← YAML overlay
+   ├─ configurations.py        # cached loader: defaults + YAML overlay
    ├─ dependency/deps.py       # DI
    ├─ errors.py                # domain errors + HTTP envelope
    ├─ models/query.py          # request/response models
-   ├─ routers/                 # alive · health · ready · status · query
+   ├─ routers/                 # alive + health + ready + status + query
    └─ services/rag_service.py  # lazy-builds and caches the pipeline
 ```
 
 ## LLM Provider
 
 portfolio-assistant supports three providers, controlled via `llm_provider` in
-`src/backend/webserver/configs/files/local.yml`:
+`src/portfolio_assistant/webserver/configs/files/local.yml`:
 
 | Provider | `llm_provider` | Model | API key |
 | --- | --- | --- | --- |
 | OpenAI (default) | `openai` | `gpt-4.1-nano` | `OPENAI_API_KEY` |
-| Google | `google` | `gemini-1.5-flash` | `GOOGLE_API_KEY` (Google AI Studio) |
+| Google | `google` | `gemini-2.0-flash` | `GOOGLE_API_KEY` (Google AI Studio) |
 | HuggingFace | `hf` | `HuggingFaceH4/zephyr-7b-beta` | `HF_TOKEN` |
 
-Embeddings are independent of `llm_provider` — set via `rag.embeddings`.
+Embeddings are independent of `llm_provider` -- set via `rag.embeddings`.
 
 ## Knowledge base
 
