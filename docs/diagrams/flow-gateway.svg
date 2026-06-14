@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 240" role="img" aria-label="Gateway routing flow">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#1a2a4f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#818cf8"/>
+    </linearGradient>
+    <style>
+      .box   { fill: #16203b; stroke: #2b3b63; stroke-width: 1.5; }
+      .hi    { fill: #15233f; stroke: url(#accent); stroke-width: 2; }
+      .err   { fill: #1f1020; stroke: #7c3aed; stroke-width: 1.5; }
+      .lbl   { font: 600 12px 'Segoe UI', system-ui, sans-serif; fill: #e2e8f0; }
+      .sub   { font: 400 10px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
+      .arw   { font: 400 10px 'Segoe UI', system-ui, sans-serif; fill: #64748b; }
+      .title { font: 600 15px 'Segoe UI', system-ui, sans-serif; fill: #f8fafc; }
+      .credit{ font: 400 10px 'Segoe UI', system-ui, sans-serif; fill: #334155; }
+    </style>
+  </defs>
+
+  <rect width="960" height="240" fill="url(#bg)"/>
+  <rect x="0" y="0" width="960" height="3" fill="url(#accent)"/>
+
+  <text x="20" y="22" class="title">Gateway Routing Flow</text>
+
+  <!-- Happy path row y=80..120 -->
+
+  <!-- Client -->
+  <rect x="20" y="76" width="90" height="40" rx="8" class="box"/>
+  <text x="65" y="101" text-anchor="middle" class="lbl">Client</text>
+
+  <!-- Arrow 1 -->
+  <line x1="110" y1="96" x2="170" y2="96" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="170,91 182,96 170,101" fill="#38bdf8" opacity="0.6"/>
+  <text x="140" y="90" text-anchor="middle" class="arw">POST /query</text>
+
+  <!-- Gateway -->
+  <rect x="182" y="66" width="120" height="60" rx="8" class="hi"/>
+  <text x="242" y="91" text-anchor="middle" class="lbl">Gateway</text>
+  <text x="242" y="107" text-anchor="middle" class="sub">registry lookup</text>
+  <text x="242" y="119" text-anchor="middle" class="sub">health check</text>
+
+  <!-- Arrow 2 -->
+  <line x1="302" y1="96" x2="362" y2="96" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="362,91 374,96 362,101" fill="#38bdf8" opacity="0.6"/>
+  <text x="332" y="90" text-anchor="middle" class="arw">forward</text>
+
+  <!-- Microservice -->
+  <rect x="374" y="76" width="120" height="40" rx="8" class="box"/>
+  <text x="434" y="101" text-anchor="middle" class="lbl">Microservice</text>
+
+  <!-- Arrow 3 response back -->
+  <path d="M434 116 L434 145 L242 145 L242 126" stroke="#818cf8" stroke-width="1.5" fill="none" opacity="0.5" stroke-dasharray="4,3"/>
+  <polygon points="237,126 242,114 247,126" fill="#818cf8" opacity="0.5"/>
+  <text x="338" y="160" text-anchor="middle" class="arw">relay response</text>
+
+  <!-- Arrow 4 response to client -->
+  <path d="M182 82 L110 82 L110 96" stroke="#818cf8" stroke-width="1.5" fill="none" opacity="0.5" stroke-dasharray="4,3"/>
+  <polygon points="105,96 110,108 115,96" fill="#818cf8" opacity="0.5"/>
+
+  <!-- Error path: service unreachable -->
+  <text x="494" y="185" text-anchor="end" class="sub">service unreachable</text>
+  <line x1="434" y1="116" x2="434" y2="195" stroke="#7c3aed" stroke-width="1" opacity="0.5" stroke-dasharray="3,3"/>
+  <rect x="374" y="195" width="120" height="34" rx="8" class="err"/>
+  <text x="434" y="213" text-anchor="middle" class="lbl">503</text>
+  <text x="434" y="224" text-anchor="middle" class="sub">service_unavailable</text>
+
+  <!-- Registry node -->
+  <rect x="600" y="66" width="130" height="60" rx="8" class="box"/>
+  <text x="665" y="88" text-anchor="middle" class="lbl">Service Registry</text>
+  <text x="665" y="104" text-anchor="middle" class="sub">name -&gt; base_url</text>
+  <text x="665" y="118" text-anchor="middle" class="sub">health_path, query_path</text>
+
+  <line x1="302" y1="80" x2="600" y2="80" stroke="#2b3b63" stroke-width="1" opacity="0.4" stroke-dasharray="3,3"/>
+  <text x="451" y="74" text-anchor="middle" class="arw">lookup</text>
+
+  <!-- Legend -->
+  <line x1="600" y1="190" x2="625" y2="190" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+  <text x="630" y="194" class="sub">request</text>
+  <line x1="680" y1="190" x2="705" y2="190" stroke="#818cf8" stroke-width="1.5" opacity="0.5" stroke-dasharray="4,3"/>
+  <text x="710" y="194" class="sub">response</text>
+
+  <text x="20" y="232" class="credit">Mario Avolio | AI Portfolio</text>
+</svg>

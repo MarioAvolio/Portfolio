@@ -28,6 +28,36 @@ answer in a local knowledge base (LangChain + Chroma + OpenAI).
 Requires an API key for the configured provider (see LLM Provider below).
 Without it the endpoint returns \`503 rag_unavailable\` -- the hub stays demonstrable.
 
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API as POST /query
+    participant Svc as RagService
+    participant Pipeline as RAG Pipeline
+    participant Chroma as ChromaDB
+    participant LLM as LLM Provider
+
+    Client->>API: {"question": "..."}
+    API->>Svc: answer(question)
+
+    alt first call
+        Svc->>Pipeline: build_rag() (lazy init)
+        Pipeline->>Chroma: load docs, embed, index
+        Pipeline-->>Svc: pipeline ready
+    end
+
+    Svc->>Pipeline: answer_question(question)
+    Pipeline->>Chroma: similarity_search(embedded question)
+    Chroma-->>Pipeline: top-k context chunks
+    Pipeline->>LLM: question + context chunks
+    LLM-->>Pipeline: grounded answer
+    Pipeline-->>Svc: (answer, source_docs)
+    Svc-->>API: answer, sources list
+    API-->>Client: 200 {"answer": "...", "sources": [...]}
+```
+
 ## Architecture
 
 ```text

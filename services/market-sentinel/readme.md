@@ -16,6 +16,37 @@ Multi-agent competitive intelligence microservice.
 | GET | `/market-sentinel/api/v1/status` | Service metadata (name, version, environment) |
 | GET | `/ping` | Liveness probe (root, no prefix) |
 
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API as POST /research
+    participant Svc as SentinelService
+    participant JS as JobStore
+    participant Crew as SentinelCrew
+    participant RS as ReportStore
+
+    Client->>API: product + competitors
+    API->>Svc: submit()
+    Svc->>JS: create job (pending)
+    Svc-->>Client: 202 + job_id
+
+    Note over Svc,Crew: Background task
+    Svc->>JS: status = running
+    Svc->>Crew: asyncio.to_thread(run)
+    Crew->>Crew: research_task -> analysis_task
+    Crew-->>Svc: markdown report
+    Svc->>JS: set_result(report)
+    Svc->>RS: save(job_id, product, competitors, report)
+    Svc->>JS: status = done
+
+    loop Polling
+        Client->>API: GET /research/jobs/{job_id}
+        API-->>Client: JobRecord (status, report if done)
+    end
+```
+
 ## Env vars
 
 | Variable | Required | Default | Description |

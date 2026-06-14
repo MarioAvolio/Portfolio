@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 260" role="img" aria-label="RAG pipeline flow">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#1a2a4f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#818cf8"/>
+    </linearGradient>
+    <style>
+      .box   { fill: #16203b; stroke: #2b3b63; stroke-width: 1.5; }
+      .hi    { fill: #15233f; stroke: url(#accent); stroke-width: 2; }
+      .db    { fill: #1a1440; stroke: #6d28d9; stroke-width: 1.5; }
+      .lbl   { font: 600 12px 'Segoe UI', system-ui, sans-serif; fill: #e2e8f0; }
+      .sub   { font: 400 10px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
+      .arw   { font: 400 10px 'Segoe UI', system-ui, sans-serif; fill: #64748b; }
+      .tag   { font: 500 10px 'Segoe UI', system-ui, sans-serif; fill: #38bdf8; }
+      .vtag  { font: 500 10px 'Segoe UI', system-ui, sans-serif; fill: #a78bfa; }
+      .title { font: 600 15px 'Segoe UI', system-ui, sans-serif; fill: #f8fafc; }
+      .note  { font: 400 10px 'Segoe UI', system-ui, sans-serif; fill: #475569; }
+      .credit{ font: 400 10px 'Segoe UI', system-ui, sans-serif; fill: #334155; }
+    </style>
+  </defs>
+
+  <rect width="960" height="260" fill="url(#bg)"/>
+  <rect x="0" y="0" width="960" height="3" fill="url(#accent)"/>
+
+  <text x="20" y="24" class="title">RAG Pipeline  --  portfolio-assistant</text>
+  <text x="20" y="38" class="sub">Retrieval-Augmented Generation over a personal knowledge base</text>
+
+  <!-- Knowledge base (pre-loaded, shown at bottom) -->
+  <rect x="20" y="185" width="920" height="44" rx="8" style="fill:#0e1c36; stroke:#1e3a5f; stroke-width:1; stroke-dasharray:4,3;"/>
+  <text x="480" y="205" text-anchor="middle" class="note">knowledge base (pre-loaded at startup)</text>
+  <text x="480" y="220" text-anchor="middle" class="note">profile documents chunked, embedded, and indexed in ChromaDB vector store</text>
+
+  <!-- Step 1: User question -->
+  <rect x="20" y="88" width="120" height="52" rx="8" class="box"/>
+  <text x="80" y="108" text-anchor="middle" class="lbl">User</text>
+  <text x="80" y="122" text-anchor="middle" class="sub">natural language</text>
+  <text x="80" y="134" text-anchor="middle" class="sub">question</text>
+
+  <!-- Arrow 1 -->
+  <line x1="140" y1="114" x2="196" y2="114" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="196,109 208,114 196,119" fill="#38bdf8" opacity="0.6"/>
+  <text x="168" y="108" text-anchor="middle" class="arw">query</text>
+
+  <!-- Step 2: Embed query -->
+  <rect x="208" y="88" width="130" height="52" rx="8" class="box"/>
+  <text x="273" y="108" text-anchor="middle" class="lbl">Embed Query</text>
+  <text x="273" y="122" text-anchor="middle" class="tag">embedding model</text>
+  <text x="273" y="134" text-anchor="middle" class="sub">text -&gt; dense vector</text>
+
+  <!-- Arrow 2 -->
+  <line x1="338" y1="114" x2="394" y2="114" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="394,109 406,114 394,119" fill="#38bdf8" opacity="0.6"/>
+  <text x="366" y="108" text-anchor="middle" class="arw">vector</text>
+
+  <!-- Step 3: ChromaDB -->
+  <rect x="406" y="88" width="140" height="52" rx="8" class="db"/>
+  <text x="476" y="108" text-anchor="middle" class="lbl">ChromaDB</text>
+  <text x="476" y="122" text-anchor="middle" class="vtag">vector similarity search</text>
+  <text x="476" y="134" text-anchor="middle" class="sub">return top-k chunks</text>
+
+  <!-- Arrow 3 -->
+  <line x1="546" y1="114" x2="602" y2="114" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="602,109 614,114 602,119" fill="#38bdf8" opacity="0.6"/>
+  <text x="574" y="108" text-anchor="middle" class="arw">chunks</text>
+
+  <!-- Step 4: LLM -->
+  <rect x="614" y="78" width="170" height="72" rx="8" class="hi"/>
+  <text x="699" y="100" text-anchor="middle" class="lbl">LLM</text>
+  <text x="699" y="116" text-anchor="middle" class="sub">question + retrieved context</text>
+  <text x="699" y="130" text-anchor="middle" class="tag">OpenAI / Google / HF / local</text>
+  <text x="699" y="143" text-anchor="middle" class="sub">grounded answer generation</text>
+
+  <!-- Arrow 4 -->
+  <line x1="784" y1="114" x2="840" y2="114" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="840,109 852,114 840,119" fill="#38bdf8" opacity="0.6"/>
+  <text x="812" y="108" text-anchor="middle" class="arw">answer</text>
+
+  <!-- Step 5: Response -->
+  <rect x="852" y="88" width="90" height="52" rx="8" class="box"/>
+  <text x="897" y="108" text-anchor="middle" class="lbl">Client</text>
+  <text x="897" y="122" text-anchor="middle" class="sub">grounded</text>
+  <text x="897" y="134" text-anchor="middle" class="sub">response</text>
+
+  <!-- Arrow from ChromaDB down to knowledge base (read) -->
+  <line x1="476" y1="140" x2="476" y2="185" stroke="#6d28d9" stroke-width="1" opacity="0.4" stroke-dasharray="3,3"/>
+
+  <text x="20" y="250" class="credit">Mario Avolio | AI Portfolio</text>
+</svg>

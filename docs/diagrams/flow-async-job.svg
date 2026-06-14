@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" role="img" aria-label="Async job pattern flow">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#1a2a4f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#818cf8"/>
+    </linearGradient>
+    <style>
+      .box   { fill: #16203b; stroke: #2b3b63; stroke-width: 1.5; }
+      .hi    { fill: #15233f; stroke: url(#accent); stroke-width: 2; }
+      .bg2   { fill: #0f1e38; stroke: #1e3a5f; stroke-width: 1; stroke-dasharray: 5,3; }
+      .done  { fill: #0d2318; stroke: #16a34a; stroke-width: 1.5; }
+      .lbl   { font: 600 12px 'Segoe UI', system-ui, sans-serif; fill: #e2e8f0; }
+      .sub   { font: 400 10px 'Segoe UI', system-ui, sans-serif; fill: #94a3b8; }
+      .arw   { font: 400 10px 'Segoe UI', system-ui, sans-serif; fill: #64748b; }
+      .tag   { font: 500 10px 'Segoe UI', system-ui, sans-serif; fill: #38bdf8; }
+      .green { font: 500 10px 'Segoe UI', system-ui, sans-serif; fill: #4ade80; }
+      .title { font: 600 15px 'Segoe UI', system-ui, sans-serif; fill: #f8fafc; }
+      .sect  { font: 500 11px 'Segoe UI', system-ui, sans-serif; fill: #475569; }
+      .credit{ font: 400 10px 'Segoe UI', system-ui, sans-serif; fill: #334155; }
+    </style>
+  </defs>
+
+  <rect width="700" height="420" fill="url(#bg)"/>
+  <rect x="0" y="0" width="700" height="3" fill="url(#accent)"/>
+
+  <text x="20" y="24" class="title">Async Job Pattern</text>
+  <text x="20" y="38" class="sub">used by: Agentic Research, Competitive Intelligence</text>
+
+  <!-- Column headers -->
+  <text x="80" y="58" text-anchor="middle" class="sect">Client</text>
+  <text x="310" y="58" text-anchor="middle" class="sect">Service (FastAPI)</text>
+  <text x="560" y="58" text-anchor="middle" class="sect">Background Thread</text>
+
+  <!-- Vertical lane dividers -->
+  <line x1="185" y1="45" x2="185" y2="405" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="2,4" opacity="0.5"/>
+  <line x1="445" y1="45" x2="445" y2="405" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="2,4" opacity="0.5"/>
+
+  <!-- Step 1: POST -->
+  <rect x="30" y="68" width="100" height="32" rx="8" class="box"/>
+  <text x="80" y="89" text-anchor="middle" class="lbl">POST /research</text>
+
+  <line x1="130" y1="84" x2="236" y2="84" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="236,79 248,84 236,89" fill="#38bdf8" opacity="0.6"/>
+  <text x="183" y="78" text-anchor="middle" class="arw">{product, competitors}</text>
+
+  <!-- Step 2: create job -->
+  <rect x="248" y="68" width="124" height="32" rx="8" class="hi"/>
+  <text x="310" y="83" text-anchor="middle" class="lbl">create job</text>
+  <text x="310" y="95" text-anchor="middle" class="tag">status: pending</text>
+
+  <!-- Step 3: spawn background -->
+  <line x1="372" y1="84" x2="448" y2="84" stroke="#38bdf8" stroke-width="1.5" opacity="0.4" stroke-dasharray="3,3"/>
+  <polygon points="448,79 460,84 448,89" fill="#38bdf8" opacity="0.4"/>
+  <text x="410" y="78" text-anchor="middle" class="arw">asyncio.to_thread</text>
+
+  <rect x="460" y="68" width="190" height="32" rx="8" class="box"/>
+  <text x="555" y="83" text-anchor="middle" class="lbl">AI Crew / Agent</text>
+  <text x="555" y="95" text-anchor="middle" class="tag">status: running</text>
+
+  <!-- Step 4: 202 back -->
+  <line x1="248" y1="120" x2="142" y2="120" stroke="#818cf8" stroke-width="1.5" opacity="0.5" stroke-dasharray="4,3"/>
+  <polygon points="142,115 130,120 142,125" fill="#818cf8" opacity="0.5"/>
+  <text x="195" y="114" text-anchor="middle" class="arw">202 + job_id</text>
+
+  <!-- Step 5: poll -->
+  <rect x="30" y="148" width="100" height="32" rx="8" class="box"/>
+  <text x="80" y="162" text-anchor="middle" class="lbl">GET /jobs/{id}</text>
+  <text x="80" y="174" text-anchor="middle" class="sub">polling</text>
+
+  <line x1="130" y1="164" x2="236" y2="164" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="236,159 248,164 236,169" fill="#38bdf8" opacity="0.6"/>
+
+  <!-- Step 6: check store -->
+  <rect x="242" y="148" width="140" height="32" rx="8" class="box"/>
+  <text x="312" y="163" text-anchor="middle" class="lbl">check JobStore</text>
+  <text x="312" y="175" text-anchor="middle" class="sub">in-memory + asyncio.Lock</text>
+
+  <!-- Running response -->
+  <line x1="248" y1="204" x2="142" y2="204" stroke="#818cf8" stroke-width="1.5" opacity="0.5" stroke-dasharray="4,3"/>
+  <polygon points="142,199 130,204 142,209" fill="#818cf8" opacity="0.5"/>
+  <text x="195" y="198" text-anchor="middle" class="arw">status: running</text>
+
+  <!-- AI completes -->
+  <rect x="460" y="148" width="190" height="68" rx="8" class="done"/>
+  <text x="555" y="167" text-anchor="middle" class="lbl">research complete</text>
+  <text x="555" y="183" text-anchor="middle" class="green">status: done</text>
+  <text x="555" y="199" text-anchor="middle" class="sub">report stored in SQLite</text>
+  <text x="555" y="211" text-anchor="middle" class="sub">JobStore updated</text>
+
+  <!-- Arrow from AI done -> service -->
+  <line x1="460" y1="182" x2="374" y2="182" stroke="#4ade80" stroke-width="1.5" opacity="0.5" stroke-dasharray="4,3"/>
+  <polygon points="374,177 362,182 374,187" fill="#4ade80" opacity="0.5"/>
+
+  <!-- Final poll gets done -->
+  <rect x="30" y="248" width="100" height="32" rx="8" class="box"/>
+  <text x="80" y="262" text-anchor="middle" class="lbl">GET /jobs/{id}</text>
+  <text x="80" y="274" text-anchor="middle" class="sub">final poll</text>
+
+  <line x1="130" y1="264" x2="236" y2="264" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="236,259 248,264 236,269" fill="#38bdf8" opacity="0.6"/>
+
+  <rect x="248" y="248" width="124" height="32" rx="8" class="done"/>
+  <text x="310" y="263" text-anchor="middle" class="lbl">status: done</text>
+  <text x="310" y="275" text-anchor="middle" class="green">report ready</text>
+
+  <line x1="248" y1="304" x2="142" y2="304" stroke="#4ade80" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,3"/>
+  <polygon points="142,299 130,304 142,309" fill="#4ade80" opacity="0.6"/>
+  <text x="195" y="298" text-anchor="middle" class="arw">200 + SWOT report</text>
+
+  <!-- History endpoint -->
+  <rect x="248" y="340" width="124" height="44" rx="8" class="box"/>
+  <text x="310" y="357" text-anchor="middle" class="lbl">GET /history</text>
+  <text x="310" y="370" text-anchor="middle" class="sub">list past reports</text>
+  <text x="310" y="380" text-anchor="middle" class="sub">from SQLite</text>
+
+  <text x="20" y="412" class="credit">Mario Avolio | AI Portfolio</text>
+</svg>

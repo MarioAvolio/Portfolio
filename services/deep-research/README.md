@@ -66,6 +66,43 @@ the agent dependencies installed -- the endpoint returns `503
 research_unavailable`, so the hub stays demonstrable when this service is not
 configured.
 
+## Request flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API as POST /research
+    participant Svc as ResearchService
+    participant JS as JobStore
+    participant RM as ResearchManager
+    participant PA as PlannerAgent
+    participant SA as SearchAgent(s)
+    participant WA as WriterAgent
+
+    Client->>API: {"query": "..."}
+    API->>Svc: submit(query, background_tasks)
+    Svc->>JS: create job (pending)
+    Svc-->>Client: 202 {"job_id": "...", "status": "pending"}
+
+    Note over Svc,WA: Background task (FastAPI BackgroundTasks)
+    Svc->>JS: status = running
+    Svc->>RM: run(query) [async generator]
+    RM->>PA: plan searches
+    PA-->>RM: search plan (list of queries)
+    RM->>SA: execute searches (parallel)
+    SA-->>RM: step events (agent, content)
+    RM->>JS: add_step per event
+    RM->>WA: compose report from search results
+    WA-->>RM: report event (markdown)
+    RM-->>Svc: set_result(report)
+    Svc->>JS: status = done
+
+    loop Polling
+        Client->>API: GET /research/jobs/{job_id}
+        API-->>Client: JobRecord (status, steps, report if done)
+    end
+```
+
 ## Architecture
 
 ```text
