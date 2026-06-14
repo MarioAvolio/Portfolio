@@ -9,7 +9,11 @@ def test_list_services_reports_unreachable(client: TestClient) -> None:
     response = client.get(f"{PREFIX}/services")
     assert response.status_code == 200
     services = response.json()
-    assert {s["name"] for s in services} == {"text-intelligence", "portfolio-assistant", "deep-research"}
+    assert {s["name"] for s in services} == {
+        "text-intelligence",
+        "portfolio-assistant",
+        "deep-research",
+    }
     # No downstream is running, so every probe must degrade gracefully.
     assert all(s["health"] == "unreachable" for s in services)
 

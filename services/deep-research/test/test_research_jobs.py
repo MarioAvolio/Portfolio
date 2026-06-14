@@ -4,15 +4,13 @@ All tests run without OPENAI_API_KEY -- the ResearchService is mocked or
 the store is pre-populated via dependency_overrides.
 """
 
+import asyncio
 from datetime import UTC, datetime
 from unittest.mock import AsyncMock, patch
 
-import pytest
 from fastapi.testclient import TestClient
 
-import asyncio
-
-from deep_research.webserver.models.job import JobRecord, JobStatus, ResearchStep
+from deep_research.webserver.models.job import JobRecord, JobStatus
 
 PREFIX = "/deep-research/api/v1"
 
@@ -53,7 +51,7 @@ def test_get_known_job_returns_record(client: TestClient) -> None:
 
     store = get_job_store()
 
-    job = asyncio.run(store.create("known-id", "test query"))
+    asyncio.run(store.create("known-id", "test query"))
 
     response = client.get(f"{PREFIX}/research/jobs/known-id")
     assert response.status_code == 200
