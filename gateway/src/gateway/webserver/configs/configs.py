@@ -41,6 +41,7 @@ class Configs(BaseModel):
         environment: Short environment label.
         api_prefix: Base URL prefix shared by the functional routers.
         request_timeout_seconds: Timeout applied to every downstream call.
+        audit_capacity: How many recent routed calls the gateway keeps in memory.
         services: The routing registry.
     """
 
@@ -49,5 +50,6 @@ class Configs(BaseModel):
     environment: str = "local"
     api_prefix: str = "/gateway/api/v1"
     request_timeout_seconds: float = 60.0
+    audit_capacity: int = 200
 
     services: list[ServiceEndpoint] = Field(default_factory=list)

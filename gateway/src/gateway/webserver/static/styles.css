@@ -109,3 +109,45 @@ textarea {
   color: #feb2b2;
   border-color: #63171b;
 }
+
+#activity {
+  margin-top: 2rem;
+}
+
+#activity h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+
+#activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1e2126;
+  border: 1px solid #2d3138;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#activity-table th,
+#activity-table td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #2d3138;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+}
+
+#activity-table th {
+  color: #9aa0a6;
+  font-family: inherit;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+#activity-table td.ok {
+  color: #9ae6b4;
+}
+
+#activity-table td.bad {
+  color: #feb2b2;
+}

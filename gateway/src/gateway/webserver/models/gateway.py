@@ -1,10 +1,12 @@
 """Models for the gateway API."""
 
+from datetime import datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel
 
 HealthState = Literal["healthy", "unreachable"]
+AuditKind = Literal["query", "job_status"]
 
 
 class ServiceInfo(BaseModel):
@@ -37,3 +39,23 @@ class QueryResponse(BaseModel):
     service: str
     status_code: int
     data: Any
+
+
+class AuditEntry(BaseModel):
+    """A single routed call recorded by the gateway's audit trail.
+
+    Attributes:
+        service: Name of the routed service.
+        kind: Which routed call site produced this entry.
+        status_code: HTTP status code returned by (or assumed for) the call.
+        latency_ms: Wall-clock time spent waiting on the downstream call.
+        timestamp: When the call was recorded (UTC).
+        request_id: Correlation id shared with the gateway's log lines.
+    """
+
+    service: str
+    kind: AuditKind
+    status_code: int
+    latency_ms: float
+    timestamp: datetime
+    request_id: str

@@ -14,7 +14,8 @@ from uvicorn import Config, Server
 from .webserver import get_configs, get_logger
 from .webserver.errors import register_exception_handlers
 from .webserver.middleware import RequestIdMiddleware
-from .webserver.routers import alive, health, ready, services, status
+from .webserver.routers import alive, audit, health, ready, services, status
+from .webserver.stores.audit_store import AuditStore
 
 logger = get_logger(__name__)
 
@@ -34,6 +35,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         [s.name for s in configs.services],
     )
     app.state.http_client = httpx.AsyncClient(timeout=configs.request_timeout_seconds)
+    app.state.audit_store = AuditStore(capacity=configs.audit_capacity)
     try:
         yield
     finally:
@@ -52,6 +54,7 @@ def get_app() -> FastAPI:
     app.include_router(ready.router, prefix=configs.api_prefix)
     app.include_router(status.router, prefix=configs.api_prefix)
     app.include_router(services.router, prefix=configs.api_prefix)
+    app.include_router(audit.router, prefix=configs.api_prefix)
 
     register_exception_handlers(app)
 

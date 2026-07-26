@@ -25,19 +25,20 @@ the gateway's uniform routing API.
 ## Topology
 
 ```text
-                       +-----------------------------+
-     client -----------> |  gateway                    |
-                        |  GET  /services             |  registry + health
-                        |  POST /services/{name}/query|  routes over HTTP
-                        |  GET /services/{name}/jobs/{job_id}  |  poll async jobs
-                        +-------------+---------------+
+                       +----------------------------------------+
+   client ------------> |  gateway                                |
+                        |  GET  /services                         |  registry + health
+                        |  POST /services/{name}/query            |  routes over HTTP
+                        |  GET  /services/{name}/jobs/{job_id}     |  poll async jobs
+                        |  GET  /audit                             |  recent routed calls
+                        +-------------+----------------------------+
                                       |  httpx
               +-------------------+---+---------------------+
               |                   |                         |
               v                   v                         v
      portfolio-assistant      deep-research           market-sentinel
      RAG chatbot              async job research       SWOT intelligence
- ```
+```
 
 ## Request flow (routed query)
 
@@ -72,6 +73,18 @@ returning recent completed reports from SQLite.
 The gateway provides a unified polling entrypoint: `GET /gateway/api/v1/services/{name}/jobs/{job_id}`
 which relays the downstream job document verbatim (same schema-agnostic pattern
 as existing `POST /services/{name}/query`).
+
+## Audit trail
+
+Every routed call already passes through the gateway, which makes it the
+natural place to keep a compact record of recent activity: `GET
+/gateway/api/v1/audit?limit=N` returns the last N calls (service, kind,
+status code, latency, timestamp), newest first. The record is written
+in-process to a bounded in-memory ring buffer -- no queue, no external
+store -- because it costs nothing to lose and nothing to regenerate at this
+scale, and it must not add latency to the call it describes. History resets
+on restart; a durable version is planned as part of the Cloud storage
+roadmap step, not missing by accident.
 
 ## Health model
 

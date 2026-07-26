@@ -59,7 +59,9 @@ def test_registry_job_paths_use_their_own_api_prefix() -> None:
             assert service.job_path.startswith(f"/{service.name}/api/v1/")
 
 
-def test_url_override_is_derived_for_every_registered_service(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_url_override_is_derived_for_every_registered_service(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """The override env var is derived from the name, not a hardcoded map.
 
     Regression test: market-sentinel previously had no entry in the old

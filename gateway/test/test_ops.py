@@ -20,6 +20,7 @@ def test_console_is_served_at_ui(client: TestClient) -> None:
     response = client.get("/ui/")
     assert response.status_code == 200
     assert 'id="services"' in response.text
+    assert 'id="activity"' in response.text
 
 
 def test_ping_still_works_after_static_mount(client: TestClient) -> None:

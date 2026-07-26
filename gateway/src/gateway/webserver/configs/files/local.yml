@@ -4,6 +4,7 @@
 app_name: gateway
 api_prefix: /gateway/api/v1
 request_timeout_seconds: 60
+audit_capacity: 200  # how many recent routed calls GET /audit remembers
 
 services:
   - name: portfolio-assistant

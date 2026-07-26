@@ -14,6 +14,41 @@ async function loadServices() {
   }
 }
 
+async function loadActivity() {
+  const tbody = document.querySelector("#activity-table tbody");
+  const response = await fetch(`${API}/audit?limit=20`);
+  const entries = await response.json();
+
+  tbody.textContent = "";
+  if (entries.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 5;
+    cell.textContent = "No calls yet.";
+    row.appendChild(cell);
+    tbody.appendChild(row);
+    return;
+  }
+
+  for (const entry of entries) {
+    const row = document.createElement("tr");
+    const time = new Date(entry.timestamp).toLocaleTimeString();
+    const statusCell = document.createElement("td");
+    statusCell.textContent = entry.status_code;
+    statusCell.className = entry.status_code >= 400 ? "bad" : "ok";
+    for (const text of [time, entry.service, entry.kind]) {
+      const cell = document.createElement("td");
+      cell.textContent = text;
+      row.appendChild(cell);
+    }
+    row.appendChild(statusCell);
+    const latencyCell = document.createElement("td");
+    latencyCell.textContent = `${entry.latency_ms} ms`;
+    row.appendChild(latencyCell);
+    tbody.appendChild(row);
+  }
+}
+
 function buildCard(entry) {
   const card = document.createElement("section");
   card.className = "card";
@@ -70,6 +105,7 @@ async function send(name, textarea, button, out) {
     }
   } finally {
     button.disabled = false;
+    loadActivity();
   }
 }
 
@@ -92,8 +128,8 @@ function render(name, data, out) {
   if (data && data.job_id) {
     poll(name, data.job_id, out);
   } else if (data && data.answer) {
-    // ponytail: report renders as preformatted text, upgrade to a markdown
-    // renderer if the console ever needs richer formatting.
+    // Reports render as preformatted text for now; a markdown renderer can
+    // replace this if the console ever needs richer formatting.
     const sources = Array.isArray(data.sources) ? `\n\nSources:\n${data.sources.join("\n")}` : "";
     setOutput(out, data.answer + sources, false);
   } else {
@@ -107,6 +143,7 @@ async function poll(name, jobId, out) {
     const response = await fetch(`${API}/services/${name}/jobs/${jobId}`);
     const body = await response.json();
 
+    loadActivity();
     if (!response.ok) {
       renderError(body, out);
       return;
@@ -129,5 +166,9 @@ async function poll(name, jobId, out) {
   out.textContent += "\nStill running -- send another request to poll again.";
 }
 
-document.getElementById("refresh").addEventListener("click", loadServices);
+document.getElementById("refresh").addEventListener("click", () => {
+  loadServices();
+  loadActivity();
+});
 loadServices();
+loadActivity();

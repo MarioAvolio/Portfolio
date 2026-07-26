@@ -19,6 +19,7 @@ pattern.
 | `GET` | `/gateway/api/v1/services` | List services with live health |
 | `POST` | `/gateway/api/v1/services/{name}/query` | Route a query to a service |
 | `GET` | `/gateway/api/v1/services/{name}/jobs/{job_id}` | Poll an async job on a service |
+| `GET` | `/gateway/api/v1/audit` | Recent routed calls (newest first) |
 
 ### Routing a query
 
@@ -39,7 +40,8 @@ The gateway serves a static web console at `http://localhost:8000/ui/`.
 It lists registered services with live health, lets you send a query to any
 service (prefilled from its `query_example`), and automatically polls async
 jobs by their `job_id` until completion, showing status transitions
-(pending -> running -> done).
+(pending -> running -> done). The console also shows a "Recent activity"
+panel displaying the last 20 routed calls.
 It is a thin read-oriented client with no business logic and no auth (local demo only).
 
 ## Request flow
@@ -87,6 +89,15 @@ used by docker-compose to point at the in-network service hostnames.
 `request_timeout_seconds` (in the YAML) bounds each downstream call. Async
 services also declare an optional `job_path` (e.g.
 `/deep-research/api/v1/research/jobs`) for polling background jobs.
+
+## Audit trail
+
+`GET /gateway/api/v1/audit?limit=N` returns the most recently routed calls,
+newest first: service, kind (`query` or `job_status`), status code, latency
+in ms, timestamp, request id. It only records calls that actually reached a
+downstream service -- unknown-service calls and health probes are not
+recorded. Storage is a bounded in-memory ring buffer (`audit_capacity` in
+the YAML, default 200); it resets on every restart by design.
 
 ## Run
 

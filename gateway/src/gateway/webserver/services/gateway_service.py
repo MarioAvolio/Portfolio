@@ -8,6 +8,7 @@ created once at startup (connection pooling).
 """
 
 import asyncio
+import time
 from typing import Literal
 
 import httpx
@@ -15,7 +16,8 @@ import httpx
 from gateway.webserver import Configs, get_logger
 from gateway.webserver.configs.configs import ServiceEndpoint
 from gateway.webserver.errors import ServiceNotFoundError, ServiceUnavailableError
-from gateway.webserver.models.gateway import QueryResponse, ServiceInfo
+from gateway.webserver.models.gateway import AuditKind, QueryResponse, ServiceInfo
+from gateway.webserver.stores.audit_store import AuditStore
 
 logger = get_logger(__name__)
 
@@ -26,10 +28,27 @@ _HEALTH_TIMEOUT = 5.0
 class GatewayService:
     """Resolves registry entries, probes health and proxies queries."""
 
-    def __init__(self, configs: Configs, client: httpx.AsyncClient) -> None:
-        """Binds the gateway to its configuration and the shared HTTP client."""
+    def __init__(self, configs: Configs, client: httpx.AsyncClient, audit: AuditStore) -> None:
+        """Binds the gateway to its configuration, HTTP client and audit store."""
         self._configs = configs
         self._client = client
+        self._audit = audit
+
+    def _record(self, name: str, kind: AuditKind, status_code: int, started: float) -> None:
+        """Records one routed call in the audit trail.
+
+        Only called for calls that actually reached (or tried to reach) a
+        downstream service -- a ``ServiceNotFoundError`` never gets here, since
+        no call was routed.
+
+        Args:
+            name: Target service identifier.
+            kind: Which routed call site produced this entry.
+            status_code: HTTP status code returned by (or assumed for) the call.
+            started: ``time.perf_counter()`` value taken before the call.
+        """
+        latency_ms = round((time.perf_counter() - started) * 1000, 1)
+        self._audit.record(service=name, kind=kind, status_code=status_code, latency_ms=latency_ms)
 
     def _endpoint(self, name: str) -> ServiceEndpoint:
         """Returns the registry entry for ``name`` or raises.
@@ -86,10 +105,13 @@ class GatewayService:
         """
         service = self._endpoint(name)
         url = f"{service.base_url}{service.query_path}"
+        started = time.perf_counter()
         try:
             response = await self._client.post(url, json=payload)
         except httpx.HTTPError as exc:
+            self._record(name, "query", ServiceUnavailableError.status_code, started)
             raise ServiceUnavailableError(service=name) from exc
+        self._record(name, "query", response.status_code, started)
 
         try:
             data = response.json()
@@ -120,10 +142,13 @@ class GatewayService:
             raise ServiceNotFoundError(service=name, message="Service does not expose async jobs.")
 
         url = f"{service.base_url}{service.job_path}/{job_id}"
+        started = time.perf_counter()
         try:
             response = await self._client.get(url)
         except httpx.HTTPError as exc:
+            self._record(name, "job_status", ServiceUnavailableError.status_code, started)
             raise ServiceUnavailableError(service=name) from exc
+        self._record(name, "job_status", response.status_code, started)
 
         try:
             data = response.json()

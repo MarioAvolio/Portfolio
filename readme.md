@@ -19,6 +19,7 @@ decoupled services -- each with its own environment, dependencies and container.
                        │  /services                 │  registry + health
                        │  /services/{name}/query    │  routes over HTTP
                        │  /services/{name}/jobs/{id}│  poll async jobs
+                       │  /audit                    │  recent routed calls
                        │  /ui                       │  static console
                        └──────────────┬─────────────┘
                                       │
@@ -127,14 +128,17 @@ competency:
    gateway.
 3. **Real LLM providers** [done] -- OpenAI, Google, and HuggingFace providers for
    \`portfolio-assistant\`.
-4. **Hub console** -- a dependency-free static UI served by the gateway:
+4. **Hub console** [done] -- a dependency-free static UI served by the gateway:
    live service registry, sync query, and async job polling through one entrypoint.
-5. **Cloud storage** -- S3-compatible `StorageClient` (MinIO -> Cloudflare R2),
+5. **Call audit trail** [done] -- the gateway records every routed call (service, kind,
+   status, latency) in a bounded in-memory ring, exposed as `GET /audit` and shown by
+   the console.
+6. **Cloud storage** -- S3-compatible `StorageClient` (MinIO -> Cloudflare R2),
    persisting requests as a JSONL landing zone.
-6. **Cloud deployment** -- gateway + services to Google Cloud Run (free tier);
+7. **Cloud deployment** -- gateway + services to Google Cloud Run (free tier);
    extend CI into CD.
-7. **Agentic AI** -- a dedicated agent service with LLM tool-calling.
-8. **Multi-cloud + lakehouse** -- Azure OpenAI / Azure Blob, Container Apps;
+8. **Agentic AI** -- a dedicated agent service with LLM tool-calling.
+9. **Multi-cloud + lakehouse** -- Azure OpenAI / Azure Blob, Container Apps;
    batch job folding JSONL -> Parquet, queried with DuckDB; observability.
 
 ## Tech
