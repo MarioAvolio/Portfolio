@@ -23,6 +23,16 @@ header p {
   color: #9aa0a6;
 }
 
+header input {
+  background: #1e2126;
+  color: #e6e6e6;
+  border: 1px solid #2d3138;
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  width: 220px;
+}
+
 header button,
 .card button {
   background: #2b6cb0;

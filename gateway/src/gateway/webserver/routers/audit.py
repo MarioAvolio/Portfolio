@@ -4,14 +4,14 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
 
-from gateway.webserver.dependency.deps import get_audit_store
+from gateway.webserver.dependency.deps import get_audit_store, require_api_key
 from gateway.webserver.models.gateway import AuditEntry
 from gateway.webserver.stores.audit_store import AuditStore
 
 router = APIRouter(tags=["audit"])
 
 
-@router.get("/audit", response_model=list[AuditEntry])
+@router.get("/audit", response_model=list[AuditEntry], dependencies=[Depends(require_api_key)])
 async def get_audit(
     store: Annotated[AuditStore, Depends(get_audit_store)],
     limit: Annotated[int, Query(ge=1, le=500)] = 50,

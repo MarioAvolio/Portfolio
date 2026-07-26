@@ -2,6 +2,11 @@ const API = "/gateway/api/v1";
 const POLL_INTERVAL_MS = 3000;
 const POLL_MAX_ATTEMPTS = 100; // ~5 minutes
 
+function authHeaders(base) {
+  const key = document.getElementById("api-key").value;
+  return key ? { ...base, Authorization: `Bearer ${key}` } : base;
+}
+
 async function loadServices() {
   const container = document.getElementById("services");
   container.textContent = "Loading...";
@@ -16,10 +21,19 @@ async function loadServices() {
 
 async function loadActivity() {
   const tbody = document.querySelector("#activity-table tbody");
-  const response = await fetch(`${API}/audit?limit=20`);
+  const response = await fetch(`${API}/audit?limit=20`, { headers: authHeaders({}) });
   const entries = await response.json();
 
   tbody.textContent = "";
+  if (!response.ok) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 5;
+    cell.textContent = `[${entries.error_code}] ${entries.message}`;
+    row.appendChild(cell);
+    tbody.appendChild(row);
+    return;
+  }
   if (entries.length === 0) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
@@ -94,7 +108,7 @@ async function send(name, textarea, button, out) {
   try {
     const response = await fetch(`${API}/services/${name}/query`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: authHeaders({ "content-type": "application/json" }),
       body: JSON.stringify(payload),
     });
     const body = await response.json();
@@ -140,7 +154,7 @@ function render(name, data, out) {
 async function poll(name, jobId, out) {
   const log = [];
   for (let attempt = 0; attempt < POLL_MAX_ATTEMPTS; attempt++) {
-    const response = await fetch(`${API}/services/${name}/jobs/${jobId}`);
+    const response = await fetch(`${API}/services/${name}/jobs/${jobId}`, { headers: authHeaders({}) });
     const body = await response.json();
 
     loadActivity();
@@ -170,5 +184,10 @@ document.getElementById("refresh").addEventListener("click", () => {
   loadServices();
   loadActivity();
 });
+
+const apiKeyField = document.getElementById("api-key");
+apiKeyField.value = sessionStorage.getItem("apiKey") || "";
+apiKeyField.addEventListener("input", () => sessionStorage.setItem("apiKey", apiKeyField.value));
+
 loadServices();
 loadActivity();

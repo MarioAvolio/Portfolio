@@ -5,13 +5,15 @@ from typing import Annotated
 from fastapi import APIRouter, Body, Depends, status
 from fastapi.responses import JSONResponse
 
-from gateway.webserver.dependency.deps import get_gateway_service
+from gateway.webserver.dependency.deps import get_gateway_service, require_api_key
 from gateway.webserver.models.gateway import ServiceInfo
 from gateway.webserver.services.gateway_service import GatewayService
 
 router = APIRouter(tags=["services"])
 
 
+# Deliberately unguarded: the console must render the registry and live
+# health for a visitor with no key, and the only cost is a /ping per service.
 @router.get("/services", status_code=status.HTTP_200_OK, response_model=list[ServiceInfo])
 async def list_services(
     service: Annotated[GatewayService, Depends(get_gateway_service)],
@@ -20,7 +22,7 @@ async def list_services(
     return await service.list_services()
 
 
-@router.post("/services/{name}/query")
+@router.post("/services/{name}/query", dependencies=[Depends(require_api_key)])
 async def query_service(
     name: str,
     service: Annotated[GatewayService, Depends(get_gateway_service)],
@@ -43,7 +45,7 @@ async def query_service(
     return JSONResponse(status_code=result.status_code, content=result.model_dump())
 
 
-@router.get("/services/{name}/jobs/{job_id}")
+@router.get("/services/{name}/jobs/{job_id}", dependencies=[Depends(require_api_key)])
 async def get_job_status(
     name: str,
     job_id: str,

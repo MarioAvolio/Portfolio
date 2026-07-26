@@ -38,11 +38,31 @@ gateway returns `503 service_unavailable` -- it degrades gracefully.
 
 The gateway serves a static web console at `http://localhost:8000/ui/`.
 It lists registered services with live health, lets you send a query to any
-service (prefilled from its `query_example`), and automatically polls async
-jobs by their `job_id` until completion, showing status transitions
-(pending -> running -> done). The console also shows a "Recent activity"
-panel displaying the last 20 routed calls.
-It is a thin read-oriented client with no business logic and no auth (local demo only).
+  service (prefilled from its `query_example`), and automatically polls async
+  jobs by their `job_id` until completion, showing status transitions
+  (pending -> running -> done). The console also shows a "Recent activity"
+  panel displaying the last 20 routed calls.
+It is a thin read-oriented client with optional auth (off by default) and no business logic (local demo only).
+
+### Access
+
+An optional shared secret guards three endpoints: `POST /services/{name}/query`,
+`GET /services/{name}/jobs/{job_id}`, and `GET /audit`. Set the `GATEWAY_API_KEY`
+environment variable and callers must send `Authorization: Bearer <that value>`
+or get a `401 unauthorized`. Unset means open -- those three endpoints behave
+exactly as before, the same contract `OPENAI_API_KEY` already has elsewhere in
+the hub.
+
+```bash
+curl -X POST localhost:8000/gateway/api/v1/services/portfolio-assistant/query \
+  -H 'content-type: application/json' \
+  -H 'Authorization: Bearer your-secret-key' \
+  -d '{"question": "What technologies does Mario know?"}'
+```
+
+`GET /services`, the console at `/ui/`, and the four operational probes always
+stay open, key or no key, so the registry, live health and container
+orchestration keep working for anyone.
 
 ## Request flow
 

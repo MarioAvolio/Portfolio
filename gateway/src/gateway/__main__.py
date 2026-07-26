@@ -1,6 +1,7 @@
 """Application entrypoint and FastAPI app factory for the gateway."""
 
 import asyncio
+import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -28,11 +29,13 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     every routed call (connection pooling), then closed on shutdown.
     """
     configs = get_configs()
+    guarded = "on" if os.environ.get("GATEWAY_API_KEY") else "off"
     logger.info(
-        "Starting %s (environment=%s, services=%s)",
+        "Starting %s (environment=%s, services=%s, api_key_check=%s)",
         configs.app_name,
         configs.environment,
         [s.name for s in configs.services],
+        guarded,
     )
     app.state.http_client = httpx.AsyncClient(timeout=configs.request_timeout_seconds)
     app.state.audit_store = AuditStore(capacity=configs.audit_capacity)

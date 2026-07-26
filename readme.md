@@ -36,6 +36,7 @@ service is down or unconfigured it returns `503` -- the hub degrades gracefully.
 Async services (`deep-research`, `market-sentinel`) return a `job_id`, polled via
 `GET /gateway/api/v1/services/{name}/jobs/{job_id}` until `status` is `done`.
 Every routed call carries an `X-Request-ID` onward to downstream services for end-to-end correlation.
+An optional `GATEWAY_API_KEY` guards `/query`, `/jobs` and `/audit` with a bearer token; unset, the hub stays open for the demo.
 
 ## Services
 
@@ -134,13 +135,17 @@ competency:
 5. **Call audit trail** [done] -- the gateway records every routed call (service, kind,
    status, latency) in a bounded in-memory ring, exposed as `GET /audit` and shown by
    the console.
-6. **Cloud storage** -- S3-compatible `StorageClient` (MinIO -> Cloudflare R2),
+6. **Traceable relay** [done] -- the gateway forwards its request id to every downstream
+   call and retries a connection-level blip, so one id joins hub, audit and service logs.
+7. **Guarded entrypoint** [done] -- one shared API key, checked at the gateway before any
+   routed call or audit read; unset by default, so the public demo stays open.
+8. **Cloud storage** -- S3-compatible `StorageClient` (MinIO -> Cloudflare R2),
    persisting requests as a JSONL landing zone.
-7. **Cloud deployment** -- gateway + services to Google Cloud Run (free tier);
+9. **Cloud deployment** -- gateway + services to Google Cloud Run (free tier);
    extend CI into CD.
-8. **Agentic AI** -- a dedicated agent service with LLM tool-calling.
-9. **Multi-cloud + lakehouse** -- Azure OpenAI / Azure Blob, Container Apps;
-   batch job folding JSONL -> Parquet, queried with DuckDB; observability.
+10. **Agentic AI** -- a dedicated agent service with LLM tool-calling.
+11. **Multi-cloud + lakehouse** -- Azure OpenAI / Azure Blob, Container Apps;
+    batch job folding JSONL -> Parquet, queried with DuckDB; observability.
 
 ## Tech
 

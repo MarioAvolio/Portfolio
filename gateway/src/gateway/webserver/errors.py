@@ -64,6 +64,19 @@ class ServiceUnavailableError(GatewayError):
         return {"service": self.service}
 
 
+class UnauthorizedError(GatewayError):
+    """Raised when the API key check fails.
+
+    A missing header and a wrong key deliberately produce the exact same
+    response, so the endpoint can never be used to probe whether a guessed
+    key is close to correct.
+    """
+
+    status_code = status.HTTP_401_UNAUTHORIZED
+    error_code = "unauthorized"
+    message = "Missing or invalid API key."
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     """Registers a handler translating :class:`GatewayError` subclasses."""
 

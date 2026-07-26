@@ -33,10 +33,10 @@ curl -X POST localhost:8000/gateway/api/v1/services/portfolio-assistant/query \
 
 Open `http://localhost:8000/ui/` to use the static web console.
 It lists registered services with live health, lets you send a query to any
-service (prefilled from its `query_example`), and automatically polls async
-jobs by their `job_id` until completion, showing status transitions
-(pending -> running -> done).
-It is a thin read-oriented client with no business logic and no auth (local demo only).
+ service (prefilled from its `query_example`), and automatically polls async
+ jobs by their `job_id` until completion, showing status transitions
+ (pending -> running -> done).
+It is a thin read-oriented client with optional auth (off by default) and no business logic (local demo only).
 
 ## Run a single service
 
@@ -56,6 +56,13 @@ Package names per service:
 | portfolio-assistant | `portfolio_assistant` | 5001 | `OPENAI_API_KEY` |
 | deep-research | `deep_research` | 5002 | `OPENAI_API_KEY` |
 | market-sentinel | `market_sentinel` | 5003 | `OPENAI_API_KEY` + `SERPER_API_KEY` |
+
+Example (gateway):
+```bash
+cd gateway
+export GATEWAY_API_KEY=sk-...
+uv run python -m gateway
+```
 
 Example (portfolio-assistant):
 ```bash

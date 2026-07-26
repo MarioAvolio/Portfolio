@@ -58,7 +58,7 @@ The gateway serves a static web console at `http://localhost:8000/ui/`.
 It lists registered services with live health, lets you send a query to any
 (service's `query_example`), and automatically polls async jobs by their
 `job_id` until completion, showing status transitions (pending -> running -> done).
-It is a thin read-oriented client with no business logic and no auth (local demo only).
+It is a thin read-oriented client with optional auth (off by default) and no business logic (local demo only).
 
 ## Async job pattern (deep-research, market-sentinel)
 
@@ -104,6 +104,8 @@ services concurrently and reports each as `healthy` or `unreachable`.
 it their `/query` returns `503` while their probes keep working -- the hub stays
 demonstrable end to end. `market-sentinel` also requires `OPENAI_API_KEY`
 and `SERPER_API_KEY`.
+
+A shared secret guards the three gateway endpoints (`POST /gateway/api/v1/services/{name}/query`, `GET /gateway/api/v1/services/{name}/jobs/{job_id}`, and `GET /gateway/api/v1/audit`). It is checked once at the single entrypoint before any downstream call or audit read happens, is opt-in (unset means open) so the public demo stays clickable without a key, and per-user identity, login flows, and token exchange between services are out of scope at this scale -- this is a single shared credential, not a user system.
 
 The same request id appears in the gateway's log, the audit trail, and each downstream service's own log for one end-to-end call, because every service already runs the same request-id middleware and adopts an inbound id instead of generating its own; retries are scoped to connection failures only, so a paid model call is never fired twice for one slow response, and each attempt shows as its own row in the audit trail.
 
