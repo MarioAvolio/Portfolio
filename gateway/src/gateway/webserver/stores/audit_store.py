@@ -47,13 +47,27 @@ class AuditStore:
             )
         )
 
-    def recent(self, limit: int) -> list[AuditEntry]:
-        """Returns up to ``limit`` entries, newest first.
+    def recent(
+        self, limit: int, service: str | None = None, kind: AuditKind | None = None
+    ) -> list[AuditEntry]:
+        """Returns up to ``limit`` matching entries, newest first.
+
+        ``limit`` bounds the number of entries returned *after* filtering, not
+        the number scanned -- ``recent(5, service="x")`` returns the 5 most
+        recent entries for ``x``, however far back it has to look.
 
         Args:
             limit: Maximum number of entries to return.
+            service: If given, only entries for this service name.
+            kind: If given, only entries of this call kind.
 
         Returns:
-            The most recently recorded entries, newest first.
+            The most recently recorded matching entries, newest first.
         """
-        return list(islice(reversed(self._entries), limit))
+        matches = (
+            entry
+            for entry in reversed(self._entries)
+            if (service is None or entry.service == service)
+            and (kind is None or entry.kind == kind)
+        )
+        return list(islice(matches, limit))

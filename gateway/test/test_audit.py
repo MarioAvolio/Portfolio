@@ -51,6 +51,48 @@ def test_ring_buffer_is_bounded() -> None:
     assert [entry.service for entry in recent] == ["c", "b"]
 
 
+def test_limit_applies_after_filtering_not_before() -> None:
+    """recent(2, service="a") must scan past non-matching entries to find two
+    matches -- under the wrong reading ("scan the last 2, then filter") this
+    would return an empty list, since the two most recent entries are "b".
+    """
+    store = AuditStore(capacity=10)
+    for service in ("a", "a", "a", "b", "b"):
+        store.record(service=service, kind="query", status_code=200, latency_ms=1.0)
+
+    matches = store.recent(2, service="a")
+    assert len(matches) == 2
+    assert all(entry.service == "a" for entry in matches)
+
+
+def test_endpoint_filters_by_service_and_kind(client: TestClient) -> None:
+    client.post(f"{PREFIX}/services/portfolio-assistant/query", json={"question": "hi"})
+    client.get(f"{PREFIX}/services/deep-research/jobs/some-id")
+
+    by_service = client.get(f"{PREFIX}/audit?service=portfolio-assistant").json()
+    assert all(entry["service"] == "portfolio-assistant" for entry in by_service)
+    assert len(by_service) >= 1
+
+    by_kind = client.get(f"{PREFIX}/audit?kind=job_status").json()
+    assert all(entry["kind"] == "job_status" for entry in by_kind)
+    assert len(by_kind) >= 1
+
+    combined = client.get(f"{PREFIX}/audit?service=deep-research&kind=job_status").json()
+    assert all(
+        entry["service"] == "deep-research" and entry["kind"] == "job_status" for entry in combined
+    )
+    assert len(combined) >= 1
+
+
+def test_unmatched_service_filter_returns_empty_list(client: TestClient) -> None:
+    client.post(f"{PREFIX}/services/portfolio-assistant/query", json={"question": "hi"})
+    assert client.get(f"{PREFIX}/audit?service=nope").json() == []
+
+
+def test_invalid_kind_filter_is_rejected(client: TestClient) -> None:
+    assert client.get(f"{PREFIX}/audit?kind=bogus").status_code == 422
+
+
 def test_limit_is_validated(client: TestClient) -> None:
     assert client.get(f"{PREFIX}/audit?limit=0").status_code == 422
 

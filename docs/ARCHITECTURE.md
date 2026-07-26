@@ -79,7 +79,8 @@ as existing `POST /services/{name}/query`).
 Every routed call already passes through the gateway, which makes it the
 natural place to keep a compact record of recent activity: `GET
 /gateway/api/v1/audit?limit=N` returns the last N calls (service, kind,
-status code, latency, timestamp), newest first. The record is written
+status code, latency, timestamp), newest first. The result can optionally be
+narrowed to one service or one call kind. The record is written
 in-process to a bounded in-memory ring buffer -- no queue, no external
 store -- because it costs nothing to lose and nothing to regenerate at this
 scale, and it must not add latency to the call it describes. History resets

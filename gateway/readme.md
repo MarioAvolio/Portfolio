@@ -128,6 +128,15 @@ downstream service -- unknown-service calls and health probes are not
 recorded. Storage is a bounded in-memory ring buffer (`audit_capacity` in
 the YAML, default 200); it resets on every restart by design.
 
+Two optional filters narrow the result: `service` (exact match on a
+registered service name) and `kind` (`query` or `job_status`). `limit`
+bounds the count returned *after* filtering, not before -- `?limit=5&service=x`
+means "the 5 most recent entries for x", scanning back as far as needed.
+
+```bash
+curl 'localhost:8000/gateway/api/v1/audit?limit=5&service=portfolio-assistant'
+```
+
 ## Run
 
 ```bash
