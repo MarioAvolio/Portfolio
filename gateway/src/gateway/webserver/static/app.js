@@ -50,33 +50,42 @@ async function send(name, textarea, button, out) {
   try {
     payload = JSON.parse(textarea.value);
   } catch (err) {
-    out.textContent = `Invalid JSON: ${err.message}`;
+    setOutput(out, `Invalid JSON: ${err.message}`, true);
     return;
   }
 
   button.disabled = true;
-  out.textContent = "Sending...";
+  setOutput(out, "Sending...", false);
   try {
     const response = await fetch(`${API}/services/${name}/query`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(payload),
     });
-    const envelope = await response.json();
-    if (envelope.status_code >= 400) {
-      renderError(envelope.data, out);
+    const body = await response.json();
+    if (!response.ok) {
+      renderError(body, out);
     } else {
-      render(name, envelope.data, out);
+      render(name, body.data, out);
     }
   } finally {
     button.disabled = false;
   }
 }
 
-function renderError(data, out) {
-  const code = data && data.error_code ? data.error_code : "error";
-  const message = data && data.message ? data.message : "Request failed.";
-  out.textContent = `[${code}] ${message}`;
+function setOutput(out, text, isError) {
+  out.textContent = text;
+  out.classList.toggle("error", isError);
+}
+
+function renderError(body, out) {
+  // Gateway-level errors (unknown service, unreachable) come back flat
+  // ({error_code, message}); errors relayed from a reachable downstream
+  // service are nested under `data`. Try both shapes.
+  const errorPayload = body && body.data ? body.data : body;
+  const code = errorPayload && errorPayload.error_code ? errorPayload.error_code : "error";
+  const message = errorPayload && errorPayload.message ? errorPayload.message : "Request failed.";
+  setOutput(out, `[${code}] ${message}`, true);
 }
 
 function render(name, data, out) {
@@ -86,9 +95,9 @@ function render(name, data, out) {
     // ponytail: report renders as preformatted text, upgrade to a markdown
     // renderer if the console ever needs richer formatting.
     const sources = Array.isArray(data.sources) ? `\n\nSources:\n${data.sources.join("\n")}` : "";
-    out.textContent = data.answer + sources;
+    setOutput(out, data.answer + sources, false);
   } else {
-    out.textContent = JSON.stringify(data, null, 2);
+    setOutput(out, JSON.stringify(data, null, 2), false);
   }
 }
 
@@ -96,25 +105,25 @@ async function poll(name, jobId, out) {
   const log = [];
   for (let attempt = 0; attempt < POLL_MAX_ATTEMPTS; attempt++) {
     const response = await fetch(`${API}/services/${name}/jobs/${jobId}`);
-    const envelope = await response.json();
+    const body = await response.json();
 
-    if (envelope.status_code >= 400) {
-      renderError(envelope.data, out);
+    if (!response.ok) {
+      renderError(body, out);
       return;
     }
 
-    const status = envelope.data.status;
+    const status = body.data.status;
     if (log[log.length - 1] !== status) {
       log.push(status);
     }
-    out.textContent = `${log.join(" -> ")}\n`;
 
     if (status === "done" || status === "failed") {
-      const report = envelope.data.report || envelope.data.error || "(no output)";
-      out.textContent += `\n${report}`;
+      const report = body.data.report || body.data.error || "(no output)";
+      setOutput(out, `${log.join(" -> ")}\n\n${report}`, status === "failed");
       return;
     }
 
+    setOutput(out, `${log.join(" -> ")}\n`, false);
     await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
   }
   out.textContent += "\nStill running -- send another request to poll again.";

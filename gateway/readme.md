@@ -68,6 +68,13 @@ sequenceDiagram
     GW-->>Client: relay response
 
     Note over GW,Reg: GET /services aggregates health<br/>of all registered services concurrently
+
+    alt client polls async jobs
+        Client->>GW: GET /services/{name}/jobs/{job_id}
+        GW->>DS: relay to /jobs/{job_id} (schema-agnostic)
+        DS-->>GW: job status
+        GW-->>Client: relay response
+    end
 ```
 
 ## Registry
