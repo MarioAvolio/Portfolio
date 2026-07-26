@@ -122,12 +122,14 @@ competency:
    gateway.
 3. **Real LLM providers** [done] -- OpenAI, Google, and HuggingFace providers for
    \`portfolio-assistant\`.
-4. **Cloud storage** -- S3-compatible `StorageClient` (MinIO -> Cloudflare R2),
+4. **Hub console** -- a dependency-free static UI served by the gateway:
+   live service registry, sync query, and async job polling through one entrypoint.
+5. **Cloud storage** -- S3-compatible `StorageClient` (MinIO -> Cloudflare R2),
    persisting requests as a JSONL landing zone.
-5. **Cloud deployment** -- gateway + services to Google Cloud Run (free tier);
+6. **Cloud deployment** -- gateway + services to Google Cloud Run (free tier);
    extend CI into CD.
-6. **Agentic AI** -- a dedicated agent service with LLM tool-calling.
-7. **Multi-cloud + lakehouse** -- Azure OpenAI / Azure Blob, Container Apps;
+7. **Agentic AI** -- a dedicated agent service with LLM tool-calling.
+8. **Multi-cloud + lakehouse** -- Azure OpenAI / Azure Blob, Container Apps;
    batch job folding JSONL -> Parquet, queried with DuckDB; observability.
 
 ## Tech
