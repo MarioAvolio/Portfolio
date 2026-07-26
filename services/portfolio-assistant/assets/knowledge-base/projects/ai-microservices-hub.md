@@ -8,11 +8,11 @@ environment, dependencies, tests, and container.
 ## Architecture
 - Gateway (port 8000): service registry, health aggregation, query routing via httpx
 - portfolio-assistant (port 5001): RAG chatbot over a local knowledge base (LangChain + ChromaDB)
-- text-intelligence (port 5000): structured text analysis (summary, sentiment, tags, language)
 - deep-research (port 5002): multi-agent web research producing a markdown report
+- market-sentinel (port 5003): multi-agent competitive intelligence (CrewAI) producing a SWOT report
 
 ## Technologies
-Python, FastAPI, LangChain, ChromaDB, OpenAI Agents SDK, Docker, Docker Compose,
+Python, FastAPI, LangChain, ChromaDB, OpenAI Agents SDK, CrewAI, Docker, Docker Compose,
 GitHub Actions, pytest, uv, ruff, mypy
 
 ## Key Design Decisions

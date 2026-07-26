@@ -42,39 +42,29 @@ class SentinelCrew:
         agents_cfg: dict = yaml.safe_load((_CONFIG_DIR / "agents.yaml").read_text())
         tasks_cfg: dict = yaml.safe_load((_CONFIG_DIR / "tasks.yaml").read_text())
 
-        competitors_str = ", ".join(competitors)
-
-        def _fmt(text: str) -> str:
-            return (
-                text.replace("{product}", product)
-                .replace("{competitors}", competitors_str)
-                .replace("{openai_model}", self._model)
-            )
-
         researcher = Agent(
             role=agents_cfg["market_researcher"]["role"],
-            goal=_fmt(agents_cfg["market_researcher"]["goal"]),
-            backstory=_fmt(agents_cfg["market_researcher"]["backstory"]),
+            goal=agents_cfg["market_researcher"]["goal"],
+            backstory=agents_cfg["market_researcher"]["backstory"],
             tools=[SerperDevTool()],
             llm=self._model,
             verbose=False,
         )
         analyst = Agent(
             role=agents_cfg["strategic_analyst"]["role"],
-            goal=_fmt(agents_cfg["strategic_analyst"]["goal"]),
-            backstory=_fmt(agents_cfg["strategic_analyst"]["backstory"]),
-            tools=[],
+            goal=agents_cfg["strategic_analyst"]["goal"],
+            backstory=agents_cfg["strategic_analyst"]["backstory"],
             llm=self._model,
             verbose=False,
         )
         research_task = Task(
-            description=_fmt(tasks_cfg["research_task"]["description"]),
-            expected_output=_fmt(tasks_cfg["research_task"]["expected_output"]),
+            description=tasks_cfg["research_task"]["description"],
+            expected_output=tasks_cfg["research_task"]["expected_output"],
             agent=researcher,
         )
         analysis_task = Task(
-            description=_fmt(tasks_cfg["analysis_task"]["description"]),
-            expected_output=_fmt(tasks_cfg["analysis_task"]["expected_output"]),
+            description=tasks_cfg["analysis_task"]["description"],
+            expected_output=tasks_cfg["analysis_task"]["expected_output"],
             agent=analyst,
             context=[research_task],
         )
@@ -84,5 +74,7 @@ class SentinelCrew:
             process=Process.sequential,
             verbose=False,
         )
-        result = crew.kickoff(inputs={"product": product, "competitors": competitors_str})
+        # crew.kickoff() interpolates {product}/{competitors} into every agent's
+        # role/goal/backstory and every task's description/expected_output.
+        result = crew.kickoff(inputs={"product": product, "competitors": ", ".join(competitors)})
         return result.raw

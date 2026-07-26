@@ -9,7 +9,6 @@ market_researcher:
     You are a meticulous market researcher who never fabricates data.
     You always rely on real search results and are transparent about
     the recency and reliability of each finding.
-  llm: {openai_model}
 
 strategic_analyst:
   role: Strategic Analyst
@@ -22,4 +21,3 @@ strategic_analyst:
     competitive landscapes into concise, evidence-backed insights.
     Your output is always a structured markdown document targeted
     at a product manager or founder audience.
-  llm: {openai_model}
