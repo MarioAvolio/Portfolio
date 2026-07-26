@@ -5,6 +5,13 @@ interprets a service's payload schema -- it forwards the request body verbatim
 and returns the downstream response -- which keeps it fully decoupled from each
 service's contract. All calls go through a shared :class:`httpx.AsyncClient`
 created once at startup (connection pooling).
+
+Every routed call also carries the current request's ``X-Request-ID`` onward
+to the downstream service. Every service in the hub was scaffolded with the
+same request-id middleware the gateway uses, which reads that same header
+when present instead of generating its own -- so one id ends up in the
+gateway's log, the audit trail and the downstream service's own log, with no
+change needed on the service side.
 """
 
 import asyncio
@@ -13,7 +20,7 @@ from typing import Literal
 
 import httpx
 
-from gateway.webserver import Configs, get_logger
+from gateway.webserver import Configs, get_logger, request_id_ctx
 from gateway.webserver.configs.configs import ServiceEndpoint
 from gateway.webserver.errors import ServiceNotFoundError, ServiceUnavailableError
 from gateway.webserver.models.gateway import AuditKind, QueryResponse, ServiceInfo
@@ -23,6 +30,13 @@ logger = get_logger(__name__)
 
 # Health probes use a short timeout regardless of the (larger) query timeout.
 _HEALTH_TIMEOUT = 5.0
+
+# Only a failed connection attempt is retried: the downstream never saw the
+# request, so retrying cannot duplicate work (including a paid LLM call). A
+# read timeout means the request WAS delivered and may still be running, so
+# retrying it risks firing a second paid call for one slow response -- that
+# is excluded on purpose, not an oversight.
+_RETRYABLE = (httpx.ConnectError, httpx.ConnectTimeout)
 
 
 class GatewayService:
@@ -89,6 +103,57 @@ class GatewayService:
             health=health,
         )
 
+    async def _send(
+        self,
+        name: str,
+        kind: AuditKind,
+        method: Literal["GET", "POST"],
+        url: str,
+        payload: dict | None = None,
+    ) -> httpx.Response:
+        """Issues one routed call, with the correlation header and bounded retry.
+
+        Retries only a failed connection attempt (see :data:`_RETRYABLE`) up to
+        ``retry_attempts`` times, waiting ``retry_delay_seconds`` between tries.
+        Every attempt is recorded in the audit trail, including ones that fail
+        and are then retried -- a call that fails once and then succeeds leaves
+        two entries (the failure and the success) because that is what actually
+        happened on the wire; collapsing them would hide the blip the retry
+        exists to absorb.
+
+        Args:
+            name: Target service identifier.
+            kind: Which routed call site this is, for the audit trail.
+            method: HTTP method to use.
+            url: Full URL to call.
+            payload: JSON body for a POST; omitted for a GET.
+
+        Returns:
+            The downstream :class:`httpx.Response`.
+
+        Raises:
+            ServiceUnavailableError: If every attempt fails to connect, or a
+                non-retryable transport error occurs.
+        """
+        headers = {"X-Request-ID": request_id_ctx.get()}
+        for attempt in range(self._configs.retry_attempts):
+            started = time.perf_counter()
+            try:
+                response = await self._client.request(method, url, json=payload, headers=headers)
+            except _RETRYABLE as exc:
+                self._record(name, kind, ServiceUnavailableError.status_code, started)
+                if attempt + 1 < self._configs.retry_attempts:
+                    logger.info("Connection to '%s' failed, retrying: %s", name, exc)
+                    await asyncio.sleep(self._configs.retry_delay_seconds)
+                    continue
+                raise ServiceUnavailableError(service=name) from exc
+            except httpx.HTTPError as exc:
+                self._record(name, kind, ServiceUnavailableError.status_code, started)
+                raise ServiceUnavailableError(service=name) from exc
+            self._record(name, kind, response.status_code, started)
+            return response
+        raise AssertionError("unreachable: loop always returns or raises")
+
     async def query(self, name: str, payload: dict) -> QueryResponse:
         """Forwards ``payload`` to ``name`` and returns its response.
 
@@ -105,13 +170,7 @@ class GatewayService:
         """
         service = self._endpoint(name)
         url = f"{service.base_url}{service.query_path}"
-        started = time.perf_counter()
-        try:
-            response = await self._client.post(url, json=payload)
-        except httpx.HTTPError as exc:
-            self._record(name, "query", ServiceUnavailableError.status_code, started)
-            raise ServiceUnavailableError(service=name) from exc
-        self._record(name, "query", response.status_code, started)
+        response = await self._send(name, "query", "POST", url, payload)
 
         try:
             data = response.json()
@@ -142,13 +201,7 @@ class GatewayService:
             raise ServiceNotFoundError(service=name, message="Service does not expose async jobs.")
 
         url = f"{service.base_url}{service.job_path}/{job_id}"
-        started = time.perf_counter()
-        try:
-            response = await self._client.get(url)
-        except httpx.HTTPError as exc:
-            self._record(name, "job_status", ServiceUnavailableError.status_code, started)
-            raise ServiceUnavailableError(service=name) from exc
-        self._record(name, "job_status", response.status_code, started)
+        response = await self._send(name, "job_status", "GET", url)
 
         try:
             data = response.json()

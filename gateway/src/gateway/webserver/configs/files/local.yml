@@ -5,6 +5,8 @@ app_name: gateway
 api_prefix: /gateway/api/v1
 request_timeout_seconds: 60
 audit_capacity: 200  # how many recent routed calls GET /audit remembers
+retry_attempts: 2  # total attempts per routed call (2 = one retry); 1 disables retrying
+retry_delay_seconds: 0.2  # delay before retrying a routed call
 
 services:
   - name: portfolio-assistant

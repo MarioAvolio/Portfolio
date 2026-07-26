@@ -17,10 +17,13 @@ def test_routed_calls_are_recorded(client: TestClient) -> None:
     assert response.status_code == 200
     entries = response.json()
 
-    assert len(entries) == 2
+    # A dead port fails to connect, so each routed call is retried once and
+    # leaves two entries (the failed attempt and the failed retry) -- see
+    # test_services.py for the dedicated retry-count assertions.
+    assert len(entries) == 4
     # Newest first: job_status was called after query.
-    assert entries[0]["kind"] == "job_status"
-    assert entries[1]["kind"] == "query"
+    assert entries[0]["kind"] == entries[1]["kind"] == "job_status"
+    assert entries[2]["kind"] == entries[3]["kind"] == "query"
     for entry in entries:
         assert entry["service"] == "market-sentinel"
         assert entry["status_code"] == 503

@@ -42,6 +42,9 @@ class Configs(BaseModel):
         api_prefix: Base URL prefix shared by the functional routers.
         request_timeout_seconds: Timeout applied to every downstream call.
         audit_capacity: How many recent routed calls the gateway keeps in memory.
+        retry_attempts: Total attempts for a routed call, including the first
+            one (2 = one retry). 1 disables retrying.
+        retry_delay_seconds: Delay before each retry of a routed call.
         services: The routing registry.
     """
 
@@ -51,5 +54,7 @@ class Configs(BaseModel):
     api_prefix: str = "/gateway/api/v1"
     request_timeout_seconds: float = 60.0
     audit_capacity: int = 200
+    retry_attempts: int = 2
+    retry_delay_seconds: float = 0.2
 
     services: list[ServiceEndpoint] = Field(default_factory=list)

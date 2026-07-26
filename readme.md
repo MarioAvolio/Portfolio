@@ -35,6 +35,7 @@ the request body verbatim to the target service and relays the response. If a
 service is down or unconfigured it returns `503` -- the hub degrades gracefully.
 Async services (`deep-research`, `market-sentinel`) return a `job_id`, polled via
 `GET /gateway/api/v1/services/{name}/jobs/{job_id}` until `status` is `done`.
+Every routed call carries an `X-Request-ID` onward to downstream services for end-to-end correlation.
 
 ## Services
 

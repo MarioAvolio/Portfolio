@@ -105,6 +105,8 @@ it their `/query` returns `503` while their probes keep working -- the hub stays
 demonstrable end to end. `market-sentinel` also requires `OPENAI_API_KEY`
 and `SERPER_API_KEY`.
 
+The same request id appears in the gateway's log, the audit trail, and each downstream service's own log for one end-to-end call, because every service already runs the same request-id middleware and adopts an inbound id instead of generating its own; retries are scoped to connection failures only, so a paid model call is never fired twice for one slow response, and each attempt shows as its own row in the audit trail.
+
 ## Configuration
 
 Each service loads non-secret settings from a YAML file

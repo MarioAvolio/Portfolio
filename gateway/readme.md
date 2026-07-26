@@ -46,6 +46,8 @@ It is a thin read-oriented client with no business logic and no auth (local demo
 
 ## Request flow
 
+Every routed call carries `X-Request-ID` onward to the downstream service, using the same header name the gateway's own middleware reads on the way in.
+
 ```mermaid
 sequenceDiagram
     participant Client
@@ -89,6 +91,13 @@ used by docker-compose to point at the in-network service hostnames.
 `request_timeout_seconds` (in the YAML) bounds each downstream call. Async
 services also declare an optional `job_path` (e.g.
 `/deep-research/api/v1/research/jobs`) for polling background jobs.
+
+`retry_attempts` (default 2, meaning one retry) and `retry_delay_seconds`
+(default 0.2) control retrying a connection failure. Only a connection failure is
+retried -- a slow response that already reached the service (a read timeout)
+is deliberately NOT retried, because that request may already be running a
+paid model call downstream, and firing a second one would be worse than the
+delay it would paper over.
 
 ## Audit trail
 
