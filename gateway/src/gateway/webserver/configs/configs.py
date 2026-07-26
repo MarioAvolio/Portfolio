@@ -19,6 +19,8 @@ class ServiceEndpoint(BaseModel):
         health_path: Path the gateway pings to assess liveness.
         query_path: Path the gateway forwards a query payload to.
         query_example: Example request body documenting the service contract.
+        job_path: Collection path for polling an async job (the gateway appends
+            ``/{job_id}``); ``None`` when the service has no async jobs.
     """
 
     name: str
@@ -27,6 +29,7 @@ class ServiceEndpoint(BaseModel):
     health_path: str = "/ping"
     query_path: str
     query_example: dict = Field(default_factory=dict)
+    job_path: str | None = None
 
 
 class Configs(BaseModel):

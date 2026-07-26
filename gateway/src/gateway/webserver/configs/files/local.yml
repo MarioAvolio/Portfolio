@@ -17,7 +17,8 @@ services:
     description: Multi-agent web research producing a structured report.
     base_url: http://localhost:5002
     health_path: /ping
-    query_path: /deep-research/api/v1/query
+    query_path: /deep-research/api/v1/research
+    job_path: /deep-research/api/v1/research/jobs
     query_example:
       query: Latest trends in retrieval-augmented generation.
   - name: market-sentinel
@@ -25,6 +26,7 @@ services:
     base_url: http://localhost:5003
     health_path: /ping
     query_path: /market-sentinel/api/v1/research
+    job_path: /market-sentinel/api/v1/research/jobs
     query_example:
       product: ChatGPT
       competitors:

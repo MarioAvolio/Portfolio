@@ -14,10 +14,12 @@ How to run, test and operate the hub. Every service uses
 ```bash
 docker compose up --build
 # gateway: http://localhost:8000/gateway/api/v1/services
+# console: http://localhost:8000/ui/
 ```
 
-`docker compose up` starts `gateway`, `portfolio-assistant`, and `deep-research`.
-All three require `OPENAI_API_KEY` for their functional endpoints.
+`docker compose up` starts `gateway`, `portfolio-assistant`, `deep-research`,
+and `market-sentinel`. The latter three require `OPENAI_API_KEY` for their
+functional endpoints; `market-sentinel` also needs `SERPER_API_KEY`.
 
 Route a query through the gateway:
 
@@ -26,6 +28,15 @@ curl -X POST localhost:8000/gateway/api/v1/services/portfolio-assistant/query \
   -H 'content-type: application/json' \
   -d '{"question": "What technologies does Mario know?"}'
 ```
+
+## Use the console
+
+Open `http://localhost:8000/ui/` to use the static web console.
+It lists registered services with live health, lets you send a query to any
+service (prefilled from its `query_example`), and automatically polls async
+jobs by their `job_id` until completion, showing status transitions
+(pending -> running -> done).
+It is a thin read-oriented client with no business logic and no auth (local demo only).
 
 ## Run a single service
 
@@ -44,7 +55,7 @@ Package names per service:
 | gateway | `gateway` | 8000 | no |
 | portfolio-assistant | `portfolio_assistant` | 5001 | `OPENAI_API_KEY` |
 | deep-research | `deep_research` | 5002 | `OPENAI_API_KEY` |
-| market-sentinel *(planned)* | `market_sentinel` | 5003 | `OPENAI_API_KEY` + `SERPER_API_KEY` |
+| market-sentinel | `market_sentinel` | 5003 | `OPENAI_API_KEY` + `SERPER_API_KEY` |
 
 Example (portfolio-assistant):
 ```bash
@@ -111,7 +122,7 @@ Two query modes:
   `status` is `done`. The job response includes agent `steps` and the final
   `report`.
 
-### market-sentinel *(planned)*
+### market-sentinel
 
 Two-agent CrewAI crew (market_researcher via SerperDev + strategic_analyst).
 Reports persisted to SQLite.

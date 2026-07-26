@@ -3,8 +3,8 @@
 Builds the cached :class:`Configs` from the YAML file selected by the active
 environment, overlaying it on the Pydantic defaults. Each downstream service's
 ``base_url`` can additionally be overridden with a ``<NAME>_URL`` environment
-variable (e.g. ``TEXT_INTELLIGENCE_URL``), which is how docker-compose injects
-the in-network service hostnames.
+variable (e.g. ``MARKET_SENTINEL_URL``), derived from the registry name, which is
+how docker-compose injects the in-network service hostnames.
 """
 
 import os
@@ -17,12 +17,17 @@ import yaml
 from .configs import CONFIG_FILE, CURRENT_ENV, MODE, ModeExecution
 from .configs.configs import Configs
 
-# Maps a registered service name to the env var overriding its base URL.
-_URL_ENV = {
-    "text-intelligence": "TEXT_INTELLIGENCE_URL",
-    "portfolio-assistant": "PORTFOLIO_ASSISTANT_URL",
-    "deep-research": "DEEP_RESEARCH_URL",
-}
+
+def _url_env_var(service_name: str) -> str:
+    """Derives the override env var name for a registered service.
+
+    Args:
+        service_name: Registry entry name (e.g. ``market-sentinel``).
+
+    Returns:
+        The env var name (e.g. ``MARKET_SENTINEL_URL``).
+    """
+    return f"{service_name.upper().replace('-', '_')}_URL"
 
 
 def _read_yaml(path: Path) -> dict[str, Any]:
@@ -46,7 +51,7 @@ def get_configs() -> Configs:
     configs = Configs(**overrides)
 
     for service in configs.services:
-        env_url = os.environ.get(_URL_ENV.get(service.name, ""))
+        env_url = os.environ.get(_url_env_var(service.name))
         if env_url:
             service.base_url = env_url
     return configs

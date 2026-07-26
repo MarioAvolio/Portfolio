@@ -18,6 +18,8 @@ decoupled services -- each with its own environment, dependencies and container.
    client ───────────► │  gateway  (FastAPI)        │
                        │  /services                 │  registry + health
                        │  /services/{name}/query    │  routes over HTTP
+                       │  /services/{name}/jobs/{id}│  poll async jobs
+                       │  /ui                       │  static console
                        └──────────────┬─────────────┘
                                       │
              ┌─────────────────────────┼──────────────────────────┐
@@ -30,6 +32,8 @@ decoupled services -- each with its own environment, dependencies and container.
 One way in: `POST /gateway/api/v1/services/{name}/query`. The gateway forwards
 the request body verbatim to the target service and relays the response. If a
 service is down or unconfigured it returns `503` -- the hub degrades gracefully.
+Async services (`deep-research`, `market-sentinel`) return a `job_id`, polled via
+`GET /gateway/api/v1/services/{name}/jobs/{job_id}` until `status` is `done`.
 
 ## Services
 
@@ -69,6 +73,7 @@ dependency injection, domain-error envelopes).
 # 1) Run the full stack
 docker compose up --build
 #    gateway: http://localhost:8000/gateway/api/v1/services
+#    console: http://localhost:8000/ui/
 
 # 2) Or run gateway standalone
 cd gateway && uv sync && uv run pytest -q && uv run python -m gateway

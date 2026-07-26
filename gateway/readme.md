@@ -18,6 +18,7 @@ pattern.
 | `GET` | `/gateway/api/v1/status` | Gateway metadata + registered services |
 | `GET` | `/gateway/api/v1/services` | List services with live health |
 | `POST` | `/gateway/api/v1/services/{name}/query` | Route a query to a service |
+| `GET` | `/gateway/api/v1/services/{name}/jobs/{job_id}` | Poll an async job on a service |
 
 ### Routing a query
 
@@ -31,6 +32,15 @@ curl -X POST localhost:8000/gateway/api/v1/services/portfolio-assistant/query \
 The body is forwarded as-is; each service documents its own schema (surfaced in
 `query_example` by `GET /services`). If a service is down or unconfigured the
 gateway returns `503 service_unavailable` -- it degrades gracefully.
+
+### Console
+
+The gateway serves a static web console at `http://localhost:8000/ui/`.
+It lists registered services with live health, lets you send a query to any
+service (prefilled from its `query_example`), and automatically polls async
+jobs by their `job_id` until completion, showing status transitions
+(pending -> running -> done).
+It is a thin read-oriented client with no business logic and no auth (local demo only).
 
 ## Request flow
 
@@ -64,10 +74,12 @@ sequenceDiagram
 
 Services are declared in [`configs/files/local.yml`](src/gateway/webserver/configs/files/local.yml)
 (name, description, paths, example body, default `base_url`). Each base URL is
-overridable with a `*_URL` environment variable (`PORTFOLIO_ASSISTANT_URL`,
-`DEEP_RESEARCH_URL`) -- used by docker-compose to point at the
-in-network service hostnames. `request_timeout_seconds` (in the YAML) bounds each
-downstream call.
+overridable with a `*_URL` environment variable, derived from the service name
+(e.g. `PORTFOLIO_ASSISTANT_URL`, `DEEP_RESEARCH_URL`, `MARKET_SENTINEL_URL`) --
+used by docker-compose to point at the in-network service hostnames.
+`request_timeout_seconds` (in the YAML) bounds each downstream call. Async
+services also declare an optional `job_path` (e.g.
+`/deep-research/api/v1/research/jobs`) for polling background jobs.
 
 ## Run
 

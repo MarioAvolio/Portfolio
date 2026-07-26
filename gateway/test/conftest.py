@@ -20,9 +20,9 @@ from gateway.webserver.configurations import get_configs
 @pytest.fixture
 def client(monkeypatch: pytest.MonkeyPatch) -> Iterator[TestClient]:
     """Yields a TestClient whose registry points at a dead port."""
-    monkeypatch.setenv("TEXT_INTELLIGENCE_URL", "http://127.0.0.1:0")
     monkeypatch.setenv("PORTFOLIO_ASSISTANT_URL", "http://127.0.0.1:0")
     monkeypatch.setenv("DEEP_RESEARCH_URL", "http://127.0.0.1:0")
+    monkeypatch.setenv("MARKET_SENTINEL_URL", "http://127.0.0.1:0")
     get_configs.cache_clear()
     with TestClient(get_app()) as test_client:
         yield test_client

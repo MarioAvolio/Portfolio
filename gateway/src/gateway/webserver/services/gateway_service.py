@@ -96,3 +96,37 @@ class GatewayService:
         except ValueError:
             data = response.text
         return QueryResponse(service=name, status_code=response.status_code, data=data)
+
+    async def job_status(self, name: str, job_id: str) -> QueryResponse:
+        """Relays the async job document for ``job_id`` from service ``name``.
+
+        Mirrors :meth:`query`: schema-agnostic, forwards nothing but the job id,
+        and returns the downstream body and status code verbatim.
+
+        Args:
+            name: Target service identifier.
+            job_id: Job identifier previously returned by that service.
+
+        Returns:
+            A :class:`QueryResponse` wrapping the downstream job document.
+
+        Raises:
+            ServiceNotFoundError: If ``name`` is not registered or does not
+                expose async jobs.
+            ServiceUnavailableError: If the service cannot be reached.
+        """
+        service = self._endpoint(name)
+        if service.job_path is None:
+            raise ServiceNotFoundError(service=name, message="Service does not expose async jobs.")
+
+        url = f"{service.base_url}{service.job_path}/{job_id}"
+        try:
+            response = await self._client.get(url)
+        except httpx.HTTPError as exc:
+            raise ServiceUnavailableError(service=name) from exc
+
+        try:
+            data = response.json()
+        except ValueError:
+            data = response.text
+        return QueryResponse(service=name, status_code=response.status_code, data=data)

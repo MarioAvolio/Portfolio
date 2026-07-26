@@ -41,3 +41,23 @@ async def query_service(
     """
     result = await service.query(name, payload)
     return JSONResponse(status_code=result.status_code, content=result.model_dump())
+
+
+@router.get("/services/{name}/jobs/{job_id}")
+async def get_job_status(
+    name: str,
+    job_id: str,
+    service: Annotated[GatewayService, Depends(get_gateway_service)],
+) -> JSONResponse:
+    """Relays the async job document ``job_id`` from service ``name``.
+
+    Args:
+        name: Target service identifier.
+        job_id: Job identifier previously returned by that service.
+        service: Injected gateway service.
+
+    Returns:
+        The downstream job document wrapped in the gateway envelope.
+    """
+    result = await service.job_status(name, job_id)
+    return JSONResponse(status_code=result.status_code, content=result.model_dump())

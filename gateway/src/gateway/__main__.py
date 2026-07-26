@@ -3,9 +3,11 @@
 import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 import httpx
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from uvicorn import Config, Server
 
@@ -61,6 +63,9 @@ def get_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    static_dir = Path(__file__).parent / "webserver" / "static"
+    app.mount("/ui", StaticFiles(directory=static_dir, html=True), name="ui")
 
     return app
 
